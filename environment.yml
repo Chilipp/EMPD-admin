@@ -1,0 +1,9 @@
+name: _empd_admin
+
+dependencies:
+ - python=3.7
+ - tornado
+ - git
+ - pip:
+     - PyGithub
+     - statuspage

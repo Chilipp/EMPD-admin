@@ -2,9 +2,9 @@ FROM chilipp/empd-admin-base
 
 ADD ./ /opt/empd-admin
 
-ADD ./conda-requirements.txt /tmp/conda-requirements.txt
+ADD ./environment.yml /tmp/environment.yml
 
-RUN conda install --yes python=3.7 --file /tmp/conda-requirements.txt && \
+RUN conda env update -f /tmp/environment.yml -n base && \
     conda clean --yes --all
 
 RUN pip install /opt/empd-admin

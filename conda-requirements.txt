@@ -1,5 +1,0 @@
-tornado
-pygithub
-nose
-mock
-git
