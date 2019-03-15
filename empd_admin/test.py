@@ -110,13 +110,13 @@ def set_pr_status(owner, repo_name, test_info, target_url=None):
         commit = repo.get_commit(test_info['sha'])
         if test_info['status'] == 'good':
             commit.create_status(
-                "success", description="All recipes are excellent.",
-                context="conda-forge-linter", target_url=target_url)
+                "success", description="All data is excellent.",
+                context="empd-admin-check", target_url=target_url)
         elif test_info['status'] == 'mixed':
             commit.create_status(
-                "success", description="Some recipes have hints.",
-                context="conda-forge-linter", target_url=target_url)
+                "success", description="Some data have issues.",
+                context="empd-admin-check", target_url=target_url)
         else:
             commit.create_status(
-                "failure", description="Some recipes need some changes.",
-                context="conda-forge-linter", target_url=target_url)
+                "failure", description="Some data need some changes.",
+                context="empd-admin-check", target_url=target_url)
