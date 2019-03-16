@@ -20,7 +20,7 @@ def main():
               console_scripts=['empd-admin = empd_admin.__main__:main']),
           packages=find_packages(),
           package_data={'empd_admin': [
-              osp.join('empd_admin', 'tests', '*.py'),
+              osp.join('empd_admin', 'data-tests', '*.py'),
               ]},
           include_package_data=True,
           classifiers=[
