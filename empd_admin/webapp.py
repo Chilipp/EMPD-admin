@@ -30,7 +30,7 @@ class TestHookHandler(tornado.web.RequestHandler):
 
                 with tempfile.TemporaryDirectory('_empd') as tmp_dir:
                     test_info = test.download_pr(
-                        owner, repo_name, pr_id, repo_name == 'EMPD-data')
+                        owner, repo_name, pr_id, tmp_dir)
 
                     # display information on the PR to the user
                     if not test_info:
