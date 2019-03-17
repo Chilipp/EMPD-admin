@@ -44,7 +44,7 @@ class TestHookHandler(tornado.web.RequestHandler):
                                                target_url=msg.html_url)
 
                         # run the tests
-                        test_info = test.full_repo_test(local_repo)
+                        test_info = test.full_repo_test(tmp_dir)
 
                 if test_info:
                     msg = test.comment_on_pr(
