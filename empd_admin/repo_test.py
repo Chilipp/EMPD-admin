@@ -59,7 +59,7 @@ def run_test(meta, pytest_args=[], tests=['']):
             my_testdir = osp.join(report_dir, 'tests')
             shutil.copytree(TESTDIR, my_testdir)
             os.environ['PYTHONUNBUFFERED'] = '1'  # turn off output buffering
-            cmd = ['pytest', '-v',
+            cmd = [os.getenv('PYTEST', 'pytest'), '-v',
                    '--empd-meta=' + meta,
                    '--markdown-report=' + osp.join(report_dir, 'report.md')
                    ] + pytest_args + [osp.join(my_testdir, f) for f in tests]
