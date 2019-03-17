@@ -62,8 +62,12 @@ def run_test(meta, pytest_args=[], tests=['']):
             print("Starting test run with %s" % ' '.join(cmd))
             proc = spr.Popen(cmd, stdout=spr.PIPE, stderr=spr.STDOUT)
             stdout, stderr = proc.communicate()
-            with open(osp.join(report_dir, 'report.md')) as f:
-                md_report = f.read()
+            report_path = osp.join(report_dir, 'report.md')
+            if not osp.exists(report_path):
+                md_report = "Apparently the pytest command failed!"
+            else:
+                with open(report_path) as f:
+                    md_report = f.read()
             success = proc.returncode == 0
 
     return success, stdout.decode('utf-8'), md_report
