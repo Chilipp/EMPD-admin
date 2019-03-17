@@ -12,7 +12,7 @@ RUN git clone https://github.com/EMPD2/EMPD-test.git /opt/empd-admin/empd_admin/
 
 RUN pip install /opt/empd-admin
 
-RUN conda create --yes -p /opt/test-env pytest pandas sqlalchemy psycopg2 shapely netcdf4 && /
+RUN conda create --yes -p /opt/test-env pytest pandas sqlalchemy psycopg2 shapely netcdf4 && \
     pip install latlon-utils && \
     conda clean --yes --all
 
