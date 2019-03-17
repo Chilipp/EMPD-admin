@@ -1,12 +1,12 @@
 FROM chilipp/empd-admin-base
 
-ADD ./ /opt/empd-admin
-
-ADD ./environment.yml /tmp/environment.yml
+COPY ./environment.yml /tmp/environment.yml
 
 RUN conda env update -f /tmp/environment.yml -n base && \
     conda clean --yes --all
 
-RUN pip install /opt/empd-admin
+COPY ./ /opt/empd-admin
+
+RUN pip install -U --force-reinstall /opt/empd-admin
 
 CMD python -m empd_admin.webapp
