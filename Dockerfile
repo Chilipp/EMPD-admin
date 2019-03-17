@@ -8,7 +8,7 @@ RUN conda env update -f /tmp/environment.yml -n base && \
 COPY ./ /opt/empd-admin
 
 # clone the EMPD-tests repository if not existent
-RUN git clone https://github.com/EMPD2/EMPD-tests.git /opt/empd-admin/empd_admin/data-tests || :
+RUN git clone https://github.com/EMPD2/EMPD-test.git /opt/empd-admin/empd_admin/data-tests || :
 
 RUN pip install -U /opt/empd-admin && \
     pip install -U --force-reinstall --no-deps -e /opt/empd-admin
