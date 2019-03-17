@@ -1,6 +1,23 @@
 #!/usr/bin/env python
+import sys
 from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
 import os.path as osp
+
+
+class PyTest(TestCommand):
+    user_options = [('pytest-args=', 'a', "Arguments to pass to pytest")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = ''
+
+    def run_tests(self):
+        import shlex
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main(shlex.split(self.pytest_args))
+        sys.exit(errno)
 
 
 def readme():
@@ -23,6 +40,12 @@ def main():
               osp.join('empd_admin', 'data-tests', '*.py'),
               ]},
           include_package_data=True,
+          install_requires=[
+              'tornado',
+              'PyGithub',
+              'gitpython',
+              'pytest',
+          ],
           classifiers=[
             'Development Status :: 2 - Pre-Alpha',
             'Intended Audience :: Developers',
@@ -31,6 +54,8 @@ def main():
             'Operating System :: Unix',
           ],
           license="GPLv3",
+          tests_require=['pytest', 'psutil'],
+          cmdclass={'test': PyTest},
           )
 
 
