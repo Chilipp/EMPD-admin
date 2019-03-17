@@ -1,3 +1,0 @@
-sut:
-  build: .
-  command: /bin/bash -c "cd /opt/empd-admin && py.test -v"
