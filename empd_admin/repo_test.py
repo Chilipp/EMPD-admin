@@ -3,6 +3,7 @@ import os.path as osp
 import contextlib
 import time
 import subprocess as spr
+import shutil
 
 import github
 import tempfile
@@ -53,11 +54,15 @@ def get_meta_file(dirname='.'):
 def run_test(meta, pytest_args=[], tests=['']):
     with remember_env('PYTHONUNBUFFERED'):
         with tempfile.TemporaryDirectory('_test') as report_dir:
+            # to make sure that the test directory is writable, we copy it to
+            # the directory for the report
+            my_testdir = osp.join(report_dir, 'tests')
+            shutil.copytree(TESTDIR, my_testdir)
             os.environ['PYTHONUNBUFFERED'] = '1'  # turn off output buffering
             cmd = ['pytest', '-v',
                    '--empd-meta=' + meta,
                    '--markdown-report=' + osp.join(report_dir, 'report.md')
-                   ] + pytest_args + [osp.join(TESTDIR, f) for f in tests]
+                   ] + pytest_args + [osp.join(my_testdir, f) for f in tests]
             print("Starting test run with %s" % ' '.join(cmd))
             proc = spr.Popen(cmd, stdout=spr.PIPE, stderr=spr.STDOUT)
             stdout, stderr = proc.communicate()
