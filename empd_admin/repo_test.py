@@ -8,7 +8,6 @@ import github
 import tempfile
 import textwrap
 from collections import OrderedDict
-from empd_admin.utils import remote_action
 
 from git import GitCommandError, Repo
 
@@ -204,7 +203,7 @@ def comment_on_pr(owner, repo_name, pr_id, message, force=False):
     issue = repo.get_issue(pr_id)
 
     if force:
-        return remote_action(issue.create_comment, message)
+        return issue.create_comment(message)
 
     comments = list(issue.get_comments())
     comment_owners = [comment.user.login for comment in comments]
@@ -217,7 +216,7 @@ def comment_on_pr(owner, repo_name, pr_id, message, force=False):
 
     # Only comment if we haven't before, or if the message we have is different
     if my_last_comment is None or my_last_comment.body != message:
-        my_last_comment = remote_action(issue.create_comment, message)
+        my_last_comment = issue.create_comment(message)
 
     return my_last_comment
 
@@ -230,19 +229,16 @@ def set_pr_status(owner, repo_name, test_info, target_url=None):
     if test_info:
         commit = repo.get_commit(test_info['sha'])
         if test_info['status'] == 'good':
-            remote_action(
-                commit.create_status, "success",
-                description="All data is excellent.",
+            commit.create_status(
+                "success", description="All data is excellent.",
                 context="empd-admin-check", target_url=target_url)
         elif test_info['status'] == 'mixed':
-            remote_action(
-                commit.create_status, "success",
-                description="Some data have issues.",
+            commit.create_status(
+                "success", description="Some data have issues.",
                 context="empd-admin-check", target_url=target_url)
         else:
-            remote_action(
-                commit.create_status, "failure",
-                description="Some data need some changes.",
+            commit.create_status(
+                "failure", description="Some data need some changes.",
                 context="empd-admin-check", target_url=target_url)
 
 
