@@ -4,7 +4,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 
-import empd_admin.test as test
+import empd_admin.repo_test as test
 
 
 class TestHookHandler(tornado.web.RequestHandler):
@@ -24,7 +24,9 @@ class TestHookHandler(tornado.web.RequestHandler):
 
             # Only do anything if we are working with EMPD2, and an open PR.
             if is_open and owner == 'EMPD2':
-                test_info = test.test_repo(owner, repo_name, pr_id,
+                self.write("testing PR %i from %s/%s" % (
+                    pr_id, owner, repo_name))
+                test_info = test.repo_test(owner, repo_name, pr_id,
                                            repo_name == 'EMPD-data')
                 if test_info:
                     msg = test.comment_on_pr(owner, repo_name, pr_id,
