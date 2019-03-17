@@ -13,4 +13,7 @@ RUN git clone https://github.com/EMPD2/EMPD-test.git /opt/empd-admin/empd_admin/
 RUN pip install -U /opt/empd-admin && \
     pip install -U --force-reinstall --no-deps -e /opt/empd-admin
 
+# make all files readable for the user
+RUN chmod u+r -R /opt/conda
+
 CMD python -m empd_admin.webapp
