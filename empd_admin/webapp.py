@@ -3,6 +3,7 @@ import tornado.escape
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
+import tempfile
 
 import empd_admin.repo_test as test
 
@@ -26,11 +27,28 @@ class TestHookHandler(tornado.web.RequestHandler):
             if is_open and owner == 'EMPD2':
                 self.write("testing PR %i from %s/%s" % (
                     pr_id, owner, repo_name))
-                test_info = test.repo_test(owner, repo_name, pr_id,
-                                           repo_name == 'EMPD-data')
+
+                with tempfile.TemporaryDirectory('_empd') as tmp_dir:
+                    test_info = test.download_pr(
+                        owner, repo_name, pr_id, repo_name == 'EMPD-data')
+
+                    # display information on the PR to the user
+                    if not test_info:
+                        test_info = test.pr_info(tmp_dir)
+                        if test_info:
+                            msg = test.comment_on_pr(
+                                owner, repo_name, pr_id, test_info['message'],
+                                onlyif='any',
+                                force=(test_info['status'] == 'failure'))
+                            test.set_pr_status(owner, repo_name, test_info,
+                                               target_url=msg.html_url)
+
+                        # run the tests
+                        test_info = test.full_repo_test(local_repo)
+
                 if test_info:
-                    msg = test.comment_on_pr(owner, repo_name, pr_id,
-                                             test_info['message'])
+                    msg = test.comment_on_pr(
+                        owner, repo_name, pr_id, test_info['message'])
                     test.set_pr_status(owner, repo_name, test_info,
                                        target_url=msg.html_url)
         else:

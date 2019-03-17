@@ -77,7 +77,57 @@ def run_test(meta, pytest_args=[], tests=['']):
     return success, stdout.decode('utf-8'), md_report
 
 
-def repo_test(repo_owner, repo_name, pr_id, ignore_base=False):
+def pr_info(local_repo):
+    repo = Repo(local_repo)
+    sha = repo.head.commit.hexsha
+
+    meta = get_meta_file(local_repo)
+
+    if len(meta.splitlines()) > 1:
+        message = textwrap.dedent("""
+            Hi! I'm your friendly automated EMPD-admin bot!
+
+            I was trying to test your data submission, but I am not sure, where you store the meta data. I found multiple possible candidates:
+
+            ```
+            %s
+            ```
+
+            Please only keep one of these files and not multiples.
+
+            Please ping `@Chilipp` if you believe this is a bug.
+            """) % meta
+        status = 'failure'
+
+        test_info = {'message': message,
+                     'status': status,
+                     'sha': sha}
+
+        return test_info
+
+    message = textwrap.dedent("""
+        Hi! I'm your friendly automated EMPD-admin bot!
+
+        Thank you very much for your data submission! I will now run some tests on your data.
+        In the meantime: please review your test data on the EMPD viewer using
+        this link: https://EMPD2.github.io/?commit={sha}&meta={meta}
+
+        This bot is helping you merging your data. I am checking for common issues and I can fix your climate, country or elevation data.
+        Type `@EMPD-admin --help` in a new comment in this PR for usage information.
+
+        <sub>Make sure, that all the commands for the `@EMPD-admin` are on one single line and nothing else. Only
+        `@EMPD-admin --help`
+        will work, not something like
+        `<other words> @EMPD-admin --help`
+        or
+        `@EMPD-admin --help <other words>`
+        </sub>
+        """).format(sha=sha, meta=meta)
+
+    return {'message': message, 'status': 'pending', 'sha': sha}
+
+
+def download_pr(repo_owner, repo_name, pr_id, target_dir):
     gh = github.Github(os.environ['GH_TOKEN'])
 
     owner = gh.get_user(repo_owner)
@@ -91,116 +141,122 @@ def repo_test(repo_owner, repo_name, pr_id, ignore_base=False):
             return {}
         mergeable = pull_request.mergeable
 
-    with tempfile.TemporaryDirectory('_empd') as tmp_dir:
-        repo = Repo.clone_from(remote_repo.clone_url, tmp_dir)
+    repo = Repo.clone_from(remote_repo.clone_url, target_dir)
 
-        # Retrieve the PR refs.
-        try:
-            repo.remotes.origin.fetch([
-                'pull/{pr}/head:pull/{pr}/head'.format(pr=pr_id),
-                'pull/{pr}/merge:pull/{pr}/merge'.format(pr=pr_id)
-            ])
-            ref_head = repo.refs['pull/{pr}/head'.format(pr=pr_id)]
-            ref_merge = repo.refs['pull/{pr}/merge'.format(pr=pr_id)]
-        except GitCommandError:
-            # Either `merge` doesn't exist because the PR was opened
-            # in conflict or it is closed and it can't be the latter.
-            repo.remotes.origin.fetch([
-                'pull/{pr}/head:pull/{pr}/head'.format(pr=pr_id)
-            ])
-            ref_head = repo.refs['pull/{pr}/head'.format(pr=pr_id)]
-        sha = str(ref_head.commit.hexsha)
+    # Retrieve the PR refs.
+    try:
+        repo.remotes.origin.fetch([
+            'pull/{pr}/head:pull/{pr}/head'.format(pr=pr_id),
+            'pull/{pr}/merge:pull/{pr}/merge'.format(pr=pr_id)
+        ])
+        ref_head = repo.refs['pull/{pr}/head'.format(pr=pr_id)]
+        ref_merge = repo.refs['pull/{pr}/merge'.format(pr=pr_id)]
+    except GitCommandError:
+        # Either `merge` doesn't exist because the PR was opened
+        # in conflict or it is closed and it can't be the latter.
+        repo.remotes.origin.fetch([
+            'pull/{pr}/head:pull/{pr}/head'.format(pr=pr_id)
+        ])
+        ref_head = repo.refs['pull/{pr}/head'.format(pr=pr_id)]
+    sha = str(ref_head.commit.hexsha)
 
-        # Check if the tests are skipped via the commit message.
-        skip_msgs = [
-            "[ci skip]",
-            "[skip ci]",
-            "[lint skip]",
-            "[skip lint]",
-        ]
-        commit_msg = repo.commit(sha).message
-        should_skip = any([msg in commit_msg for msg in skip_msgs])
-        if should_skip:
-            return {}        # Raise an error if the PR is not mergeable.
+    # Check if the tests are skipped via the commit message.
+    skip_msgs = [
+        "[ci skip]",
+        "[skip ci]",
+        "[lint skip]",
+        "[skip lint]",
+    ]
+    commit_msg = repo.commit(sha).message
+    should_skip = any([msg in commit_msg for msg in skip_msgs])
+    if should_skip:
+        return {}        # Raise an error if the PR is not mergeable.
 
-        if not mergeable:
-            message = textwrap.dedent("""
-                Hi! This is the friendly automated EMPD service.
-
-                I was trying to test your data submission, but it appears we have a merge conflict.
-                Please try to merge or rebase with the base branch to resolve this conflict.
-
-                Please ping the 'Chilipp' (using the @ notation in a comment) if you believe this is a bug.
-                """)
-            status = 'merge_conflict'
-
-            test_info = {'message': message,
-                         'status': status,
-                         'sha': sha}
-
-            return test_info
-
-        ref_merge.checkout(force=True)
-
-        meta = get_meta_file(tmp_dir)
-        results = OrderedDict()
-
-        # run cricital tests
-        results['Critical tests'] = crit_success, crit_log, crit_md = run_test(
-            meta, '-m critical'.split())
-
-        if crit_success:
-            results['Formatting tests'] = run_test(
-                meta, tests=['test_formatting.py'])
-            results['Metadata tests'] = run_test(
-                meta, tests=['test_meta.py'])
-
-        test_summary = '\n\n'.join(
-            textwrap.dedent("""
-                ## {}
-
-                {}
-                <details><summary>Full test report</summary>
-
-                ```
-                {}
-                ```
-                </details>""").format(key, log, md)
-            for key, (succes, md, log) in results.items())
-
-        good = textwrap.dedent("""
+    if not mergeable:
+        message = textwrap.dedent("""
             Hi! I'm your friendly automated EMPD-admin bot!
 
-            This is just to inform you that I tested your data submission in your PR (``%s``) and found it in an excellent condition!
+            I was trying to test your data submission, but it appears we have a merge conflict.
+            Please try to merge or rebase with the base branch to resolve this conflict.
 
-            """ % meta)
+            Please ping `@Chilipp` if you believe this is a bug.
+            """)
+        status = 'merge_conflict'
 
-        mixed = good + textwrap.dedent("""
-            I just have some more information for you:
+        test_info = {'message': message,
+                     'status': status,
+                     'sha': sha}
 
-            """) + test_summary
+        return test_info
 
-        failed = textwrap.dedent("""
-            Hi! I'm your friendly automated EMPD-admin bot!
-
-            I found some errors in your data submission. You may fix some of them using the `@EMPD-admin fix` command.
-            Please ping `@Chilipp` if you have difficulties with your submission.
-
-            """) + test_summary
-        if not all(t[0] for t in results.values()):
-            status = 'failure'
-            message = failed
-        elif any(t[1] for t in results.values()):
-            status = 'mixed'
-            message = mixed
-        else:
-            status = 'good'
-            message = good
-
-        return {'message': message, 'status': status, 'sha': sha}
+    ref_merge.checkout(force=True)
+    return {}
 
 
-def comment_on_pr(owner, repo_name, pr_id, message, force=False):
+def full_repo_test(local_repo):
+    repo = Repo(local_repo)
+    sha = repo.head.commit.hexsha
+
+    meta = get_meta_file(local_repo)
+    results = OrderedDict()
+
+    # run cricital tests
+    results['Critical tests'] = crit_success, crit_log, crit_md = run_test(
+        meta, '-m critical'.split())
+
+    if crit_success:
+        results['Formatting tests'] = run_test(
+            meta, tests=['test_formatting.py'])
+        results['Metadata tests'] = run_test(
+            meta, tests=['test_meta.py'])
+
+    test_summary = '\n\n'.join(
+        textwrap.dedent("""
+            ## {}
+
+            {}
+            <details><summary>Full test report</summary>
+
+            ```
+            {}
+            ```
+            </details>""").format(key, log, md)
+        for key, (succes, md, log) in results.items())
+
+    good = textwrap.dedent("""
+        Hi! I'm your friendly automated EMPD-admin bot!
+
+        This is just to inform you that I tested your data submission in your PR (``%s``) and found it in an excellent condition!
+
+        """ % meta)
+
+    mixed = good + textwrap.dedent("""
+        I just have some more information for you:
+
+        """) + test_summary
+
+    failed = textwrap.dedent("""
+        Hi! I'm your friendly automated EMPD-admin bot!
+
+        I found some errors in your data submission. You may fix some of them using the `@EMPD-admin fix` command.
+        Please ping `@Chilipp` if you have difficulties with your submission.
+
+        """) + test_summary
+    if not all(t[0] for t in results.values()):
+        status = 'failure'
+        message = failed
+    elif any(t[1] for t in results.values()):
+        status = 'mixed'
+        message = mixed
+    else:
+        status = 'good'
+        message = good
+
+    return {'message': message, 'status': status, 'sha': sha}
+
+
+def comment_on_pr(owner, repo_name, pr_id, message, force=False,
+                  onlyif='last'):
     gh = github.Github(os.environ['GH_TOKEN'])
 
     user = gh.get_user(owner)
@@ -216,12 +272,19 @@ def comment_on_pr(owner, repo_name, pr_id, message, force=False):
     my_last_comment = None
     my_login = gh.get_user().login
     if my_login in comment_owners:
-        my_last_comment = [comment for comment in comments
-                           if comment.user.login == my_login][-1]
-
-    # Only comment if we haven't before, or if the message we have is different
-    if my_last_comment is None or my_last_comment.body != message:
-        my_last_comment = issue.create_comment(message)
+        my_comments = [comment for comment in comments
+                       if comment.user.login == my_login]
+        my_last_comment = my_comments[-1]
+        if onlyif == 'last':
+            # Only comment if we haven't before, or if the message we have is
+            # different
+            if my_last_comment is None or my_last_comment.body != message:
+                my_last_comment = issue.create_comment(message)
+        elif onlyif == 'any':
+            # Only comment if there is not any other message like this
+            if my_last_comment is None or all(
+                    comment.body != message for comment in my_comments):
+                my_last_comment = issue.create_comment(message)
 
     return my_last_comment
 
@@ -241,6 +304,10 @@ def set_pr_status(owner, repo_name, test_info, target_url=None):
             commit.create_status(
                 "success", description="Some data have issues.",
                 context="empd-admin-check", target_url=target_url)
+        elif test_info['status'] == 'pending':
+            commit.create_status(
+                "pending", description="Waiting for tests to complete.",
+                context='empd-admin-check', target_url=target_url)
         else:
             commit.create_status(
                 "failure", description="Some data need some changes.",
@@ -252,8 +319,23 @@ def test_get_meta_file(local_repo):
     assert get_meta_file(repo_dir) == osp.join(repo_dir, 'test.tsv')
 
 
-def test_repo_test(pr_id):
-    test_info = repo_test('EMPD2', 'EMPD-data', pr_id)
+def test_repo_test(pr_id, tmpdir):
+    test_info = download_pr('EMPD2', 'EMPD-data', pr_id, tmpdir)
+
+    assert not test_info
+
+    test_info = full_repo_test(tmpdir)
 
     assert test_info
     assert test_info['status'] == 'failure'
+
+
+def test_pr_info(pr_id, tmpdir):
+    test_info = download_pr('EMPD2', 'EMPD-data', pr_id, tmpdir)
+
+    assert not test_info
+
+    test_info = pr_info(tmpdir)
+
+    assert test_info
+    assert test_info['status'] == 'pending'
