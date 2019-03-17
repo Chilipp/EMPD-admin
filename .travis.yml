@@ -1,0 +1,13 @@
+services:
+    - docker
+
+env:
+    global:
+        - secure: "tm6UOFJu9c/Icz4I2rx+WtyZW5MZfrVAhQe1LHrTCOUp014kyQXV0aJgCwAtR2IjsO7h7crKCOolg32XWBhbo65a5xcZbExPKEAhfP+fjRrSaKkgUO0cWcy6i4AjiednXeA5S4IfraqaroATUPMscQjZaI9o/B6eoSeu2Mcryq86q+ardcaNaAsWMQoT13tAZJMyfhTyOpNFR+PjHQWDhtVNB9MUq8SCEiU90S1eTOa6UG8ShBPzv0eEC0j80qGXn+Qf1Q+O/fm//yTA7w2h3Y9V/BIWqqcP1mh+50JVJcOa/bmZeCitnCbdojiqpbkzpUDUzitUv0fMbzv1JVu8SwA6jl2wtIGltxBqRd8X+FjJ7W0R3DIDuPT4KGAz8V76wazBySLTE57m3Y8h7lDka9bOGwejqC2P12ko52QC2+qH48DEvXu97j7AFTu2WP3n5puxFEQQ1D37EHf2H3oNwn4GgPDB+Qn0oXM/OyCFR6DH8FMoCL3hCXKPvpVAGvZw9+rcQH4lXZpTt+invNYh5MmJuIbeY3vQw4awZhk0M2FLzHCRiNlsc5AYc/gEg1ll1KCj9aeoUYN8VviQmYZ4Sdmd6+V73O8W3rgGN94UZE0IMqTYeGvH0kTYyYonEVY3G7nioXNe8AmCGlajQLnqOvu+/QN6FCKzIutIMF+AruY="
+
+install:
+    - docker build . -t empd2/empd-admin
+    - echo GH_TOKEN=$GH_TOKEN > env.list
+
+script:
+    - docker run --env-file env.list empd2/empd-admin /bin/bash -c "cd /opt/empd-admin && py.test -v"
