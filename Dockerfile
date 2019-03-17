@@ -12,7 +12,7 @@ RUN git clone https://github.com/EMPD2/EMPD-test.git /opt/empd-admin/empd_admin/
 
 RUN pip install /opt/empd-admin
 
-# delete a file that caused issues in the past (if existent)
-RUN rm /opt/conda/lib/python3.7/site-packages/.wh.pip-18.1-py3.7.egg-info || :
+RUN useradd -m empd-admin && chown -R empd-admin /opt/conda
 
+USER empd-admin
 CMD python -m empd_admin.webapp
