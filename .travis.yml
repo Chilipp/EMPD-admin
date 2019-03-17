@@ -13,6 +13,9 @@ install:
 script:
     - docker run --env-file env.list empd2/empd-admin /bin/bash -c "cd /opt/empd-admin && py.test -v"
 
+before_deploy:
+    - rm env.list
+
 deploy:
     provider: script
     script: bash docker_push
