@@ -122,7 +122,7 @@ def pr_info(local_repo):
         or
         `@EMPD-admin --help <other words>`
         </sub>
-        """).format(sha=sha, meta=meta)
+        """).format(sha=sha, meta=osp.basename(meta))
 
     return {'message': message, 'status': 'pending', 'sha': sha}
 
