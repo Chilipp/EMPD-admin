@@ -1,4 +1,5 @@
 import os
+import json
 import tornado.escape
 import tornado.httpserver
 import tornado.ioloop
@@ -19,7 +20,8 @@ class CommandHookHandler(tornado.web.RequestHandler):
             self.write('pong')
         elif event == 'pull_request_review' or event == 'pull_request' \
                 or event == 'pull_request_review_comment':
-            body = tornado.escape.json_decode(self.request.body)
+            # body = tornado.escape.json_decode(self.request.body)
+            body = json.loads(self.request.body, strict=False)
             action = body["action"]
             repo_name = body['repository']['name']
             owner = body['repository']['owner']['login']
