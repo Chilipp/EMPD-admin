@@ -156,9 +156,9 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
             ret += repr(e)
     else:
         if ns.parser == 'help':
-            ret += '```\n' + ns.format_help(ns.command) + '\n```'
+            ret += '```\n' + ns.format_help(ns.command) + '```'
         elif ns.parser is None:
-            ret += '```\n' + parser.format_help() + '\n```'
+            ret += '```\n' + parser.format_help() + '```'
         else:
             with tempfile.TemporaryDirectory('_empd') as tmpdir:
                 remote_url = ('https://EMPD-admin:%s@github.com/'
@@ -210,7 +210,7 @@ def test_help():
     parser = argparse.ArgumentParser('@EMPD-admin', add_help=False)
     setup_subparsers(parser)
     assert '\n'.join(msg.splitlines()[1:]).strip() == \
-        parser.format_help().strip()
+        '```\n' + parser.format_help() + '```'
 
 
 def test_help_test():
@@ -220,7 +220,7 @@ def test_help_test():
     subparsers = setup_subparsers(parser)
     parser = subparsers.choices['test']
     assert '\n'.join(msg.splitlines()[1:]).strip() == \
-        parser.format_help().strip()
+        '```\n' + parser.format_help().strip() + '\n```'
 
 
 def test_test_collect():
