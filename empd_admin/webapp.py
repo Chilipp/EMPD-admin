@@ -44,22 +44,36 @@ class CommandHookHandler(tornado.web.RequestHandler):
                 comment = body['comment']['body']
 
             if comment:
-                reports = []
-                for line in comment.splitlines():
-                    report = parsers.process_comment_line(
-                        line, pr_owner, pr_repo, pr_branch)
-                    if report:
-                        reports.append(report)
-                if reports:
-                    message = textwrap.dedent("""
-                    Hi! I'm your friendly automated EMPD-admin bot!
-
-                    I processed your command%s and hope that I can help you!
-                    """ % ('s' if len(reports) > 1 else ''))
+                message = parsers.process_comment(
+                    comment, pr_owner, pr_repo, pr_branch)
+                if message:
                     test.comment_on_pr(
-                        owner, repo_name, pr_num,
-                        message + '\n\n' + '\n---\n'.join(reports),
-                        force=True)
+                        owner, repo_name, pr_num, message, force=True)
+
+        elif event == 'issue_comment' or event == "issues":
+            body = json.loads(self.request.body)
+            action = body["action"]
+            repo_name = body['repository']['name']
+            owner = body['repository']['owner']['login']
+
+            # Only do anything if we are working with conda-forge
+            if owner != 'conda-forge':
+                return
+            pull_request = False
+            if "pull_request" in body["issue"]:
+                pull_request = True
+            if pull_request and action != 'deleted':
+                pr_repo = body['pull_request']['head']['repo']
+                pr_owner = pr_repo['owner']['login']
+                pr_repo = pr_repo['name']
+                pr_branch = body['pull_request']['head']['ref']
+                pr_num = body['pull_request']['number']
+                comment = body['comment']['body']
+                message = parsers.process_comment(
+                    comment, pr_owner, pr_repo, pr_branch)
+                if message:
+                    test.comment_on_pr(
+                        owner, repo_name, pr_num, message, force=True)
 
         else:
             print('Unhandled event "{}".'.format(event))

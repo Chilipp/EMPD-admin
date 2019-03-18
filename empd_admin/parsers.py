@@ -123,6 +123,21 @@ def setup_pytest_args(namespace):
     return pytest_args, files
 
 
+def process_comment(comment, pr_owner, pr_repo, pr_branch):
+    reports = []
+    for line in comment.splitlines():
+        report = process_comment_line(line, pr_owner, pr_repo, pr_branch)
+        if report:
+            reports.append(report)
+    if reports:
+        message = textwrap.dedent("""
+        Hi! I'm your friendly automated EMPD-admin bot!
+
+        I processed your command%s and hope that I can help you!
+        """ % ('s' if len(reports) > 1 else ''))
+        return message + '\n\n' + '\n---\n'.join(reports)
+
+
 def process_comment_line(line, pr_owner, pr_repo, pr_branch):
     if not line.startswith('@EMPD-admin'):
         return
