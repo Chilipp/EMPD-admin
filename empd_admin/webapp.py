@@ -51,6 +51,8 @@ class CommandHookHandler(tornado.web.RequestHandler):
                         owner, repo_name, pr_num, message, force=True)
 
         elif event == 'issue_comment' or event == "issues":
+            print(type(self.request.body))
+            print(self.request.body)
             body = json.loads(self.request.body, strict=False)
             action = body["action"]
             repo_name = body['repository']['name']
