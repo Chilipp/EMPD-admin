@@ -93,10 +93,10 @@ def pr_info(local_repo):
             %s
             ```
 
-            Please only keep one of these files and not multiples.
+            Please only keep one of them and delete the other%s.
 
             Please ping `@Chilipp` if you believe this is a bug.
-            """) % meta
+            """) % (meta, 's' if len(meta.splitlines()) > 2 else '')
         status = 'failure'
 
         test_info = {'message': message,
@@ -121,7 +121,9 @@ def pr_info(local_repo):
         `<other words> @EMPD-admin --help`
         or
         `@EMPD-admin --help <other words>`
-        </sub>
+
+        Note that you can also run these tests on your local machine with
+        pytest.</sub>
         """).format(sha=sha, meta=osp.basename(meta))
 
     return {'message': message, 'status': 'pending', 'sha': sha}
@@ -212,7 +214,7 @@ def full_repo_test(local_repo):
 
     test_summary = '\n\n'.join(
         textwrap.dedent("""
-            ## {}
+            ## {}..{}
 
             {}
             <details><summary>Full test report</summary>
@@ -220,8 +222,9 @@ def full_repo_test(local_repo):
             ```
             {}
             ```
-            </details>""").format(key, log, md)
-        for key, (succes, md, log) in results.items())
+            </details>""").format(
+                key, "PASSED" if success else "FAILED", log, md)
+        for key, (success, md, log) in results.items())
 
     good = textwrap.dedent("""
         Hi! I'm your friendly automated EMPD-admin bot!
