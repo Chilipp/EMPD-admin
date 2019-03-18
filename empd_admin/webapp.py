@@ -20,6 +20,10 @@ class TestHookHandler(tornado.web.RequestHandler):
             repo_name = body['repository']['name']
             repo_url = body['repository']['clone_url']
             owner = body['repository']['owner']['login']
+            pr_repo = body['pull_request']['head']['repo']
+            pr_owner = pr_repo['owner']['login']
+            pr_repo = pr_repo['name']
+            pr_branch = body['pull_request']['head']['ref']
             pr_id = int(body['pull_request']['number'])
             is_open = body['pull_request']['state'] == 'open'
 
@@ -34,7 +38,8 @@ class TestHookHandler(tornado.web.RequestHandler):
 
                     # display information on the PR to the user
                     if not test_info:
-                        test_info = test.pr_info(tmp_dir)
+                        test_info = test.pr_info(tmp_dir, pr_owner, pr_repo,
+                                                 pr_branch)
                         if test_info:
                             msg = test.comment_on_pr(
                                 owner, repo_name, pr_id, test_info['message'],

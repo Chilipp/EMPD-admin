@@ -77,7 +77,7 @@ def run_test(meta, pytest_args=[], tests=['']):
     return success, stdout.decode('utf-8'), md_report
 
 
-def pr_info(local_repo):
+def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None):
     repo = Repo(local_repo)
     sha = repo.head.commit.hexsha
 
@@ -105,12 +105,20 @@ def pr_info(local_repo):
 
         return test_info
 
-    message = textwrap.dedent("""
+    meta = osp.basename(meta)
+
+    if pr_owner is None:
+        url = f'https://EMPD2.github.io/?commit={sha}&meta={meta}'
+    else:
+        url = (f'https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&'
+               f'branch={pr_branch}&meta={meta}')
+
+    message = textwrap.dedent(f"""
         Hi! I'm your friendly automated EMPD-admin bot!
 
         Thank you very much for your data submission! I will now run some tests on your data.
         In the meantime: please review your test data on the EMPD viewer using
-        this link: https://EMPD2.github.io/?commit={sha}&meta={meta}
+        this link: {url}
 
         This bot is helping you merging your data. I am checking for common issues and I can fix your climate, country or elevation data.
         Type `@EMPD-admin --help` in a new comment in this PR for usage information.
@@ -124,7 +132,7 @@ def pr_info(local_repo):
 
         Note that you can also run these tests on your local machine with
         pytest.</sub>
-        """).format(sha=sha, meta=osp.basename(meta))
+        """)
 
     return {'message': message, 'status': 'pending', 'sha': sha}
 
