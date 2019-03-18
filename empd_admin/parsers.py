@@ -189,7 +189,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                             {}
                             ```
                             </details>""").format(
-                                "PASSED" if success else "FAILED", log, md)
+                                "PASSED" if success else "FAILED", md, log)
                 # push new commits
                 if sum(1 for c in repo.iter_commits(
                         f'origin/{pr_branch}..{pr_branch}')):
