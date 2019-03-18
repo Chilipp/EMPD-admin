@@ -12,5 +12,4 @@ RUN git clone https://github.com/EMPD2/EMPD-test.git /opt/empd-admin/empd_admin/
 
 RUN pip install /opt/empd-admin
 
-USER empd-admin
 CMD python -m empd_admin.webapp
