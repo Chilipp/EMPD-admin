@@ -4,8 +4,65 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tempfile
+import textwrap
 
 import empd_admin.repo_test as test
+import empd_admin.parsers as parsers
+
+
+class CommandHookHandler(tornado.web.RequestHandler):
+    def post(self):
+        headers = self.request.headers
+        event = headers.get('X-GitHub-Event', None)
+
+        if event == 'ping':
+            self.write('pong')
+        elif event == 'pull_request_review' or event == 'pull_request' \
+                or event == 'pull_request_review_comment':
+            body = tornado.escape.json_decode(self.request.body)
+            action = body["action"]
+            repo_name = body['repository']['name']
+            owner = body['repository']['owner']['login']
+            # Only do anything if we are working with EMPD2
+            if owner != 'EMPD2':
+                return
+            pr_repo = body['pull_request']['head']['repo']
+            pr_owner = pr_repo['owner']['login']
+            pr_repo = pr_repo['name']
+            pr_branch = body['pull_request']['head']['ref']
+            pr_num = body['pull_request']['number']
+            comment = None
+            if event == 'pull_request_review' and action != 'dismissed':
+                comment = body['review']['body']
+            elif event == 'pull_request' and action in ['opened', 'edited',
+                                                        'reopened']:
+                comment = body['pull_request']['body']
+            elif (event == 'pull_request_review_comment' and
+                  action != 'deleted'):
+                comment = body['comment']['body']
+
+            if comment:
+                reports = []
+                for line in comment.splitlines():
+                    report = parsers.process_comment_line(
+                        line, pr_owner, pr_repo, pr_branch)
+                    if report:
+                        reports.append(report)
+                if reports:
+                    message = textwrap.dedent("""
+                    Hi! I'm your friendly automated EMPD-admin bot!
+
+                    I processed your command%s and hope that I can help you!
+                    """ % ('s' if len(reports) > 1 else ''))
+                    test.comment_on_pr(
+                        owner, repo_name, pr_num,
+                        message + '\n\n' + '\n---\n'.join(reports),
+                        force=True)
+
+        else:
+            print('Unhandled event "{}".'.format(event))
+            self.set_status(404)
+            self.write_error(404)
 
 
 class TestHookHandler(tornado.web.RequestHandler):
@@ -51,7 +108,7 @@ class TestHookHandler(tornado.web.RequestHandler):
                         # run the tests
                         test_info = test.full_repo_test(tmp_dir)
 
-                if test_info:
+                if test_info and test_info['status'] != 'skipped':
                     msg = test.comment_on_pr(
                         owner, repo_name, pr_id, test_info['message'])
                     test.set_pr_status(owner, repo_name, test_info,
@@ -65,6 +122,7 @@ class TestHookHandler(tornado.web.RequestHandler):
 def create_webapp():
     application = tornado.web.Application([
         (r"/empd-data/hook", TestHookHandler),
+        (r"/empd-admin-command/hook", CommandHookHandler),
     ])
     return application
 

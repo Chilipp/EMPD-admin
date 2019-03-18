@@ -48,7 +48,10 @@ def get_meta_file(dirname='.'):
                  if osp.isfile(f) and not f.startswith('.')]
         cmd = 'git diff origin/master --name-only --diff-filter=A'.split()
         meta = spr.check_output(cmd + files).decode('utf-8').strip()
-    return osp.join(dirname, meta or 'meta.tsv')
+        if meta:
+            return '\n'.join(osp.join(dirname, f) for f in meta.splitlines())
+
+    return osp.join(dirname, 'meta.tsv')
 
 
 def run_test(meta, pytest_args=[], tests=['']):
@@ -57,7 +60,10 @@ def run_test(meta, pytest_args=[], tests=['']):
             # to make sure that the test directory is writable, we copy it to
             # the directory for the report
             my_testdir = osp.join(report_dir, 'tests')
-            shutil.copytree(TESTDIR, my_testdir)
+            shutil.copytree(
+                TESTDIR, my_testdir,
+                ignore=lambda src, names: names if '__pycache__' in src else []
+                )
             os.environ['PYTHONUNBUFFERED'] = '1'  # turn off output buffering
             cmd = [os.getenv('PYTEST', 'pytest'), '-v',
                    '--empd-meta=' + meta,
@@ -137,7 +143,7 @@ def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None):
     return {'message': message, 'status': 'pending', 'sha': sha}
 
 
-def download_pr(repo_owner, repo_name, pr_id, target_dir):
+def download_pr(repo_owner, repo_name, pr_id, target_dir, force=False):
     gh = github.Github(os.environ['GH_TOKEN'])
 
     owner = gh.get_user(repo_owner)
@@ -174,14 +180,16 @@ def download_pr(repo_owner, repo_name, pr_id, target_dir):
     skip_msgs = [
         "[ci skip]",
         "[skip ci]",
-        "[lint skip]",
-        "[skip lint]",
+        "[admin skip]",
+        "[skip admin]",
     ]
     commit_msg = repo.commit(sha).message
     should_skip = any([msg in commit_msg for msg in skip_msgs])
-    if should_skip:
-        return {}        # Raise an error if the PR is not mergeable.
+    if not force and should_skip:
+        return {'status': 'skipped', 'message': 'skipped by commit msg',
+                'sha': sha}
 
+    # Raise an error if the PR is not mergeable.
     if not mergeable:
         message = textwrap.dedent("""
             Hi! I'm your friendly automated EMPD-admin bot!
