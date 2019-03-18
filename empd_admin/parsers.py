@@ -126,7 +126,6 @@ def setup_pytest_args(namespace):
 def process_comment(comment, pr_owner, pr_repo, pr_branch):
     reports = []
     for line in comment.splitlines():
-        print('processing ' + line)
         report = process_comment_line(line, pr_owner, pr_repo, pr_branch)
         if report:
             reports.append(report)
