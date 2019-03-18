@@ -156,9 +156,9 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
             ret += repr(e)
     else:
         if ns.parser == 'help':
-            ret += ns.format_help(ns.command)
+            ret += '```\n' + ns.format_help(ns.command) + '\n```'
         elif ns.parser is None:
-            ret += parser.format_help()
+            ret += '```\n' + parser.format_help() + '\n```'
         else:
             with tempfile.TemporaryDirectory('_empd') as tmpdir:
                 remote_url = ('https://EMPD-admin:%s@github.com/'
