@@ -5,7 +5,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tempfile
-import textwrap
+import github
 
 import empd_admin.repo_test as test
 import empd_admin.parsers as parsers
@@ -55,6 +55,7 @@ class CommandHookHandler(tornado.web.RequestHandler):
             action = body["action"]
             repo_name = body['repository']['name']
             owner = body['repository']['owner']['login']
+            issue_num = body['issue']['number']
 
             # Only do anything if we are working with conda-forge
             if owner != 'EMPD2':
@@ -63,17 +64,20 @@ class CommandHookHandler(tornado.web.RequestHandler):
             if "pull_request" in body["issue"]:
                 pull_request = True
             if pull_request and action != 'deleted':
-                pr_repo = body['pull_request']['head']['repo']
+                gh = github.Github(os.environ['GH_TOKEN'])
+                repo_owner = gh.get_user(owner)
+                remote_repo = repo_owner.get_repo(repo_name)
+                pull = remote_repo.get_pull(issue_num)
+                pr_repo = pull.raw_data['head']['repo']
                 pr_owner = pr_repo['owner']['login']
                 pr_repo = pr_repo['name']
-                pr_branch = body['pull_request']['head']['ref']
-                pr_num = body['pull_request']['number']
+                pr_branch = pull.raw_data['head']['ref']
                 comment = body['comment']['body']
                 message = parsers.process_comment(
                     comment, pr_owner, pr_repo, pr_branch)
                 if message:
                     test.comment_on_pr(
-                        owner, repo_name, pr_num, message, force=True)
+                        owner, repo_name, issue_num, message, force=True)
 
         else:
             print('Unhandled event "{}".'.format(event))
