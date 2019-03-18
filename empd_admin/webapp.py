@@ -57,7 +57,7 @@ class CommandHookHandler(tornado.web.RequestHandler):
             owner = body['repository']['owner']['login']
 
             # Only do anything if we are working with conda-forge
-            if owner != 'conda-forge':
+            if owner != 'EMPD2':
                 return
             pull_request = False
             if "pull_request" in body["issue"]:
