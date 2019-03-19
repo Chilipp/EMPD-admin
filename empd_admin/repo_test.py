@@ -80,7 +80,9 @@ def run_test(meta, pytest_args=[], tests=['']):
                     md_report = f.read()
             success = proc.returncode == 0
 
-    return success, stdout.decode('utf-8'), md_report
+    return (success,
+            stdout.decode('utf-8').replace(report_dir, TESTDIR),
+            md_report.replace(report_dir, TESTDIR))
 
 
 def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None):
@@ -212,6 +214,7 @@ def download_pr(repo_owner, repo_name, pr_id, target_dir, force=False):
 
 
 def full_repo_test(local_repo):
+    local_repo = osp.join(local_repo, '')
     repo = Repo(local_repo)
     sha = repo.head.commit.hexsha
 
@@ -239,7 +242,9 @@ def full_repo_test(local_repo):
             {}
             ```
             </details>""").format(
-                key, "PASSED" if success else "FAILED", log, md)
+                key, "PASSED" if success else "FAILED",
+                log.replace(local_repo, 'data/'),
+                md.replace(local_repo, 'data/'))
         for key, (success, md, log) in results.items())
 
     good = textwrap.dedent("""
@@ -247,7 +252,7 @@ def full_repo_test(local_repo):
 
         This is just to inform you that I tested your data submission in your PR (``%s``) and found it in an excellent condition!
 
-        """ % meta)
+        """ % osp.basename(meta))
 
     mixed = good + textwrap.dedent("""
         I just have some more information for you:
