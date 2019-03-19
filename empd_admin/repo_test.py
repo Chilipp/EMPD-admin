@@ -55,6 +55,10 @@ def get_meta_file(dirname='.'):
 
 
 def run_test(meta, pytest_args=[], tests=['']):
+
+    def replace_testdir(s):
+        return s.replace(my_testdir, TESTDIR).replace(my_testdir[1:], TESTDIR)
+
     with remember_env('PYTHONUNBUFFERED'):
         with tempfile.TemporaryDirectory('_test') as report_dir:
             # to make sure that the test directory is writable, we copy it to
@@ -80,9 +84,8 @@ def run_test(meta, pytest_args=[], tests=['']):
                     md_report = f.read()
             success = proc.returncode == 0
 
-    return (success,
-            stdout.decode('utf-8').replace(report_dir, TESTDIR),
-            md_report.replace(report_dir, TESTDIR))
+    return (success, replace_testdir(stdout.decode('utf-8')),
+            replace_testdir(md_report))
 
 
 def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None):
@@ -352,6 +355,8 @@ def test_repo_test(pr_id, tmpdir):
 
     assert test_info
     assert test_info['status'] == 'failure'
+    # make sure all temporary paths have been removed
+    assert 'tmp' not in test_info['message'], test_info['message']
 
 
 def test_pr_info(pr_id, tmpdir):
