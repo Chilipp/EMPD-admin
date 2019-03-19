@@ -25,6 +25,12 @@ def main():
     if args.parser == 'finish':
         from empd_admin.finish import finish_pr
         finish_pr(meta, commit=args.commit)
+    elif args.parser == 'accept':
+        from empd_admin.accept import accept
+        accept(meta, args.acceptable, not args.no_commit, raise_error=True)
+    elif args.parser == 'unaccept':
+        from empd_admin.accept import unaccept
+        unaccept(meta, args.unacceptable, not args.no_commit, raise_error=True)
     else:
         pytest_args, files = setup_pytest_args(args)
 

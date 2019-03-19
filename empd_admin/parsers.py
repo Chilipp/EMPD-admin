@@ -8,6 +8,9 @@ import tempfile
 import textwrap
 from git import Repo
 import empd_admin.repo_test as test
+from empd_admin.finish import finish_pr
+from empd_admin.accept import accept, unaccept
+
 
 parser_info = dict(exited=False, errored=False, exit_message='',
                    exit_status=0)
@@ -100,6 +103,40 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
 
     finish_parser.add_argument(
         '-c', '--commit', help=finish_help, action='store_true')
+
+    # accept parser
+    accept_parser = subparsers.add_parser(
+        'accept', help="Mark incomplete or erroneous meta data as accepted")
+
+    accept_parser.add_argument(
+        'acceptable', metavar='SampleName:Column', nargs='+',
+        type=lambda s: s.split(':'),
+        help=("The sample name and the column that should be accepted despite "
+              "being erroneous. For example use `my_sample_a1:Country` to not "
+              "check the `Country` column for the sample `my_sample_a1`. "
+              "`SampleName` might also be `all` to accept it for all samples.")
+        )
+
+    accept_parser.add_argument(
+        '--no-commit', action='store_true', help="Do not commit the changes")
+
+    # unaccept parser
+    unaccept_parser = subparsers.add_parser(
+        'unaccept',
+        help="Reverse the acceptance of incomplete or erroneous meta data.")
+
+    unaccept_parser.add_argument(
+        'unacceptable', metavar='SampleName:Column', nargs='+',
+        type=lambda s: s.split(':'),
+        help=("The sample name and the column that should be rejected if it is"
+              " erroneous. For example use `my_sample_a1:Country` to "
+              "check the `Country` column for the sample `my_sample_a1` again."
+              " `SampleName` and/or `Column` might also be `all` to enable the"
+              " tests for all the samples and/or meta data fields again.")
+        )
+
+    unaccept_parser.add_argument(
+        '--no-commit', action='store_true', help="Do not commit the changes")
 
     # help parser
     choices = subparsers.choices
@@ -212,8 +249,13 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                     "PASSED" if success else "FAILED",
                                     md.replace(tmpdir, 'data/'),
                                     log.replace(tmpdir, 'data/'))
+                        elif ns.parser == 'accept':
+                            ret += accept(meta, ns.acceptable,
+                                          not ns.no_commit)
+                        elif ns.parser == 'unaccept':
+                            ret += accept(meta, ns.unacceptable,
+                                          not ns.no_commit)
                         elif ns.parser == 'finish':
-                            from empd_admin.finish import finish_pr
                             try:
                                 finish_pr(meta, commit=ns.commit)
                             except Exception:
@@ -318,3 +360,19 @@ def test_finish():
                                'EMPD2', 'EMPD-data', 'test-data')
 
     assert "Tests failed after finishing the PR" in msg, msg
+
+
+def test_accept():
+    msg = process_comment_line(
+        '@EMPD-admin accept test_a1:Country --no-commit',
+        'EMPD2', 'EMPD-data', 'test-data')
+
+    assert 'test_a1' in msg and 'Country' in msg
+
+
+def test_unaccept():
+    msg = process_comment_line(
+        '@EMPD-admin unaccept test_a1:Country --no-commit',
+        'EMPD2', 'EMPD-data', 'test-data')
+
+    assert 'test_a1' in msg and 'Country' in msg
