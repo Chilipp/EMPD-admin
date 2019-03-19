@@ -230,7 +230,8 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                 if not ns.commit:
                                     # run the tests to check if everything
                                     # goes well
-                                    success, log, md = test.run_test(meta)
+                                    success, log, md = test.run_test(
+                                        osp.join(tmpdir, 'meta.tsv'))
                                     if success:
                                         ret += textwrap.dedent(f"""
                                             Finished the PR and everything went fine.
