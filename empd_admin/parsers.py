@@ -1,4 +1,5 @@
 # command line parser for the EMPD-admin
+import os
 import argparse
 import traceback
 import io
@@ -302,7 +303,8 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                             remote_url = ('https://EMPD-admin:%s@github.com/'
                                           f'{pr_owner}/{pr_repo}.git')
                             remote = repo.create_remote(
-                                'push_remote', remote_url)
+                                'push_remote',
+                                remote_url % os.environ['GH_TOKEN'])
                             remote.push()
     return ret
 
