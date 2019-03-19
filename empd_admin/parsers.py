@@ -251,10 +251,10 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                     log.replace(tmpdir, 'data/'))
                         elif ns.parser == 'accept':
                             ret += accept(meta, ns.acceptable,
-                                          not ns.no_commit)
+                                          not ns.no_commit) or ''
                         elif ns.parser == 'unaccept':
                             ret += accept(meta, ns.unacceptable,
-                                          not ns.no_commit)
+                                          not ns.no_commit) or ''
                         elif ns.parser == 'finish':
                             try:
                                 finish_pr(meta, commit=ns.commit)
