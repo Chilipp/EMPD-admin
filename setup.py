@@ -45,6 +45,7 @@ def main():
               'PyGithub',
               'gitpython',
               'pytest',
+              'pandas',
           ],
           classifiers=[
             'Development Status :: 2 - Pre-Alpha',

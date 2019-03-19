@@ -5,6 +5,7 @@ dependencies:
  - tornado
  - git
  - gitpython
+ - pandas
  - pytest
  - pip:
      - PyGithub
