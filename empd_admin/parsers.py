@@ -164,9 +164,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                 tmpdir = osp.join(tmpdir, '')
                 remote_url = ('https://github.com/'
                               f'{pr_owner}/{pr_repo}.git')
-                repo = Repo.clone_from(
-                    remote_url % os.getenv('GH_TOKEN'), tmpdir,
-                    branch=pr_branch)
+                repo = Repo.clone_from(remote_url, tmpdir, branch=pr_branch)
                 pytest_args, files = setup_pytest_args(ns)
 
                 try:
