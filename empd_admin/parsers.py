@@ -1,6 +1,7 @@
 # command line parser for the EMPD-admin
 import argparse
-import os
+import traceback
+import io
 import os.path as osp
 import shlex
 import tempfile
@@ -44,7 +45,7 @@ def get_parser():
     return parser
 
 
-def setup_subparsers(parser):
+def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
 
     subparsers = parser.add_subparsers(title='Commands', dest='parser')
 
@@ -80,8 +81,25 @@ def setup_subparsers(parser):
                   "names in their 'extra_keyword_matches' set, as well as"
                   'functions which have names assigned directly to them.'))
 
+    fix_help = "Do not commit the changes."
+    if pr_owner:
+        fix_help += (" If not set, changes are commited and pushed to the"
+                     f"{pr_branch} branch of {pr_owner}/{pr_repo}")
+
     fix_parser.add_argument(
-        '--no-commit', help="Do not commit the changes", action='store_true')
+        '--no-commit', help=fix_help, action='store_true')
+
+    # finish parser
+    finish_parser = subparsers.add_parser(
+        'finish', help='Finish this PR and merge the data into meta.tsv')
+
+    finish_help = "Commit the changes"
+    if pr_owner:
+        finish_help += (" and push them to the "
+                        f"{pr_branch} branch of {pr_owner}/{pr_repo}")
+
+    finish_parser.add_argument(
+        '-c', '--commit', help=finish_help, action='store_true')
 
     # help parser
     choices = subparsers.choices
@@ -143,7 +161,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
         return
     args = shlex.split(line)
     parser = WebParser('@EMPD-admin', add_help=False)
-    setup_subparsers(parser)
+    setup_subparsers(parser, pr_owner, pr_repo, pr_branch)
 
     ret = '> ' + line[len('@EMPD-admin'):] + '\n\n'
 
@@ -165,8 +183,6 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                 remote_url = ('https://github.com/'
                               f'{pr_owner}/{pr_repo}.git')
                 repo = Repo.clone_from(remote_url, tmpdir, branch=pr_branch)
-                pytest_args, files = setup_pytest_args(ns)
-
                 try:
                     meta = test.get_meta_file(tmpdir)
                 except Exception:
@@ -176,28 +192,75 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                         ret += "Found multiple potential meta files:\n"
                         ret += '\n'.join(map(osp.basename, meta.splitlines()))
                     else:
-                        success, log, md = test.run_test(
-                            meta, pytest_args, files)
-                        ret += textwrap.dedent("""
-                            {}
+                        if ns.parser in ['test', 'fix']:
+                            pytest_args, files = setup_pytest_args(ns)
 
-                            {}
-                            <details><summary>Full test report</summary>
+                            success, log, md = test.run_test(meta, pytest_args,
+                                                             files)
 
-                            ```
-                            {}
-                            ```
-                            </details>""").format(
-                                "PASSED" if success else "FAILED",
-                                md.replace(tmpdir, 'data/'),
-                                log.replace(tmpdir, 'data/'))
-                # push new commits
-                if sum(1 for c in repo.iter_commits(
-                        f'origin/{pr_branch}..{pr_branch}')):
-                    remote_url = ('https://EMPD-admin:%s@github.com/'
-                                  f'{pr_owner}/{pr_repo}.git')
-                    remote = repo.create_remote('push_remote', remote_url)
-                    remote.push()
+                            ret += textwrap.dedent("""
+                                {}
+
+                                {}
+                                <details><summary>Full test report</summary>
+
+                                ```
+                                {}
+                                ```
+                                </details>
+                                """).format(
+                                    "PASSED" if success else "FAILED",
+                                    md.replace(tmpdir, 'data/'),
+                                    log.replace(tmpdir, 'data/'))
+                        elif ns.parser == 'finish':
+                            from empd_admin.finish import finish_pr
+                            try:
+                                finish_pr(meta, commit=ns.commit)
+                            except Exception:
+                                s = io.StringIO()
+                                traceback.print_exc(file=s)
+
+                                ret += textwrap.dedent("""
+                                    Could not finish the PR!
+
+                                    ```
+                                    {}
+                                    ```""").format(s.getvalue())
+                            else:
+                                if not ns.commit:
+                                    # run the tests to check if everything
+                                    # goes well
+                                    success, log, md = test.run_test(meta)
+                                    if success:
+                                        ret += textwrap.dedent(f"""
+                                            Finished the PR and everything went fine.
+                                            Feel free to run `@EMPD-admin finish --commit` now to push everything to [{pr_owner}/{pr_repo}](https://github.com/{pr_owner}/{pr_repo})
+                                            """)
+                                    else:
+                                        ret += textwrap.dedent("""
+                                            Tests failed after finishing the PR!
+
+                                            {}
+                                            <details><summary>Full test report</summary>
+
+                                            ```
+                                            {}
+                                            ```
+                                            </details>
+                                            """).format(
+                                                md.replace(tmpdir, 'data/'),
+                                                log.replace(tmpdir, 'data/'))
+                                else:
+                                    ret += "Finished the PR. Feel free to merge it now.\n"
+
+                        # push new commits
+                        if sum(1 for c in repo.iter_commits(
+                                f'origin/{pr_branch}..{pr_branch}')):
+                            remote_url = ('https://EMPD-admin:%s@github.com/'
+                                          f'{pr_owner}/{pr_repo}.git')
+                            remote = repo.create_remote(
+                                'push_remote', remote_url)
+                            remote.push()
     return ret
 
 
@@ -247,3 +310,10 @@ def test_fix():
 
     assert 'fix_country' in msg
     assert 'fix_temperature' not in msg
+
+
+def test_finish():
+    msg = process_comment_line('@EMPD-admin finish',
+                               'EMPD2', 'EMPD-data', 'test-data')
+
+    assert "Tests failed after finishing the PR" in msg, msg

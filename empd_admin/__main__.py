@@ -1,6 +1,5 @@
 # Main module for the empd-admin
 from empd_admin.parsers import setup_pytest_args, get_parser
-from empd_admin.repo_test import get_meta_file, run_test
 
 
 def main():
@@ -12,6 +11,8 @@ def main():
     elif args.parser is None:
         parser.print_help()
         parser.exit()
+    else:
+        from empd_admin.repo_test import get_meta_file, run_test
 
     try:
         meta = get_meta_file(args.directory)
@@ -21,10 +22,14 @@ def main():
         if len(meta.splitlines()) > 1:
             raise IOError("Found multiple potential meta files:\n" + meta)
 
-    pytest_args, files = setup_pytest_args(args)
+    if args.parser == 'finish':
+        from empd_admin.finish import finish_pr
+        finish_pr(meta, commit=args.commit)
+    else:
+        pytest_args, files = setup_pytest_args(args)
 
-    success, report, md_report = run_test(meta, pytest_args, files)
-    print(report)
+        success, report, md_report = run_test(meta, pytest_args, files)
+        print(report)
 
 
 if __name__ == '__main__':
