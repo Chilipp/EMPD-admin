@@ -66,7 +66,7 @@ def setup_subparsers(parser):
                         "example: -m 'mark1 and not mark2'.'"),
             metavar='MARKEXPR')
         subparser.add_argument(
-            '-k', metavar='EXPRESSION',
+            'k', metavar='EXPRESSION', nargs='?',
             help=('only run tests which match the given substring'
                   'expression. An expression is a python evaluatable'
                   'expression where all names are substring-matched'
@@ -228,21 +228,21 @@ def test_help_test():
 
 
 def test_test_collect():
-    msg = process_comment_line('@EMPD-admin test -k precip --collect-only',
+    msg = process_comment_line('@EMPD-admin test precip --collect-only',
                                'EMPD2', 'EMPD-data', 'test-data')
     assert 'test_precip' in msg, msg
     assert 'test_temperature' not in msg
 
 
 def test_test():
-    msg = process_comment_line('@EMPD-admin test -k precip',
+    msg = process_comment_line('@EMPD-admin test precip',
                                'EMPD2', 'EMPD-data', 'test-data')
     assert 'test_precip' in msg
     assert 'test_temperature' not in msg
 
 
 def test_fix():
-    msg = process_comment_line('@EMPD-admin fix -k country --no-commit',
+    msg = process_comment_line('@EMPD-admin fix country --no-commit',
                                'EMPD2', 'EMPD-data', 'test-data')
 
     assert 'fix_country' in msg
