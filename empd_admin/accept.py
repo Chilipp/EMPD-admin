@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 
-def accept(meta, what, commit=True, raise_error=False):
+def accept(meta, what, commit=True, skip_ci=False, raise_error=False):
     repo = Repo(osp.dirname(meta))
     meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName')
     samples = np.unique([t[0] for t in what])
@@ -30,14 +30,14 @@ def accept(meta, what, commit=True, raise_error=False):
         if commit:
             meta_df.to_csv(meta, sep='\t')
             repo.index.add([osp.basename(meta)])
-            repo.index.commit(message)
+            repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
     if not commit:
         meta_df.to_csv(meta, sep='\t')
         return ("Marked the fields as accepted but without having it "
                 "commited")
 
 
-def unaccept(meta, what, commit=True, raise_error=False):
+def unaccept(meta, what, commit=True, skip_ci=False, raise_error=False):
     repo = Repo(osp.dirname(meta))
     meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName')
     samples = np.unique([t[0] for t in what])
@@ -73,7 +73,7 @@ def unaccept(meta, what, commit=True, raise_error=False):
         if commit and (old_okexcept != meta_df['okexcept']).any():
             meta_df.to_csv(meta, sep='\t')
             repo.index.add([osp.basename(meta)])
-            repo.index.commit(message)
+            repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
         old_okexcept = meta_df['okexcept'].copy(True)
     if not commit:
         meta_df.to_csv(meta, sep='\t')

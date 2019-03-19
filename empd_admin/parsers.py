@@ -85,14 +85,6 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
                   "names in their 'extra_keyword_matches' set, as well as"
                   'functions which have names assigned directly to them.'))
 
-    fix_help = "Do not commit the changes."
-    if pr_owner:
-        fix_help += (" If not set, changes are commited and pushed to the"
-                     f"{pr_branch} branch of {pr_owner}/{pr_repo}")
-
-    fix_parser.add_argument(
-        '--no-commit', help=fix_help, action='store_true')
-
     # finish parser
     finish_parser = subparsers.add_parser(
         'finish', help='Finish this PR and merge the data into meta.tsv')
@@ -118,9 +110,6 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
               "`SampleName` might also be `all` to accept it for all samples.")
         )
 
-    accept_parser.add_argument(
-        '--no-commit', action='store_true', help="Do not commit the changes")
-
     # unaccept parser
     unaccept_parser = subparsers.add_parser(
         'unaccept',
@@ -136,8 +125,20 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
               " tests for all the samples and/or meta data fields again.")
         )
 
-    unaccept_parser.add_argument(
-        '--no-commit', action='store_true', help="Do not commit the changes")
+    no_commit_help = "Do not commit the changes."
+    if pr_owner:
+        no_commit_help += (
+            " If not set, changes are commited and pushed to the"
+            f"{pr_branch} branch of {pr_owner}/{pr_repo}")
+
+    for subparser in [accept_parser, unaccept_parser, fix_parser]:
+        subparser.add_argument(
+            '--no-commit', action='store_true', help=no_commit_help)
+        subparser.add_argument(
+            '--skip-ci', action='store_true',
+            help=("Do not build the commits with the continous integration. "
+                  "Has no effect if the `--no-commit` argument is passed as "
+                  "well."))
 
     # help parser
     choices = subparsers.choices
@@ -173,6 +174,8 @@ def setup_pytest_args(namespace):
         pytest_args.append('--collect-only')
     if namespace.exitfirst:
         pytest_args.append('-x')
+    if namespace.skip_ci:
+        pytest_args.append('--skip-ci')
 
     files = ['fixes.py'] if namespace.parser == 'fix' else ['']
 
@@ -252,11 +255,11 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                     log.replace(tmpdir, 'data/'))
                         elif ns.parser == 'accept':
                             msg = accept(meta, ns.acceptable,
-                                         not ns.no_commit)
+                                         not ns.no_commit, ns.skip_ci)
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'unaccept':
                             msg = unaccept(meta, ns.unacceptable,
-                                           not ns.no_commit)
+                                           not ns.no_commit, ns.skip_ci)
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'finish':
                             try:

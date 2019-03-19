@@ -29,4 +29,4 @@ def finish_pr(meta, commit=True):
         repo = Repo(local_repo)
         repo.index.add(
             [osp.basename(meta), 'meta.tsv'])
-        repo.index.commit(f"Merged {meta} into meta.tsv")
+        repo.index.commit(f"Merged {meta} into meta.tsv [skip ci]")
