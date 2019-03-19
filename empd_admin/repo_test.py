@@ -132,14 +132,14 @@ def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None):
         this link: {url}
 
         This bot is helping you merging your data. I am checking for common issues and I can fix your climate, country or elevation data.
-        Type `@EMPD-admin --help` in a new comment in this PR for usage information.
+        Type `@EMPD-admin help` in a new comment in this PR for usage information.
 
         <sub>Make sure, that all the commands for the `@EMPD-admin` are on one single line and nothing else. Only
-        `@EMPD-admin --help`
+        `@EMPD-admin help`
         will work, not something like
-        `<other words> @EMPD-admin --help`
+        `<other words> @EMPD-admin help`
         or
-        `@EMPD-admin --help <other words>`
+        `@EMPD-admin help <other words>`
 
         Note that you can also run these tests on your local machine with
         pytest.</sub>
