@@ -161,7 +161,8 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
             ret += '```\n' + parser.format_help() + '```'
         else:
             with tempfile.TemporaryDirectory('_empd') as tmpdir:
-                remote_url = ('https://EMPD-admin:%s@github.com/'
+                tmpdir = osp.join(tmpdir, '')
+                remote_url = ('https://github.com/'
                               f'{pr_owner}/{pr_repo}.git')
                 repo = Repo.clone_from(
                     remote_url % os.getenv('GH_TOKEN'), tmpdir,
@@ -195,7 +196,10 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                 # push new commits
                 if sum(1 for c in repo.iter_commits(
                         f'origin/{pr_branch}..{pr_branch}')):
-                    repo.remotes('origin').push()
+                    remote_url = ('https://EMPD-admin:%s@github.com/'
+                                  f'{pr_owner}/{pr_repo}.git')
+                    remote = repo.create_remote('push_remote', remote_url)
+                    remote.push()
     return ret
 
 
