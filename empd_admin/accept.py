@@ -19,6 +19,8 @@ def accept(meta, what, commit=True, skip_ci=False, raise_error=False):
             return msg
     if 'okexcept' not in meta_df.columns:
         meta_df['okexcept'] = ''
+    else:
+        meta_df['okexcept'] = meta_df.okexcept.fillna('')
     for sample, column in what:
         if sample == 'all':
             meta_df.loc[:, 'okexcept'] += column + ','
@@ -49,8 +51,8 @@ def unaccept(meta, what, commit=True, skip_ci=False, raise_error=False):
             raise ValueError(msg)
         else:
             return msg
-    if 'okexcept' not in meta_df.columns:
-        return  # everything is not accepted already
+    if 'okexcept' not in meta_df.columns or not meta_df.okexcept.any():
+        return  # no failures are already
     old_okexcept = meta_df.okexcept.copy(True)
     for sample, column in what:
         if sample == 'all':

@@ -379,7 +379,7 @@ def test_accept():
 
 def test_unaccept():
     msg = process_comment_line(
-        '@EMPD-admin unaccept test_a1:Country --no-commit',
+        '@EMPD-admin unaccept test_a2:Country --no-commit',
         'EMPD2', 'EMPD-data', 'test-data')
 
-    assert 'test_a1' in msg and 'Country' in msg
+    assert 'test_a2' in msg and 'Country' in msg
