@@ -168,14 +168,14 @@ def setup_pytest_args(namespace):
         pytest_args.extend(['-m', 'dbfix', '--fix-db'])
         if not namespace.no_commit:
             pytest_args.append('--commit')
+        if namespace.skip_ci:
+            pytest_args.append('--skip-ci')
     if namespace.k:
         pytest_args.extend(['-k', namespace.k])
     if namespace.collect_only:
         pytest_args.append('--collect-only')
     if namespace.exitfirst:
         pytest_args.append('-x')
-    if namespace.skip_ci:
-        pytest_args.append('--skip-ci')
 
     files = ['fixes.py'] if namespace.parser == 'fix' else ['']
 
