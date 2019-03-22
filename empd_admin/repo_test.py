@@ -1,3 +1,4 @@
+import sys
 import os
 import os.path as osp
 import contextlib
@@ -14,6 +15,8 @@ from git import GitCommandError, Repo
 
 
 TESTDIR = osp.join(osp.dirname(__file__), 'data-tests')
+
+SQLSCRIPTS = osp.join(osp.dirname(__file__), 'data', 'postgres', 'scripts')
 
 
 @contextlib.contextmanager
@@ -38,6 +41,25 @@ def remember_env(key):
             os.environ[key] = val
 
 
+@contextlib.contextmanager
+def temporary_database(name=None):
+    import psycopg2 as psql
+    from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+    dbname = name or osp.basename(tempfile.mkdtemp('_empd'))
+    base_url = os.getenv('DATABASE_URL', 'postgres://postgres@localhost/')
+    conn = psql.connect(osp.join(base_url, 'postgres'))
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = conn.cursor()
+    cursor.execute('CREATE DATABASE ' + dbname)
+    conn.commit()
+    try:
+        yield osp.join(base_url, dbname)
+    finally:
+        cursor.execute('DROP DATABASE ' + dbname)
+        conn.commit()
+        conn.close()
+
+
 def get_meta_file(dirname='.'):
     if not osp.exists(osp.join(dirname, 'meta.tsv')):
         raise ValueError(
@@ -52,6 +74,40 @@ def get_meta_file(dirname='.'):
             return '\n'.join(osp.join(dirname, f) for f in meta.splitlines())
 
     return osp.join(dirname, 'meta.tsv')
+
+
+def import_database(meta, dbname=None, commit=False):
+    with temporary_database(dbname) as db_url:
+
+        # populate database
+        spr.check_call(['psql', db_url, '-q', '-f',
+                        osp.join(SQLSCRIPTS, 'create_empd2.sql')])
+        spr.check_call([
+            sys.executable, osp.join(SQLSCRIPTS, 'makeFixedTables.py'),
+            db_url])
+
+        # import the data
+        cmd = [sys.executable, osp.join(SQLSCRIPTS, 'import_into_empd2.py'),
+               meta, '--database-url', db_url]
+
+        print("Importing in %s with %s" % (dbname, ' '.join(cmd)))
+        proc = spr.Popen(cmd, stdout=spr.PIPE, stderr=spr.STDOUT)
+        stdout, stderr = proc.communicate()
+        success = proc.returncode == 0
+
+        if success and commit:
+            sql_dump = osp.join(osp.dirname(meta), 'postgres',
+                                osp.splitext(osp.basename(meta))[0])
+            with open(sql_dump, 'w') as f:
+                proc = spr.Popen(['pg_dump', db_url], stdout=f)
+                stdout, stderr = proc.communicate()
+                success = proc.returncode == 0
+            if success:
+                repo = Repo(osp.dirname(meta))
+                repo.index.add(sql_dump)
+                repo.index.commit('Added postgres dump')
+
+    return success, stdout.decode('utf-8')
 
 
 def run_test(meta, pytest_args=[], tests=['']):
@@ -279,6 +335,24 @@ def full_repo_test(local_repo):
         status = 'good'
         message = good
 
+    if status in ['mixed', 'good']:
+        # test the import into postgres
+        success, log = import_database(meta)
+        if not success:
+            message += '\n\n' + textwrap.dedent("""
+                ## Postgres import
+
+                I tried to import your data into the postgres database, but
+                did not success!
+
+                <details>
+
+                ```
+                {}
+                ```
+                </details>
+                """).format(log.replace(local_repo, 'data/'))
+
     return {'message': message, 'status': status, 'sha': sha}
 
 
@@ -368,3 +442,9 @@ def test_pr_info(pr_id, tmpdir):
 
     assert test_info
     assert test_info['status'] == 'pending'
+
+
+def test_import_database(local_repo):
+    repo_dir = local_repo.working_dir
+    success, log = import_database(osp.join(repo_dir, 'test.tsv'))
+    assert success, log
