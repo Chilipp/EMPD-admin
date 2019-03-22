@@ -37,7 +37,7 @@ def main():
               console_scripts=['empd-admin = empd_admin.__main__:main']),
           packages=find_packages(),
           package_data={'empd_admin': [
-              osp.join('empd_admin', 'data-tests', '*.py'),
+              osp.join('empd_admin', 'data', 'tests', '*.py'),
               osp.join('empd_admin', 'data', 'postgres', 'scripts', '*.py'),
               osp.join('empd_admin', 'data', 'postgres', 'scripts', '*.sql'),
               ]},

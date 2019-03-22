@@ -1,5 +1,5 @@
 include README.rst
 include LICENSE
-include empd_admin/data-tests/*.py
+include empd_admin/data/tests/*.py
 include empd_admin/data/postgres/scripts/*.py
 include empd_admin/data/postgres/scripts/*.sql

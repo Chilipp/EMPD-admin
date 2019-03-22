@@ -14,7 +14,7 @@ from collections import OrderedDict
 from git import GitCommandError, Repo
 
 
-TESTDIR = osp.join(osp.dirname(__file__), 'data-tests')
+TESTDIR = osp.join(osp.dirname(__file__), 'data', 'tests')
 
 SQLSCRIPTS = osp.join(osp.dirname(__file__), 'data', 'postgres', 'scripts')
 

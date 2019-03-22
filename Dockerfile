@@ -11,11 +11,8 @@ RUN conda env update -f /tmp/environment.yml -n base && \
 
 ADD ./ /opt/empd-admin
 
-# clone the EMPD-tests repository if not existent
-RUN git clone https://github.com/EMPD2/EMPD-test.git /opt/empd-admin/empd_admin/data-tests || :
-
 # clone the EMPD-data repository if not existent
-RUN git clone https://github.com/EMPD2/EMPD-data.git /opt/empd-admin/empd_admin/data || :
+RUN git clone --recursive https://github.com/EMPD2/EMPD-data.git /opt/empd-admin/empd_admin/data || :
 
 RUN pip install /opt/empd-admin
 
