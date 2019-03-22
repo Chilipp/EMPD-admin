@@ -42,22 +42,27 @@ def remember_env(key):
 
 
 @contextlib.contextmanager
-def temporary_database(name=None):
+def temporary_database(dbname=None):
     import psycopg2 as psql
     from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-    dbname = name or osp.basename(tempfile.mkdtemp('_empd'))
     base_url = os.getenv('DATABASE_URL', 'postgres://postgres@localhost/')
-    conn = psql.connect(osp.join(base_url, 'postgres'))
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cursor = conn.cursor()
-    cursor.execute('CREATE DATABASE ' + dbname)
-    conn.commit()
-    try:
+    if dbname is not None:
         yield osp.join(base_url, dbname)
-    finally:
-        cursor.execute('DROP DATABASE ' + dbname)
+    else:
+        tmpdir = tempfile.mkdtemp('_empd')
+        dbname = osp.basename(tmpdir)
+        conn = psql.connect(osp.join(base_url, 'postgres'))
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor = conn.cursor()
+        cursor.execute('CREATE DATABASE ' + dbname)
         conn.commit()
-        conn.close()
+        try:
+            yield osp.join(base_url, dbname)
+        finally:
+            cursor.execute('DROP DATABASE ' + dbname)
+            conn.commit()
+            conn.close()
+            os.rmdir(tmpdir)
 
 
 def get_meta_file(dirname='.'):
@@ -76,15 +81,34 @@ def get_meta_file(dirname='.'):
     return osp.join(dirname, 'meta.tsv')
 
 
-def import_database(meta, dbname=None, commit=False):
+def import_database(meta, dbname=None, commit=False, populate=None):
     with temporary_database(dbname) as db_url:
 
-        # populate database
-        spr.check_call(['psql', db_url, '-q', '-f',
-                        osp.join(SQLSCRIPTS, 'create_empd2.sql')])
-        spr.check_call([
-            sys.executable, osp.join(SQLSCRIPTS, 'makeFixedTables.py'),
-            db_url])
+        # populate temporary database
+        create_tables = fill_tables = True
+
+        if dbname is not None and populate is None:
+            import psycopg2 as psql
+            with psql.connect(db_url) as conn:
+                cursor = conn.cursor()
+                try:
+                    cursor.execute("SELECT * FROM countries")
+                except psql.ProgrammingError:
+                    populate = True
+                else:
+                    conn.commit()
+                    res = cursor.fetchall()
+                    create_tables = False
+                    fill_tables = not bool(res)
+                    populate = fill_tables
+        if dbname is None or populate:
+            if create_tables:
+                spr.check_call(['psql', db_url, '-q', '-f',
+                                osp.join(SQLSCRIPTS, 'create_empd2.sql')])
+            if fill_tables:
+                spr.check_call([
+                    sys.executable, osp.join(SQLSCRIPTS, 'makeFixedTables.py'),
+                    db_url])
 
         # import the data
         cmd = [sys.executable, osp.join(SQLSCRIPTS, 'import_into_empd2.py'),
@@ -95,9 +119,18 @@ def import_database(meta, dbname=None, commit=False):
         stdout, stderr = proc.communicate()
         success = proc.returncode == 0
 
+        sql_dump = None
+
         if success and commit:
+            if dbname:
+                meta_base = dbname
+            elif osp.basename(meta) == 'meta.tsv':
+                meta_base = "EMPD2"
+            else:
+                meta_base = osp.splitext(osp.basename(meta))[0]
+
             sql_dump = osp.join(osp.dirname(meta), 'postgres',
-                                osp.splitext(osp.basename(meta))[0] + '.sql')
+                                meta_base + '.sql')
             with open(sql_dump, 'w') as f:
                 proc = spr.Popen(['pg_dump', db_url], stdout=f)
                 proc.communicate()
@@ -108,7 +141,7 @@ def import_database(meta, dbname=None, commit=False):
                 repo.index.commit(
                     'Added postgres dump for %s' % osp.basename(meta))
 
-    return success, stdout.decode('utf-8')
+    return success, stdout.decode('utf-8'), sql_dump
 
 
 def run_test(meta, pytest_args=[], tests=['']):
@@ -152,6 +185,7 @@ def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None):
     meta = get_meta_file(local_repo)
 
     if len(meta.splitlines()) > 1:
+        meta = '\n'.join(map(osp.basename, meta.splitlines()))
         message = textwrap.dedent("""
             Hi! I'm your friendly automated EMPD-admin bot!
 
@@ -447,5 +481,5 @@ def test_pr_info(pr_id, tmpdir):
 
 def test_import_database(local_repo):
     repo_dir = local_repo.working_dir
-    success, log = import_database(osp.join(repo_dir, 'test.tsv'))
+    success, log, sql_dump = import_database(osp.join(repo_dir, 'test.tsv'))
     assert success, log

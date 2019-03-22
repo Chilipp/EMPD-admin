@@ -89,9 +89,27 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
         '--maxfail', metavar='num', default=20, type=int,
         help="exit after first num failures or errors.")
 
+    # createdb parser
+    createdb_parser = subparsers.add_parser(
+        'createdb', help='Create a postgres database out of the data',
+        add_help=False)
+
+    commit_help = "Dump the postgres database into a .sql file"
+    if pr_owner:
+        commit_help += (" and push it to the "
+                        f"{pr_branch} branch of {pr_owner}/{pr_repo}")
+    else:
+        createdb_parser.add_argument(
+            '-db', '--database',
+            help=("The name of the database. If not given, a temporary "
+                  "database will be created and deleted afterwards."))
+    createdb_parser.add_argument(
+        '-c', '--commit', action='store_true', help=commit_help)
+
     # finish parser
     finish_parser = subparsers.add_parser(
-        'finish', help='Finish this PR and merge the data into meta.tsv')
+        'finish', help='Finish this PR and merge the data into meta.tsv',
+        add_help=False)
 
     finish_help = "Commit the changes"
     if pr_owner:
@@ -103,7 +121,8 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
 
     # accept parser
     accept_parser = subparsers.add_parser(
-        'accept', help="Mark incomplete or erroneous meta data as accepted")
+        'accept', help="Mark incomplete or erroneous meta data as accepted",
+        add_help=False)
 
     accept_parser.add_argument(
         'acceptable', metavar='SampleName:Column', nargs='+',
@@ -117,7 +136,8 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
     # unaccept parser
     unaccept_parser = subparsers.add_parser(
         'unaccept',
-        help="Reverse the acceptance of incomplete or erroneous meta data.")
+        help="Reverse the acceptance of incomplete or erroneous meta data.",
+        add_help=False)
 
     unaccept_parser.add_argument(
         'unacceptable', metavar='SampleName:Column', nargs='+',
@@ -267,6 +287,18 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                             msg = unaccept(meta, ns.unacceptable,
                                            not ns.no_commit, ns.skip_ci)
                             ret = ret + msg if msg else ''
+                        elif ns.parser == 'createdb':
+                            success, msg, sql_dump = test.import_database(
+                                meta, commit=ns.commit)
+                            if success:
+                                ret += "Postgres import succeded "
+                                if sql_dump:
+                                    ret += ("and dumped into "
+                                            "postgres/%s.sql." % sql_dump)
+
+                                else:
+                                    ret += "(but has not been commited)."
+                            ret = ret + msg if msg else ''
                         elif ns.parser == 'finish':
                             try:
                                 finish_pr(meta, commit=ns.commit)
@@ -280,6 +312,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                     ```
                                     {}
                                     ```""").format(s.getvalue())
+                                ns.commit = False
                             else:
                                 if not ns.commit:
                                     # run the tests to check if everything
@@ -306,11 +339,20 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                                 md.replace(tmpdir, 'data/'),
                                                 log.replace(tmpdir, 'data/'))
                                 else:
-                                    ret += "Finished the PR. Feel free to merge it now.\n"
+                                    ret += textwrap.dedent(f"""
+                                        Finished the PR!
+
+                                        You may want to have a final look into the viewer (https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}) and then merge it.
+                                        """)
 
                         # push new commits
-                        if sum(1 for c in repo.iter_commits(
-                                f'origin/{pr_branch}..{pr_branch}')):
+                        push2remote = (
+                            getattr(ns, 'commit', not getattr(
+                                ns, 'no_commit', False)) and
+                            sum(1 for c in repo.iter_commits(
+                                f'origin/{pr_branch}..{pr_branch}'))
+                            )
+                        if push2remote:
                             remote_url = ('https://EMPD-admin:%s@github.com/'
                                           f'{pr_owner}/{pr_repo}.git')
                             remote = repo.create_remote(

@@ -1,4 +1,5 @@
 # Main module for the empd-admin
+import sys
 from empd_admin.parsers import setup_pytest_args, get_parser
 
 
@@ -12,7 +13,8 @@ def main():
         parser.print_help()
         parser.exit()
     else:
-        from empd_admin.repo_test import get_meta_file, run_test
+        from empd_admin.repo_test import \
+            get_meta_file, run_test, import_database
 
     try:
         meta = get_meta_file(args.directory)
@@ -31,11 +33,19 @@ def main():
     elif args.parser == 'unaccept':
         from empd_admin.accept import unaccept
         unaccept(meta, args.unacceptable, not args.no_commit, raise_error=True)
+    elif args.parser == 'createdb':
+        success, report, sql_dump = import_database(
+            meta, dbname=args.database, commit=args.commit)
+        print(report)
+        if not success:
+            sys.exit(1)
     else:
         pytest_args, files = setup_pytest_args(args)
 
         success, report, md_report = run_test(meta, pytest_args, files)
         print(report)
+        if not success:
+            sys.exit(1)
 
 
 if __name__ == '__main__':
