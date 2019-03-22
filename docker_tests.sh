@@ -6,6 +6,7 @@
 #
 #     docker run empd2/empd-admin test-empd-admin
 start_pg_server
+git config --global user.name "EMPD-admin"
 /opt/test-env/bin/pip install --user gitpython PyGithub xlrd openpyxl
 cd /opt/empd-admin
 /opt/test-env/bin/py.test $@

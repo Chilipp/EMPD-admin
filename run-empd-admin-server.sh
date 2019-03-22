@@ -10,6 +10,8 @@ curl -fsSL https://raw.githubusercontent.com/EMPD2/EMPD-data/master/postgres/EMP
 # activate conda
 conda -h > /dev/null || source /root/.bashrc
 
+git config --global user.name "EMPD-admin"
+
 # start the webapp
 echo 'Starting EMPD-admin webapp...'
 python -m empd_admin.webapp
