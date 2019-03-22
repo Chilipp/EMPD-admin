@@ -85,6 +85,10 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
                   "names in their 'extra_keyword_matches' set, as well as"
                   'functions which have names assigned directly to them.'))
 
+    test_parser.add_argument(
+        '--maxfail', metavar='num', default=20, type=int,
+        help="exit after first num failures or errors.")
+
     # finish parser
     finish_parser = subparsers.add_parser(
         'finish', help='Finish this PR and merge the data into meta.tsv')
@@ -176,6 +180,8 @@ def setup_pytest_args(namespace):
         pytest_args.append('--collect-only')
     if namespace.exitfirst:
         pytest_args.append('-x')
+    if getattr(namespace, 'maxfail', None) is not None:
+        pytest_args.append('--maxfail=%i' % namespace.maxfail)
 
     files = ['fixes.py'] if namespace.parser == 'fix' else ['']
 
