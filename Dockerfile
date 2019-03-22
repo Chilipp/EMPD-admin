@@ -9,7 +9,7 @@ COPY ./environment.yml /tmp/environment.yml
 RUN conda env update -f /tmp/environment.yml -n base && \
     conda clean --yes --all
 
-COPY ./ /opt/empd-admin
+ADD ./ /opt/empd-admin
 
 # clone the EMPD-tests repository if not existent
 RUN git clone https://github.com/EMPD2/EMPD-test.git /opt/empd-admin/empd_admin/data-tests || :
@@ -20,6 +20,7 @@ RUN git clone https://github.com/EMPD2/EMPD-data.git /opt/empd-admin/empd_admin/
 RUN pip install /opt/empd-admin
 
 COPY run-empd-admin-server.sh /usr/local/bin/run-empd-admin-server
+COPY docker_tests.sh /usr/local/bin/test-empd-admin
 
 # download and verify tini
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/local/bin/tini
