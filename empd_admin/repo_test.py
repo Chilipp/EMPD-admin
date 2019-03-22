@@ -97,15 +97,16 @@ def import_database(meta, dbname=None, commit=False):
 
         if success and commit:
             sql_dump = osp.join(osp.dirname(meta), 'postgres',
-                                osp.splitext(osp.basename(meta))[0])
+                                osp.splitext(osp.basename(meta))[0] + '.sql')
             with open(sql_dump, 'w') as f:
                 proc = spr.Popen(['pg_dump', db_url], stdout=f)
-                stdout, stderr = proc.communicate()
+                proc.communicate()
                 success = proc.returncode == 0
             if success:
                 repo = Repo(osp.dirname(meta))
-                repo.index.add(sql_dump)
-                repo.index.commit('Added postgres dump')
+                repo.index.add([osp.join('postgres', osp.basename(sql_dump))])
+                repo.index.commit(
+                    'Added postgres dump for %s' % osp.basename(meta))
 
     return success, stdout.decode('utf-8')
 
