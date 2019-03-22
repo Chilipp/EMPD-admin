@@ -90,7 +90,7 @@ def import_database(meta, dbname=None, commit=False):
         cmd = [sys.executable, osp.join(SQLSCRIPTS, 'import_into_empd2.py'),
                meta, '--database-url', db_url]
 
-        print("Importing in %s with %s" % (dbname, ' '.join(cmd)))
+        print("Importing in %s with %s" % (db_url, ' '.join(cmd)))
         proc = spr.Popen(cmd, stdout=spr.PIPE, stderr=spr.STDOUT)
         stdout, stderr = proc.communicate()
         success = proc.returncode == 0
