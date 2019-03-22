@@ -48,6 +48,7 @@ def main():
               'gitpython',
               'pytest',
               'pandas',
+              'xlrd',
           ],
           classifiers=[
             'Development Status :: 2 - Pre-Alpha',
