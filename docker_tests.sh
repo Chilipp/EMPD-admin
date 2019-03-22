@@ -8,4 +8,4 @@
 start_pg_server
 /opt/test-env/bin/pip install --user gitpython PyGithub xlrd openpyxl
 cd /opt/empd-admin
-/opt/test-env/bin/py.test -v
+/opt/test-env/bin/py.test $@
