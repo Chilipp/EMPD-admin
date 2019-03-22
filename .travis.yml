@@ -12,7 +12,7 @@ install:
     - echo GH_TOKEN=$GH_TOKEN > env.list
 
 script:
-    - docker run --env-file env.list empd2/empd-admin /bin/bash -c "start_pg_server && /opt/test-env/bin/pip install --user gitpython PyGithub && cd /opt/empd-admin && /opt/test-env/bin/py.test -v"
+    - docker run --env-file env.list empd2/empd-admin test-empd-admin 
 
 before_deploy:
     - rm env.list
