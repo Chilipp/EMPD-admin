@@ -440,8 +440,8 @@ def test_fix():
     msg = process_comment_line('@EMPD-admin fix country --no-commit',
                                'EMPD2', 'EMPD-data', 'test-data')
 
-    assert 'fix_country' in msg
-    assert 'fix_temperature' not in msg
+    assert 'fix_country' in msg, 'Wrong message:\n' + msg
+    assert 'fix_temperature' not in msg, 'Wrong message:\n' + msg
 
 
 def test_finish():
