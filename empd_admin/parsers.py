@@ -9,7 +9,7 @@ import tempfile
 import textwrap
 from git import Repo
 import empd_admin.repo_test as test
-from empd_admin.finish import finish_pr
+from empd_admin.finish import finish_pr, rebase_master
 from empd_admin.accept import accept, unaccept
 
 
@@ -105,6 +105,17 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
                   "database will be created and deleted afterwards."))
     createdb_parser.add_argument(
         '-c', '--commit', action='store_true', help=commit_help)
+
+    # rebase parser
+    rebase_parser = subparsers.add_parser(
+        'rebase', add_help=True,
+        help=("Merge the master branch of EMPD2/EMPD-data into the current "
+              "branch to resolve merge conflicts"))
+
+    if pr_owner:
+        rebase_parser.add_argument(
+            '--no-commit', help=("Perform the merge but do not push it to "
+                                 f"{pr_owner}/{pr_repo}"))
 
     # finish parser
     finish_parser = subparsers.add_parser(
@@ -299,6 +310,22 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                 else:
                                     ret += "(but has not been commited)."
                             ret = ret + msg if msg else ''
+                        elif ns.parser == 'rebase':
+                            try:
+                                rebase_master(meta)
+                            except Exception:
+                                s = io.StringIO()
+                                traceback.print_exc(file=s)
+
+                                ret += textwrap.dedent(f"""
+                                    Sorry but I could not rebase {pr_owner}/{pr_repo} on EMPD2/EMPD-data because of the following Exception:
+
+                                    ```
+                                    {{}}
+                                    ```
+
+                                    If you don't know, what is wrong here, you should ping `@Chilipp`.""").format(s.getvalue())
+                                ns.no_commit = True
                         elif ns.parser == 'finish':
                             try:
                                 finish_pr(meta, commit=ns.commit)
@@ -307,11 +334,13 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                 traceback.print_exc(file=s)
 
                                 ret += textwrap.dedent("""
-                                    Could not finish the PR!
+                                    Sorry but I could not finish the PR because of the following exception:
 
                                     ```
-                                    {}
-                                    ```""").format(s.getvalue())
+                                    {{}}
+                                    ```
+
+                                    If you don't know, what is wrong here, you should ping `@Chilipp`.""").format(s.getvalue())
                                 ns.commit = False
                             else:
                                 if not ns.commit:

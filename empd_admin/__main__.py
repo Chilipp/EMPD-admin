@@ -27,6 +27,9 @@ def main():
     if args.parser == 'finish':
         from empd_admin.finish import finish_pr
         finish_pr(meta, commit=args.commit)
+    elif args.parser == 'rebase':
+        from empd_admin.finish import rebase_master
+        rebase_master(meta)
     elif args.parser == 'accept':
         from empd_admin.accept import accept
         accept(meta, args.acceptable, not args.no_commit, raise_error=True)
