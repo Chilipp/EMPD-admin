@@ -291,9 +291,11 @@ def download_pr(repo_owner, repo_name, pr_id, target_dir, force=False):
             Hi! I'm your friendly automated EMPD-admin bot!
 
             I was trying to test your data submission, but it appears we have a merge conflict.
-            Please try to merge or rebase with the base branch to resolve this conflict.
+            If you want me to fix this, just write
+            `@EMPD-admin rebase`
+            and I will rebase your pull request on the master branch of [EMPD2/EMPD-data](https://github.com/EMPD2/EMPD-data).
 
-            Please ping `@Chilipp` if you believe this is a bug.
+            Otherwise, please ping `@Chilipp` if you believe this is a bug.
             """)
         status = 'merge_conflict'
 
