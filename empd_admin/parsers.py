@@ -327,7 +327,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                     If you don't know, what is wrong here, you should ping `@Chilipp`.""").format(s.getvalue())
                                 ns.no_commit = True
                             else:
-                                ret += "I successfully rebased {pr_owner}/{pr_repo}:{pr_branch} on EMPD2/EMPD-data:master"
+                                ret += f"I successfully rebased {pr_owner}/{pr_repo}:{pr_branch} on EMPD2/EMPD-data:master"
                                 if ns.no_commit:
                                     ret += f" (but did not push to {pr_owner}/{pr_repo})"
                                 ret += "."
