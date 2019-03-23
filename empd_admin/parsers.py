@@ -114,8 +114,9 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
 
     if pr_owner:
         rebase_parser.add_argument(
-            '--no-commit', help=("Perform the merge but do not push it to "
-                                 f"{pr_owner}/{pr_repo}"))
+            '--no-commit', action='store_true',
+            help=("Perform the merge but do not push it to "
+                  f"{pr_owner}/{pr_repo}"))
 
     # finish parser
     finish_parser = subparsers.add_parser(
@@ -308,8 +309,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                             "postgres/%s.sql." % sql_dump)
 
                                 else:
-                                    ret += "(but has not been commited)."
-                            ret = ret + msg if msg else ''
+                                    ret += "(but has not been committed)."
                         elif ns.parser == 'rebase':
                             try:
                                 rebase_master(meta)
@@ -318,7 +318,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                 traceback.print_exc(file=s)
 
                                 ret += textwrap.dedent(f"""
-                                    Sorry but I could not rebase {pr_owner}/{pr_repo} on EMPD2/EMPD-data because of the following Exception:
+                                    Sorry but I could not rebase {pr_owner}/{pr_repo}:{pr_branch} on EMPD2/EMPD-data:master because of the following Exception:
 
                                     ```
                                     {{}}
@@ -326,6 +326,11 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
 
                                     If you don't know, what is wrong here, you should ping `@Chilipp`.""").format(s.getvalue())
                                 ns.no_commit = True
+                            else:
+                                ret += "I successfully rebased {pr_owner}/{pr_repo}:{pr_branch} on EMPD2/EMPD-data:master"
+                                if ns.no_commit:
+                                    ret += f" (but did not push to {pr_owner}/{pr_repo})"
+                                ret += "."
                         elif ns.parser == 'finish':
                             try:
                                 finish_pr(meta, commit=ns.commit)
@@ -460,3 +465,17 @@ def test_unaccept():
         'EMPD2', 'EMPD-data', 'test-data')
 
     assert 'test_a2' in msg and 'Country' in msg
+
+
+def test_createdb():
+    msg = process_comment_line(
+        '@EMPD-admin createdb', 'EMPD2', 'EMPD-data', 'test-data')
+    assert 'Postgres import succeded' in msg, "Wrong message:\n" + msg
+    assert 'not been committed' in msg, "Wrong message:\n" + msg
+
+
+def test_rebase():
+    msg = process_comment_line(
+        '@EMPD-admin rebase --no-commit', 'EMPD2', 'EMPD-data', 'test-data')
+    assert 'successfully rebased' in msg, "Wrong message:\n" + msg
+    assert 'did not push' in msg, "Wrong message:\n" + msg
