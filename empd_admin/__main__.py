@@ -42,6 +42,13 @@ def main():
         print(report)
         if not success:
             sys.exit(1)
+    elif args.parser == 'rebuild':
+        success, report, sql_dump = import_database(
+            meta, dbname=args.database, commit=args.commit,
+            rebuild_fixed=args.tables)
+        print(report)
+        if not success:
+            sys.exit(1)
     else:
         pytest_args, files = setup_pytest_args(args)
 

@@ -81,7 +81,8 @@ def get_meta_file(dirname='.'):
     return osp.join(dirname, 'meta.tsv')
 
 
-def import_database(meta, dbname=None, commit=False, populate=None):
+def import_database(meta, dbname=None, commit=False, populate=None,
+                    rebuild_fixed=[]):
     with temporary_database(dbname) as db_url:
 
         # populate temporary database
@@ -111,8 +112,14 @@ def import_database(meta, dbname=None, commit=False, populate=None):
                     db_url])
 
         # import the data
-        cmd = [sys.executable, osp.join(SQLSCRIPTS, 'import_into_empd2.py'),
-               meta, '--database-url', db_url]
+        if rebuild_fixed:
+            cmd = [sys.executable,
+                   osp.join(SQLSCRIPTS, 'updateFixedTables.py'),
+                   db_url] + rebuild_fixed
+        else:
+            cmd = [sys.executable,
+                   osp.join(SQLSCRIPTS, 'import_into_empd2.py'),
+                   meta, '--database-url', db_url]
 
         print("Importing in %s with %s" % (db_url, ' '.join(cmd)))
         proc = spr.Popen(cmd, stdout=spr.PIPE, stderr=spr.STDOUT)

@@ -9,7 +9,8 @@ import tempfile
 import textwrap
 from git import Repo
 import empd_admin.repo_test as test
-from empd_admin.finish import finish_pr, rebase_master
+from empd_admin.finish import (
+    finish_pr, rebase_master, look_for_changed_fixed_tables)
 from empd_admin.accept import accept, unaccept
 
 
@@ -104,6 +105,27 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
             help=("The name of the database. If not given, a temporary "
                   "database will be created and deleted afterwards."))
     createdb_parser.add_argument(
+        '-c', '--commit', action='store_true', help=commit_help)
+
+    # rebuild parser
+    rebuild_parser = subparsers.add_parser(
+        'rebuild', help='Rebuild the fixed tables of the postgres database',
+        add_help=False)
+
+    rebuild_parser.add_argument(
+        'tables', help='The table name to rebuild.',
+        choices=['all', 'GroupID', 'SampleType', 'Country'], nargs='+')
+
+    commit_help = "Dump the postgres database into a .sql file"
+    if pr_owner:
+        commit_help += (" and push it to the "
+                        f"{pr_branch} branch of {pr_owner}/{pr_repo}")
+    else:
+        rebuild_parser.add_argument(
+            '-db', '--database',
+            help=("The name of the database. If not given, a temporary "
+                  "database will be created and deleted afterwards."))
+    rebuild_parser.add_argument(
         '-c', '--commit', action='store_true', help=commit_help)
 
     # rebase parser
@@ -220,10 +242,11 @@ def setup_pytest_args(namespace):
     return pytest_args, files
 
 
-def process_comment(comment, pr_owner, pr_repo, pr_branch):
+def process_comment(comment, pr_owner, pr_repo, pr_branch, pr_num):
     reports = []
     for line in comment.splitlines():
-        report = process_comment_line(line, pr_owner, pr_repo, pr_branch)
+        report = process_comment_line(line, pr_owner, pr_repo, pr_branch,
+                                      pr_num)
         if report:
             reports.append(report)
     if reports:
@@ -235,7 +258,7 @@ def process_comment(comment, pr_owner, pr_repo, pr_branch):
         return message + '\n\n' + '\n\n---\n\n'.join(reports)
 
 
-def process_comment_line(line, pr_owner, pr_repo, pr_branch):
+def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
     if not line or not line.startswith('@EMPD-admin'):
         return
     args = shlex.split(line)
@@ -310,6 +333,24 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
 
                                 else:
                                     ret += "(but has not been committed)."
+                            else:
+                                ret += ("Failed to import into postgres!\n\n"
+                                        f"```\n{msg}\n```")
+                        elif ns.parser == 'rebuild':
+                            success, msg, sql_dump = test.import_database(
+                                meta, commit=ns.commit,
+                                rebuild_fixed=ns.tables)
+                            if success:
+                                ret += "Postgres import succeded "
+                                if sql_dump:
+                                    ret += ("and dumped into "
+                                            "postgres/%s.sql." % sql_dump)
+
+                                else:
+                                    ret += "(but has not been committed)."
+                            else:
+                                ret += ("Failed to import into postgres!\n\n"
+                                        f"```\n{msg}\n```")
                         elif ns.parser == 'rebase':
                             try:
                                 rebase_master(meta)
@@ -333,7 +374,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                 ret += "."
                         elif ns.parser == 'finish':
                             try:
-                                finish_pr(meta, commit=ns.commit)
+                                changed = finish_pr(meta, commit=ns.commit)
                             except Exception:
                                 s = io.StringIO()
                                 traceback.print_exc(file=s)
@@ -377,7 +418,8 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
                                         Finished the PR!
 
                                         You may want to have a final look into the viewer (https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}) and then merge it.
-                                        """)
+                                        """) + look_for_changed_fixed_tables(
+                                            meta, pr_owner, pr_repo, pr_branch)
 
                         # push new commits
                         push2remote = (
@@ -399,13 +441,13 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch):
 # --- tests
 def test_no_command():
     msg = process_comment_line('should not trigger anything',
-                               'EMPD2', 'EMPD-data', 'test-data')
+                               'EMPD2', 'EMPD-data', 'test-data', 2)
     assert msg is None
 
 
 def test_help():
     msg = process_comment_line('@EMPD-admin help',
-                               'EMPD2', 'EMPD-data', 'test-data')
+                               'EMPD2', 'EMPD-data', 'test-data', 2)
     parser = argparse.ArgumentParser('@EMPD-admin', add_help=False)
     setup_subparsers(parser)
     assert '\n'.join(msg.splitlines()[1:]).strip() == \
@@ -414,7 +456,7 @@ def test_help():
 
 def test_help_test():
     msg = process_comment_line('@EMPD-admin help test',
-                               'EMPD2', 'EMPD-data', 'test-data')
+                               'EMPD2', 'EMPD-data', 'test-data', 2)
     parser = argparse.ArgumentParser('@EMPD-admin', add_help=False)
     subparsers = setup_subparsers(parser)
     parser = subparsers.choices['test']
@@ -424,21 +466,21 @@ def test_help_test():
 
 def test_test_collect():
     msg = process_comment_line('@EMPD-admin test precip --collect-only',
-                               'EMPD2', 'EMPD-data', 'test-data')
+                               'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'test_precip' in msg, msg
     assert 'test_temperature' not in msg
 
 
 def test_test():
     msg = process_comment_line('@EMPD-admin test precip',
-                               'EMPD2', 'EMPD-data', 'test-data')
+                               'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'test_precip' in msg
     assert 'test_temperature' not in msg
 
 
 def test_fix():
     msg = process_comment_line('@EMPD-admin fix country --no-commit',
-                               'EMPD2', 'EMPD-data', 'test-data')
+                               'EMPD2', 'EMPD-data', 'test-data', 2)
 
     assert 'fix_country' in msg, 'Wrong message:\n' + msg
     assert 'fix_temperature' not in msg, 'Wrong message:\n' + msg
@@ -446,7 +488,7 @@ def test_fix():
 
 def test_finish():
     msg = process_comment_line('@EMPD-admin finish',
-                               'EMPD2', 'EMPD-data', 'test-data')
+                               'EMPD2', 'EMPD-data', 'test-data', 2)
 
     assert "Tests failed after finishing the PR" in msg, msg
 
@@ -454,7 +496,7 @@ def test_finish():
 def test_accept():
     msg = process_comment_line(
         '@EMPD-admin accept test_a1:Country --no-commit',
-        'EMPD2', 'EMPD-data', 'test-data')
+        'EMPD2', 'EMPD-data', 'test-data', 2)
 
     assert 'test_a1' in msg and 'Country' in msg
 
@@ -462,20 +504,27 @@ def test_accept():
 def test_unaccept():
     msg = process_comment_line(
         '@EMPD-admin unaccept test_a2:Country --no-commit',
-        'EMPD2', 'EMPD-data', 'test-data')
+        'EMPD2', 'EMPD-data', 'test-data', 2)
 
     assert 'test_a2' in msg and 'Country' in msg
 
 
 def test_createdb():
     msg = process_comment_line(
-        '@EMPD-admin createdb', 'EMPD2', 'EMPD-data', 'test-data')
+        '@EMPD-admin createdb', 'EMPD2', 'EMPD-data', 'test-data', 2)
+    assert 'Postgres import succeded' in msg, "Wrong message:\n" + msg
+    assert 'not been committed' in msg, "Wrong message:\n" + msg
+
+
+def test_rebuild():
+    msg = process_comment_line(
+        '@EMPD-admin rebuild all', 'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'Postgres import succeded' in msg, "Wrong message:\n" + msg
     assert 'not been committed' in msg, "Wrong message:\n" + msg
 
 
 def test_rebase():
     msg = process_comment_line(
-        '@EMPD-admin rebase --no-commit', 'EMPD2', 'EMPD-data', 'test-data')
+        '@EMPD-admin rebase --no-commit', 'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'successfully rebased' in msg, "Wrong message:\n" + msg
     assert 'did not push' in msg, "Wrong message:\n" + msg

@@ -74,7 +74,7 @@ class CommandHookHandler(tornado.web.RequestHandler):
                 pr_branch = pull.raw_data['head']['ref']
                 comment = body['comment']['body']
                 message = parsers.process_comment(
-                    comment, pr_owner, pr_repo, pr_branch)
+                    comment, pr_owner, pr_repo, pr_branch, issue_num)
                 if message:
                     test.comment_on_pr(
                         owner, repo_name, issue_num, message, force=True)
