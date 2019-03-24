@@ -8,5 +8,11 @@
 start_pg_server
 git config --global user.name "EMPD-admin"
 /opt/test-env/bin/pip install --user gitpython PyGithub xlrd openpyxl
-cd /opt/empd-admin
-/opt/test-env/bin/py.test $@
+if [ -w /opt/empd-admin ]; then
+    cd /opt/empd-admin
+    /opt/test-env/bin/py.test $@
+else
+    cp -r /opt/empd-admin $HOME
+    cd $HOME/empd-admin
+    /opt/test-env/bin/py.test $@
+fi

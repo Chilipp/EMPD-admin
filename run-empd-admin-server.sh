@@ -14,4 +14,10 @@ git config --global user.name "EMPD-admin"
 
 # start the webapp
 echo 'Starting EMPD-admin webapp...'
-python -m empd_admin.webapp
+if [ -w /opt/conda ]; then
+    python -m empd_admin.webapp
+else
+    cp -r /opt/empd-admin $HOME
+    cd $HOME/empd-admin
+    python -m empd_admin.webapp
+fi
