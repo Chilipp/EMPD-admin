@@ -41,6 +41,8 @@ def main():
               osp.join('empd_admin', 'data', 'postgres', 'scripts', '*.py'),
               osp.join('empd_admin', 'data', 'postgres', 'scripts', '*.sql'),
               osp.join('empd_admin', 'data', 'postgres', 'scripts', '*.xlsx'),
+              osp.join('empd_admin', 'data', 'postgres', 'scripts', 'tables',
+                       '*.tsv'),
               ]},
           include_package_data=True,
           install_requires=[
