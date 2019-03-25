@@ -4,6 +4,7 @@ import os.path as osp
 from functools import partial
 import pandas as pd
 from git import Repo
+import glob
 import github
 from empd_admin.repo_test import import_database, temporary_database
 import subprocess as spr
@@ -83,6 +84,11 @@ def merge_postgres(meta, commit=True):
             for table in tables:
                 spr.check_call(['psql', db_url, '-c', copy % table,
                                 '-o', osp.join(tables_dir, table + '.tsv')])
+            if commit:
+                repo = Repo(osp.dirname(meta))
+                repo.index.add(glob.glob(osp.join(tables_dir, '*.tsv')))
+                repo.index.commit(
+                    "Updated tab-delimited files from EMPD2 postgres database")
 
     else:
         import_database(meta, commit=True)  # to dump it to a temporary file
