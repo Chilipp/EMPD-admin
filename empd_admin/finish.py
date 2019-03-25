@@ -104,23 +104,18 @@ def merge_postgres(meta, commit=True):
 
 
 def look_for_changed_fixed_tables(meta, pr_owner, pr_repo, pr_branch):
-    from urllib import request
     fixed = ['Country', 'GroupID', 'SampleContext', 'SampleMethod',
              'SampleType']
     msg = ''
     changed_tables = []
     local_tables = osp.join(osp.dirname(meta), 'postgres', 'scripts', 'tables')
     for table in fixed:
-        upstream_url = ('https://raw.githubusercontent.com/EMPD2/EMPD-data/'
-                        f'master/postgres/scripts/tables/{table}.tsv')
-        fname = request.urlretrieve(upstream_url)[0]
+        fname = osp.join(SQLSCRIPTS, 'tables', table + '.tsv')
         old = pd.read_csv(fname, sep='\t')
-        os.remove(fname)
         new = pd.read_csv(osp.join(local_tables, table + '.tsv'), sep='\t')
         changed = set(map(tuple, new.values)) - set(map(tuple, old.values))
         if changed:
-            shutil.copyfile(osp.join(local_tables, table + '.tsv'),
-                            osp.join(SQLSCRIPTS, 'tables', table + '.tsv'))
+            shutil.copyfile(osp.join(local_tables, table + '.tsv'), fname)
             changed = pd.DataFrame(
                 [('---', ) * len(new.columns)] + list(changed),
                 columns=new.columns)
