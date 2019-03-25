@@ -90,6 +90,9 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
         '--maxfail', metavar='num', default=20, type=int,
         help="exit after first num failures or errors.")
 
+    test_parser.add_argument('-v', '--verbose', action='store_true',
+                             help="Print the full test report")
+
     # createdb parser
     createdb_parser = subparsers.add_parser(
         'createdb', help='Create a postgres database out of the data',
@@ -299,7 +302,8 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
 
                             success, log, md = test.run_test(meta, pytest_args,
                                                              files)
-                            if success and ns.parser == 'test':
+                            if success and ns.parser == 'test' and (
+                                    not ns.collect_only and not ns.verbose):
                                 ret += "All tests passed!"
                             else:
                                 ret += textwrap.dedent("""
@@ -474,7 +478,7 @@ def test_test_collect():
 
 
 def test_test():
-    msg = process_comment_line('@EMPD-admin test precip',
+    msg = process_comment_line('@EMPD-admin test precip -v',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'test_precip' in msg
     assert 'test_temperature' not in msg

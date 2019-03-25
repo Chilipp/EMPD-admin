@@ -53,7 +53,11 @@ def main():
         pytest_args, files = setup_pytest_args(args)
 
         success, report, md_report = run_test(meta, pytest_args, files)
-        print(report)
+        if success and args.parser == 'test' and (
+                not args.collect_only and not args.verbose):
+            print('All tests passed')
+        else:
+            print(report)
         if not success:
             sys.exit(1)
 
