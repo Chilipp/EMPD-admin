@@ -4,7 +4,7 @@ ENV TINI_VERSION v0.18.0
 
 USER root
 
-RUN conda install -y -p /opt/test-env requests
+RUN conda install -y -p /opt/test-env requests gitpython
 
 COPY ./environment.yml /tmp/environment.yml
 
