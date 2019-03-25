@@ -38,6 +38,7 @@ def main():
           packages=find_packages(),
           package_data={'empd_admin': [
               osp.join('empd_admin', 'data', 'tests', '*.py'),
+              osp.join('empd_admin', 'data', 'tests', 'pytest.ini'),
               osp.join('empd_admin', 'data', 'meta.tsv'),
               osp.join('empd_admin', 'data', 'postgres', 'scripts', '*.py'),
               osp.join('empd_admin', 'data', 'postgres', 'scripts', '*.sql'),
