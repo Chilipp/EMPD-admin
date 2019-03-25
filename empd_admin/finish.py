@@ -4,7 +4,7 @@ import os.path as osp
 import shutil
 from functools import partial
 import pandas as pd
-from git import Repo
+from git import Repo, GitCommandError
 import glob
 import github
 from empd_admin.repo_test import (
@@ -57,7 +57,14 @@ def rebase_master(meta):
         remote = repo.create_remote(
             'upstream', 'https://github.com/EMPD2/EMPD-data.git')
         remote.fetch()
-    repo.git.rebase('upstream/master')
+    # first try a rebase
+    try:
+        repo.git.rebase('upstream/master')
+    except GitCommandError:
+        repo.git.rebase('--abort')
+        repo.git.pull('upstream', 'master')
+        branch = repo.active_branch.name
+        repo.index.commit("Merge branch 'upstream/master' into " + branch)
     repo.git.pull('--rebase')  # pull the remote origin
 
 
