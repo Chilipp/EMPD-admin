@@ -381,7 +381,7 @@ def full_repo_test(local_repo):
 
     if status in ['mixed', 'good']:
         # test the import into postgres
-        success, log = import_database(meta)
+        success, log, sql_dump = import_database(meta)
         if not success:
             message += '\n\n' + textwrap.dedent("""
                 ## Postgres import
