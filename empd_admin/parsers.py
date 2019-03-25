@@ -299,21 +299,23 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
 
                             success, log, md = test.run_test(meta, pytest_args,
                                                              files)
+                            if success and ns.parser == 'test':
+                                ret += "All tests passed!"
+                            else:
+                                ret += textwrap.dedent("""
+                                    {}
 
-                            ret += textwrap.dedent("""
-                                {}
+                                    {}
+                                    <details><summary>Full test report</summary>
 
-                                {}
-                                <details><summary>Full test report</summary>
-
-                                ```
-                                {}
-                                ```
-                                </details>
-                                """).format(
-                                    "PASSED" if success else "FAILED",
-                                    md.replace(tmpdir, 'data/'),
-                                    log.replace(tmpdir, 'data/'))
+                                    ```
+                                    {}
+                                    ```
+                                    </details>
+                                    """).format(
+                                        "PASSED" if success else "FAILED",
+                                        md.replace(tmpdir, 'data/'),
+                                        log.replace(tmpdir, 'data/'))
                         elif ns.parser == 'accept':
                             msg = accept(meta, ns.acceptable,
                                          not ns.no_commit, ns.skip_ci)
