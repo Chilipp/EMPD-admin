@@ -1,12 +1,14 @@
 """Command to finish the merging of a PR"""
 import os
 import os.path as osp
+import shutil
 from functools import partial
 import pandas as pd
 from git import Repo
 import glob
 import github
-from empd_admin.repo_test import import_database, temporary_database
+from empd_admin.repo_test import (
+    import_database, temporary_database, SQLSCRIPTS)
 import subprocess as spr
 import textwrap
 
@@ -110,6 +112,8 @@ def look_for_changed_fixed_tables(meta, pr_owner, pr_repo, pr_branch):
         new = pd.read_csv(osp.join(local_tables, table + '.tsv'), sep='\t')
         changed = set(map(tuple, new.values)) - set(map(tuple, old.values))
         if changed:
+            shutil.copyfile(osp.join(local_tables, table + '.tsv'),
+                            osp.join(SQLSCRIPTS, 'tables', table + '.tsv'))
             changed = pd.DataFrame(
                 [('---', ) * len(new.columns)] + list(changed),
                 columns=new.columns)
