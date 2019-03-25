@@ -129,6 +129,10 @@ def import_database(meta, dbname=None, commit=False, populate=None,
         sql_dump = None
 
         if success and commit:
+            repo = Repo(osp.dirname(meta))
+            if repo.git.diff(osp.join('postgres', 'scripts', 'tables')):
+                repo.index.add([osp.join('postgres', 'scripts', 'tables')])
+                repo.index.commit('Updated fixed tables')
             if dbname:
                 meta_base = dbname
             elif osp.basename(meta) == 'meta.tsv':
@@ -143,7 +147,6 @@ def import_database(meta, dbname=None, commit=False, populate=None,
                 proc.communicate()
                 success = proc.returncode == 0
             if success:
-                repo = Repo(osp.dirname(meta))
                 repo.index.add([osp.join('postgres', osp.basename(sql_dump))])
                 repo.index.commit(
                     'Added postgres dump for %s' % osp.basename(meta))
