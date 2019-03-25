@@ -375,7 +375,7 @@ def full_repo_test(local_repo):
     if not all(t[0] for t in results.values()):
         status = 'failure'
         message = failed
-    elif any(t[1] for t in results.values()):
+    elif any(t[2] for t in results.values()):
         status = 'mixed'
         message = mixed
     else:
