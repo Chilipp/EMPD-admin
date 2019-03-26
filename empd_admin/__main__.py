@@ -54,7 +54,7 @@ def main():
 
         success, report, md_report = run_test(meta, pytest_args, files)
         if success and args.parser == 'test' and (
-                not args.collect_only and not args.verbose):
+                not args.collect_only and not args.full_report):
             print('All tests passed')
         else:
             print(report)

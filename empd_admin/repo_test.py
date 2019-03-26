@@ -180,7 +180,7 @@ def run_test(meta, pytest_args=[], tests=['']):
                 ignore=lambda src, names: names if '__pycache__' in src else []
                 )
             os.environ['PYTHONUNBUFFERED'] = '1'  # turn off output buffering
-            cmd = [os.getenv('PYTEST', 'pytest'), '-v',
+            cmd = [os.getenv('PYTEST', 'pytest'),
                    '--empd-meta=' + meta,
                    '--markdown-report=' + osp.join(report_dir, 'report.md')
                    ] + pytest_args + [osp.join(my_testdir, f) for f in tests]

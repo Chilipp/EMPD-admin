@@ -85,12 +85,14 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
                   'are matched to classes and functions containing extra'
                   "names in their 'extra_keyword_matches' set, as well as"
                   'functions which have names assigned directly to them.'))
+        subparser.add_argument('-v', '--verbose', action='store_true',
+                               help='increase verbosity.')
 
     test_parser.add_argument(
         '--maxfail', metavar='num', default=20, type=int,
         help="exit after first num failures or errors.")
 
-    test_parser.add_argument('-v', '--verbose', action='store_true',
+    test_parser.add_argument('-f', '--full-report', action='store_true',
                              help="Print the full test report")
 
     # createdb parser
@@ -249,6 +251,8 @@ def setup_pytest_args(namespace):
         pytest_args.append('-x')
     if getattr(namespace, 'maxfail', None) is not None:
         pytest_args.append('--maxfail=%i' % namespace.maxfail)
+    if getattr(namespace, 'verbose', False):
+        pytest_args.append('-v')
 
     files = ['fixes.py'] if namespace.parser == 'fix' else ['']
 
@@ -313,7 +317,8 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                             success, log, md = test.run_test(meta, pytest_args,
                                                              files)
                             if success and ns.parser == 'test' and (
-                                    not ns.collect_only and not ns.verbose):
+                                    not ns.collect_only and
+                                    not ns.full_report):
                                 ret += "All tests passed!"
                             else:
                                 ret += textwrap.dedent("""
@@ -483,21 +488,21 @@ def test_help_test():
 
 
 def test_test_collect():
-    msg = process_comment_line('@EMPD-admin test precip --collect-only',
+    msg = process_comment_line('@EMPD-admin test -v precip --collect-only',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'test_precip' in msg, msg
     assert 'test_temperature' not in msg
 
 
 def test_test():
-    msg = process_comment_line('@EMPD-admin test precip -v',
+    msg = process_comment_line('@EMPD-admin test precip -v -f',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'test_precip' in msg
     assert 'test_temperature' not in msg
 
 
 def test_fix():
-    msg = process_comment_line('@EMPD-admin fix country --no-commit',
+    msg = process_comment_line('@EMPD-admin fix -v country --no-commit',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
 
     assert 'fix_country' in msg, 'Wrong message:\n' + msg
