@@ -170,6 +170,11 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
               "`SampleName` might also be `all` to accept it for all samples.")
         )
 
+    accept_parser.add_argument(
+        '-e', '--exact', action='store_true',
+        help=("Assume provided sample names to match exactly. Otherwise we "
+              "expect a regex and search for it in the sample name."))
+
     # unaccept parser
     unaccept_parser = subparsers.add_parser(
         'unaccept',
@@ -185,6 +190,11 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
               " `SampleName` and/or `Column` might also be `all` to enable the"
               " tests for all the samples and/or meta data fields again.")
         )
+
+    unaccept_parser.add_argument(
+        '-e', '--exact', action='store_true',
+        help=("Assume provided sample names to match exactly. Otherwise we "
+              "expect a regex and search for it in the sample name."))
 
     no_commit_help = "Do not commit the changes."
     if pr_owner:
@@ -322,11 +332,13 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                         log.replace(tmpdir, 'data/'))
                         elif ns.parser == 'accept':
                             msg = accept(meta, ns.acceptable,
-                                         not ns.no_commit, ns.skip_ci)
+                                         not ns.no_commit, ns.skip_ci,
+                                         exact=ns.exact)
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'unaccept':
                             msg = unaccept(meta, ns.unacceptable,
-                                           not ns.no_commit, ns.skip_ci)
+                                           not ns.no_commit, ns.skip_ci,
+                                           exact=ns.exact)
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'createdb':
                             success, msg, sql_dump = test.import_database(
