@@ -41,11 +41,22 @@ def remember_env(key):
             os.environ[key] = val
 
 
+def wait_for_pg_server(timeout=120):
+    for i in range(timeout):
+        if not osp.exists(osp.expanduser(osp.join(
+                '~', 'starting_pg_server.lock'))):
+            return
+        time.sleep(1)
+    raise TimeoutError(
+        "Postgres server has not started within %i seconds" % timeout)
+
+
 @contextlib.contextmanager
 def temporary_database(dbname=None):
     import psycopg2 as psql
     from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
     base_url = os.getenv('DATABASE_URL', 'postgres://postgres@localhost/')
+    wait_for_pg_server()
     if dbname is not None:
         yield osp.join(base_url, dbname)
     else:
