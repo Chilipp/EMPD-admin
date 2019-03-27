@@ -10,7 +10,7 @@ def accept_query(meta, query, columns, commit=True, skip_ci=False,
                  raise_error=False,):
     """Accept the columns based on a query for the pandas.DataFrame.query"""
     repo = Repo(osp.dirname(meta))
-    meta_df = pd.read_csv(meta, sep='\t')
+    meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName')
     samples = query_samples(meta_df, query)
     if not len(samples):
         msg = "No samples selected with %r" % (query, )
@@ -157,7 +157,7 @@ def unaccept_query(meta, query, columns, commit=True, skip_ci=False,
                    raise_error=False,):
     """Accept the columns based on a query for the pandas.DataFrame.query"""
     repo = Repo(osp.dirname(meta))
-    meta_df = pd.read_csv(meta, sep='\t')
+    meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName')
     samples = query_samples(meta_df, query)
 
     if not len(samples):

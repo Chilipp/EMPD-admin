@@ -413,7 +413,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                     else:
                         if ns.parser in ['test', 'fix']:
                             pytest_args, files = setup_pytest_args(ns)
-                            pytest_args += ['-tb=line']
+                            pytest_args += ['--tb=line']
 
                             success, log, md = test.run_test(meta, pytest_args,
                                                              files)
@@ -588,7 +588,7 @@ def test_help():
     msg = process_comment_line('@EMPD-admin help',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     parser = argparse.ArgumentParser('@EMPD-admin', add_help=False)
-    setup_subparsers(parser)
+    setup_subparsers(parser, add_help=False)
     assert '\n'.join(msg.splitlines()[1:]).strip() == \
         '```\n' + parser.format_help() + '```'
 
@@ -597,7 +597,7 @@ def test_help_test():
     msg = process_comment_line('@EMPD-admin help test',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     parser = argparse.ArgumentParser('@EMPD-admin', add_help=False)
-    subparsers = setup_subparsers(parser)
+    subparsers = setup_subparsers(parser, add_help=False)
     parser = subparsers.choices['test']
     assert '\n'.join(msg.splitlines()[1:]).strip() == \
         '```\n' + parser.format_help().strip() + '\n```'
@@ -642,7 +642,7 @@ def test_accept():
 
 def test_accept_query():
     msg = process_comment_line(
-        ('@EMPD-admin accept -q "SampleName == \'test_a1\'" Country'
+        ('@EMPD-admin accept -q "SampleName = \'test_a1\'" Country'
          ' --no-commit'),
         'EMPD2', 'EMPD-data', 'test-data', 2)
 
@@ -659,11 +659,19 @@ def test_unaccept():
 
 def test_unaccept_query():
     msg = process_comment_line(
-        ('@EMPD-admin unaccept -q "SampleName == \'test_a1\'" Country '
+        ('@EMPD-admin unaccept -q "SampleName = \'test_a1\'" Country '
          '--no-commit'),
         'EMPD2', 'EMPD-data', 'test-data', 2)
 
     assert '1 sample' in msg
+
+
+def test_query():
+    msg = process_comment_line(
+        '@EMPD-admin query "okexcept LIKE \'%Country%\'" SampleName',
+        'EMPD2', 'EMPD-data', 'test-data', 2)
+    assert 'test_a2' in msg, "Wrong message:\n" + msg
+    assert 'test_a1' not in msg, "Wrong message:\n" + msg
 
 
 def test_createdb():

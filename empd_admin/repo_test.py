@@ -349,13 +349,13 @@ def full_repo_test(local_repo):
 
     # run cricital tests
     results['Critical tests'] = crit_success, crit_log, crit_md = run_test(
-        meta, '-m critical -tb=line --maxfail=20'.split())
+        meta, '-m critical --tb=line --maxfail=20'.split())
 
     if crit_success:
         results['Formatting tests'] = run_test(
-            meta, ['--maxfail=20', '-tb=line'], tests=['test_formatting.py'])
+            meta, ['--maxfail=20', '--tb=line'], tests=['test_formatting.py'])
         results['Metadata tests'] = run_test(
-            meta, ['--maxfail=20', '-tb=line'], tests=['test_meta.py'])
+            meta, ['--maxfail=20', '--tb=line'], tests=['test_meta.py'])
 
     test_summary = '\n\n'.join(
         textwrap.dedent("""
