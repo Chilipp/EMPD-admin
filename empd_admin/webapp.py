@@ -106,6 +106,9 @@ class TestHookHandler(tornado.web.RequestHandler):
 
             # Only do anything if we are working with EMPD2, and an open PR.
             if is_open and owner == 'EMPD2':
+                if body['sender']['login'] == 'EMPD-admin':
+                    self.write('EMPD-admin pushes are skipped')
+                    return
                 self.write("testing PR %i from %s/%s" % (
                     pr_id, owner, repo_name))
 
