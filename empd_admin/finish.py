@@ -5,8 +5,6 @@ import shutil
 from functools import partial
 import pandas as pd
 from git import Repo, GitCommandError
-import glob
-import github
 from empd_admin.repo_test import (
     import_database, temporary_database, SQLSCRIPTS)
 import subprocess as spr
@@ -15,8 +13,8 @@ import textwrap
 
 def finish_pr(meta, commit=True):
     rebase_master(meta)
-    merge_meta(meta, commit)
     merge_postgres(meta, commit)
+    merge_meta(meta, commit)
 
     if commit and osp.basename(meta) != 'meta.tsv':
         repo = Repo(osp.dirname(meta))
@@ -39,7 +37,7 @@ def merge_meta(meta, commit=True):
     base_meta_df = base_meta_df.join(meta_df[[]], how='outer')
     base_meta_df.loc[meta_df.index, meta_df.columns] = meta_df
 
-    base_meta_df.to_csv(base_meta, sep='\t')
+    base_meta_df.to_csv(base_meta, sep='\t', float_format='%1.8g')
 
     if commit:
         repo = Repo(local_repo)
@@ -95,7 +93,7 @@ def merge_postgres(meta, commit=True):
                                 '-o', osp.join(tables_dir, table + '.tsv')])
             if commit:
                 repo = Repo(osp.dirname(meta))
-                repo.index.add(glob.glob(osp.join(tables_dir, '*.tsv')))
+                repo.index.add([tables_dir])
                 repo.index.commit(
                     "Updated tab-delimited files from EMPD2 postgres database")
 

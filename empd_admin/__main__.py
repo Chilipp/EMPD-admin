@@ -1,6 +1,17 @@
 # Main module for the empd-admin
 import sys
+import re
 from empd_admin.parsers import setup_pytest_args, get_parser
+
+
+def filter_pytest():
+    """Filter lines that only contain dots and s from pytest runs"""
+    perc_pat = re.compile(r'\[\s*\d+%\]')
+    dot_pat = re.compile(r'(?m)^[\.s]{2,1000}')
+    for s in sys.stdin:
+        s = perc_pat.sub('', dot_pat.sub('', s)).strip()
+        if s:
+            print(s)
 
 
 def main():
@@ -12,6 +23,9 @@ def main():
     elif args.parser is None:
         parser.print_help()
         parser.exit()
+    elif args.parser == 'filter-log':
+        filter_pytest()
+        return
     else:
         from empd_admin.repo_test import \
             get_meta_file, run_test, import_database
@@ -31,19 +45,31 @@ def main():
         from empd_admin.finish import rebase_master
         rebase_master(meta)
     elif args.parser == 'accept':
-        from empd_admin.accept import accept
-        accept(meta, args.acceptable, not args.no_commit, raise_error=True,
-               exact=args.exact)
+        from empd_admin.accept import accept, accept_query
+        if args.query:
+            accept_query(meta, args.query, [t[-1] for t in args.acceptable],
+                         not args.no_commit, raise_error=True)
+        else:
+            accept(meta, args.acceptable, not args.no_commit, raise_error=True,
+                   exact=args.exact)
     elif args.parser == 'unaccept':
-        from empd_admin.accept import unaccept
-        unaccept(meta, args.unacceptable, not args.no_commit, raise_error=True,
-                 exact=args.exact)
+        from empd_admin.accept import unaccept, unaccept_query
+        if args.query:
+            unaccept_query(meta, args.query,
+                           [t[-1] for t in args.unacceptable],
+                           not args.no_commit, raise_error=True)
+        else:
+            unaccept(meta, args.unacceptable, not args.no_commit,
+                     raise_error=True, exact=args.exact)
     elif args.parser == 'createdb':
         success, report, sql_dump = import_database(
             meta, dbname=args.database, commit=args.commit)
         print(report)
         if not success:
             sys.exit(1)
+    elif args.parser == 'query':
+        from empd_admin.query import query_meta
+        print(query_meta(meta, args.query, args.columns, args.count))
     elif args.parser == 'rebuild':
         success, report, sql_dump = import_database(
             meta, dbname=args.database, commit=args.commit,

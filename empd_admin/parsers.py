@@ -11,7 +11,8 @@ from git import Repo
 import empd_admin.repo_test as test
 from empd_admin.finish import (
     finish_pr, rebase_master, look_for_changed_fixed_tables)
-from empd_admin.accept import accept, unaccept
+import empd_admin.accept as accept
+from empd_admin.query import query_meta
 
 
 parser_info = dict(exited=False, errored=False, exit_message='',
@@ -39,25 +40,29 @@ class WebParser(argparse.ArgumentParser):
 
 
 def get_parser():
-    parser = argparse.ArgumentParser('empd-admin', add_help=False)
+    parser = argparse.ArgumentParser('empd-admin', add_help=True)
 
     parser.add_argument(
         '-d', '--directory', default='.',
         help=('Path to the local EMPD2/EMPD-data repository. '
               'Default: %(default)s'))
 
-    setup_subparsers(parser)
+    subparsers = setup_subparsers(parser)
+    subparsers.add_parser(
+        'filter-log',
+        help="Filter pytest runs with lots of dots")
     return parser
 
 
-def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
+def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
+                     add_help=True):
 
     subparsers = parser.add_subparsers(title='Commands', dest='parser')
 
     test_parser = subparsers.add_parser(
-        'test', help='test the database', add_help=False)
+        'test', help='test the database', add_help=add_help)
     fix_parser = subparsers.add_parser(
-        'fix', help='fix the database', add_help=False)
+        'fix', help='fix the database', add_help=add_help)
 
     for subparser in [test_parser, fix_parser]:
         subparser.add_argument(
@@ -95,10 +100,17 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
     test_parser.add_argument('-f', '--full-report', action='store_true',
                              help="Print the full test report")
 
+    test_parser.add_argument(
+        '-e', '--extract-failed', metavar='filename.tsv', nargs='?',
+        const='failed.tsv', default=False,
+        help=("Extract the meta data of failed samples into a separate file "
+              "in the `failures` directory. Without argument, failed samples "
+              "will be extracted to ``%(const)s``."))
+
     # createdb parser
     createdb_parser = subparsers.add_parser(
         'createdb', help='Create a postgres database out of the data',
-        add_help=False)
+        add_help=add_help)
 
     commit_help = "Dump the postgres database into a .sql file"
     if pr_owner:
@@ -115,7 +127,7 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
     # rebuild parser
     rebuild_parser = subparsers.add_parser(
         'rebuild', help='Rebuild the fixed tables of the postgres database',
-        add_help=False)
+        add_help=add_help)
 
     rebuild_parser.add_argument(
         'tables', help='The table name to rebuild.',
@@ -148,7 +160,7 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
     # finish parser
     finish_parser = subparsers.add_parser(
         'finish', help='Finish this PR and merge the data into meta.tsv',
-        add_help=False)
+        add_help=add_help)
 
     finish_help = "Commit the changes"
     if pr_owner:
@@ -160,8 +172,9 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
 
     # accept parser
     accept_parser = subparsers.add_parser(
-        'accept', help="Mark incomplete or erroneous meta data as accepted",
-        add_help=False)
+        'accept', add_help=add_help,
+        help="Mark incomplete or erroneous meta data as accepted",
+        formatter_class=argparse.RawDescriptionHelpFormatter)
 
     accept_parser.add_argument(
         'acceptable', metavar='SampleName:Column', nargs='+',
@@ -169,19 +182,32 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
         help=("The sample name and the column that should be accepted despite "
               "being erroneous. For example use `my_sample_a1:Country` to not "
               "check the `Country` column for the sample `my_sample_a1`. "
-              "`SampleName` might also be `all` to accept it for all samples.")
+              "`SampleName` might also be `all` to accept it for all samples. "
+              "NOTE: When using --query argument, the SampleName is ignored.")
         )
 
-    accept_parser.add_argument(
-        '-e', '--exact', action='store_true',
-        help=("Assume provided sample names to match exactly. Otherwise we "
-              "expect a regex and search for it in the sample name."))
+    accept_parser.epilog = textwrap.dedent(f"""
+        Examples
+        --------
+
+        - Accept wrong countries for samples starting with "sample_a"::
+
+              {parser.prog} accept sample_a:Country
+
+        - Accept a wrong Country for the sample "sample_a1"::
+
+              {parser.prog} accept -e sample_a1:Country
+
+        - To accept missing Latitudes and Longitudes, use::
+
+              {parser.prog} accept Country -q "Latitude is NULL or Longitude is NULL"
+        """)
 
     # unaccept parser
     unaccept_parser = subparsers.add_parser(
-        'unaccept',
+        'unaccept', formatter_class=argparse.RawDescriptionHelpFormatter,
         help="Reverse the acceptance of incomplete or erroneous meta data.",
-        add_help=False)
+        add_help=add_help)
 
     unaccept_parser.add_argument(
         'unacceptable', metavar='SampleName:Column', nargs='+',
@@ -190,13 +216,47 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
               " erroneous. For example use `my_sample_a1:Country` to "
               "check the `Country` column for the sample `my_sample_a1` again."
               " `SampleName` and/or `Column` might also be `all` to enable the"
-              " tests for all the samples and/or meta data fields again.")
+              " tests for all the samples and/or meta data fields again. "
+              "NOTE: When using --query argument, the SampleName is ignored.")
         )
 
-    unaccept_parser.add_argument(
-        '-e', '--exact', action='store_true',
-        help=("Assume provided sample names to match exactly. Otherwise we "
-              "expect a regex and search for it in the sample name."))
+    unaccept_parser.epilog = textwrap.dedent(f"""
+
+        Examples
+        --------
+
+        - Do not accept any failure for the Country column for samples
+          starting with "sample_a"::
+
+              {parser.prog} unaccept sample_a:Country
+
+        - Do not accept any failure for the Country column and one single
+          sample "sample_a1"::
+
+              {parser.prog} unaccept -e sample_a1:Country
+
+        - Do not accept any failure for samples where the Country equals
+          "Germany"::
+
+              {parser.prog} unaccept Country -q "Country = 'Germany'"
+        """)
+
+    for subparser in [accept_parser, unaccept_parser]:
+        subparser.add_argument(
+            '-e', '--exact', action='store_true',
+            help=("Assume provided sample names to match exactly. Otherwise "
+                  "we expect a regex and search for it in the sample name."))
+        subparser.add_argument(
+            '-q', '--query',
+            help="""
+                Select the samples through an SQLite query instead of the
+                `SampleName:Column` syntax. If this argument is provided,
+                the resulting query is passed to the WHERE clause of an SQL
+                query. E.g. `%(prog)s -q "Country = 'Germany'"` will be
+                executed as
+                `SELECT SampleName FROM meta WHERE Country = 'Germany'`.
+                Note that any provided SampleName in the positional arguments
+                (`SampleName:Column`) are then ignored""")
 
     no_commit_help = "Do not commit the changes."
     if pr_owner:
@@ -213,11 +273,49 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None):
                   "Has no effect if the `--no-commit` argument is passed as "
                   "well."))
 
+    # filter parser
+    query_parser = subparsers.add_parser(
+        'query', add_help=add_help,
+        help="Query and display the meta data",
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    query_parser.add_argument(
+        'query',
+        help=("The query that is passed to the pandas.DataFrame.query method "
+              "to select a subsection of the data. See the examples below for "
+              "further details."))
+    query_parser.add_argument(
+        'columns', nargs='*', default='notnull',
+        help=("The columns in the metadata to show. The default is `notnull`, "
+              "to only display columns that have at least one valid value. "
+              "You can change this by setting it to 'all'"))
+
+    query_parser.add_argument(
+        '-c', '--count', action='store_true',
+        help=("Display the number of not-null values (i.e. `COUNT(column)`) "
+              "in the selected columns instead of the data table."))
+
+    query_parser.epilog = textwrap.dedent(f"""
+        Examples
+        --------
+        Display the samples in Germany::
+
+            {parser.prog} query "Country = 'Germany'"
+
+        Display only the sample names of samples in Germany::
+
+            {parser.prog} query "Country == 'Germany'" SampleName
+
+        Display the samples with a 'forest' SampleContext::
+
+            {parser.prog} query "SampleContext LIKE '%forest%'"
+        """)
+
     # help parser
     choices = subparsers.choices
 
     help_parser = subparsers.add_parser(
-        'help', help='Print the help on a command', add_help=False)
+        'help', help='Print the help on a command', add_help=add_help)
 
     help_parser.add_argument(
         'command', choices=choices, nargs='?',
@@ -253,6 +351,8 @@ def setup_pytest_args(namespace):
         pytest_args.append('--maxfail=%i' % namespace.maxfail)
     if getattr(namespace, 'verbose', False):
         pytest_args.append('-v')
+    if getattr(namespace, 'extract_failed', False):
+        pytest_args.extend(['--extract-failed', namespace.extract_failed])
 
     files = ['fixes.py'] if namespace.parser == 'fix' else ['']
 
@@ -280,7 +380,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
         return
     args = shlex.split(line)
     parser = WebParser('@EMPD-admin', add_help=False)
-    setup_subparsers(parser, pr_owner, pr_repo, pr_branch)
+    setup_subparsers(parser, pr_owner, pr_repo, pr_branch, add_help=False)
 
     ret = '> ' + line[len('@EMPD-admin'):] + '\n\n'
 
@@ -313,6 +413,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                     else:
                         if ns.parser in ['test', 'fix']:
                             pytest_args, files = setup_pytest_args(ns)
+                            pytest_args += ['-tb=line']
 
                             success, log, md = test.run_test(meta, pytest_args,
                                                              files)
@@ -335,15 +436,30 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                         "PASSED" if success else "FAILED",
                                         md.replace(tmpdir, 'data/'),
                                         log.replace(tmpdir, 'data/'))
+                        elif ns.parser == 'query':
+                            ret += query_meta(meta, ns.query, ns.columns,
+                                              ns.count)
                         elif ns.parser == 'accept':
-                            msg = accept(meta, ns.acceptable,
-                                         not ns.no_commit, ns.skip_ci,
-                                         exact=ns.exact)
+                            if ns.query:
+                                msg = accept.accept_query(
+                                    meta, ns.query,
+                                    [t[-1] for t in ns.acceptable],
+                                    not ns.no_commit, ns.skip_ci)
+                            else:
+                                msg = accept.accept(
+                                    meta, ns.acceptable, not ns.no_commit,
+                                    ns.skip_ci, exact=ns.exact)
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'unaccept':
-                            msg = unaccept(meta, ns.unacceptable,
-                                           not ns.no_commit, ns.skip_ci,
-                                           exact=ns.exact)
+                            if ns.query:
+                                msg = accept.unaccept_query(
+                                    meta, ns.query,
+                                    [t[-1] for t in ns.unacceptable],
+                                    not ns.no_commit, ns.skip_ci)
+                            else:
+                                msg = accept.unaccept(
+                                    meta, ns.unacceptable, not ns.no_commit,
+                                    ns.skip_ci, exact=ns.exact)
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'createdb':
                             success, msg, sql_dump = test.import_database(
@@ -521,7 +637,16 @@ def test_accept():
         '@EMPD-admin accept test_a1:Country --no-commit',
         'EMPD2', 'EMPD-data', 'test-data', 2)
 
-    assert 'test_a1' in msg and 'Country' in msg
+    assert 'Accept wrong Country for sample test_a1' in msg
+
+
+def test_accept_query():
+    msg = process_comment_line(
+        ('@EMPD-admin accept -q "SampleName == \'test_a1\'" Country'
+         ' --no-commit'),
+        'EMPD2', 'EMPD-data', 'test-data', 2)
+
+    assert '1 sample' in msg
 
 
 def test_unaccept():
@@ -529,7 +654,16 @@ def test_unaccept():
         '@EMPD-admin unaccept test_a2:Country --no-commit',
         'EMPD2', 'EMPD-data', 'test-data', 2)
 
-    assert 'test_a2' in msg and 'Country' in msg
+    assert 'Do not accept wrong Country for sample test_a2' in msg
+
+
+def test_unaccept_query():
+    msg = process_comment_line(
+        ('@EMPD-admin unaccept -q "SampleName == \'test_a1\'" Country '
+         '--no-commit'),
+        'EMPD2', 'EMPD-data', 'test-data', 2)
+
+    assert '1 sample' in msg
 
 
 def test_createdb():
