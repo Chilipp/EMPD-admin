@@ -378,7 +378,14 @@ def process_comment(comment, pr_owner, pr_repo, pr_branch, pr_num):
 def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
     if not line or not line.startswith('@EMPD-admin'):
         return
-    args = shlex.split(line)
+
+    # split args using shlex. We add ` (accent grave) as a quote character
+    lex = shlex.shlex(line, posix=True)
+    lex.quotes += '`'
+    lex.whitespace_split = True
+    lex.commenters = ''
+    args = list(lex)
+
     parser = WebParser('@EMPD-admin', add_help=False)
     setup_subparsers(parser, pr_owner, pr_repo, pr_branch, add_help=False)
 
@@ -668,7 +675,7 @@ def test_unaccept_query():
 
 def test_query():
     msg = process_comment_line(
-        '@EMPD-admin query "okexcept LIKE \'%Country%\'" SampleName',
+        "@EMPD-admin query `okexcept LIKE '%Country%'` SampleName",
         'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'test_a2' in msg, "Wrong message:\n" + msg
     assert 'test_a1' not in msg, "Wrong message:\n" + msg
