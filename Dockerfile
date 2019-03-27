@@ -1,10 +1,6 @@
 FROM chilipp/empd-admin-base
 
-ENV TINI_VERSION v0.18.0
-
 USER root
-
-RUN conda install -y -p /opt/test-env requests gitpython
 
 COPY ./environment.yml /tmp/environment.yml
 
@@ -21,12 +17,6 @@ RUN pip install /opt/empd-admin
 COPY run-empd-admin-server.sh /usr/local/bin/run-empd-admin-server
 COPY docker_tests.sh /usr/local/bin/test-empd-admin
 
-# download and verify tini
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/local/bin/tini
-RUN chmod +x /usr/local/bin/tini
-
 USER postgres
-
-ENTRYPOINT ["tini", "--"]
 
 CMD run-empd-admin-server
