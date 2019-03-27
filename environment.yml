@@ -1,4 +1,6 @@
 name: _empd_admin
+channels:
+ - conda-forge
 
 dependencies:
  - python=3.7
@@ -9,6 +11,4 @@ dependencies:
  - pytest
  - xlrd
  - openpyxl
- - pip:
-     - PyGithub
-     - statuspage
+ - pygithub
