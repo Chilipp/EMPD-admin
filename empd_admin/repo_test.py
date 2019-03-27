@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import os.path as osp
 import contextlib
 import time
@@ -142,7 +143,9 @@ def import_database(meta, dbname=None, commit=False, populate=None,
         if success and commit:
             repo = Repo(osp.dirname(meta))
             if repo.git.diff(osp.join('postgres', 'scripts', 'tables')):
-                repo.index.add([osp.join('postgres', 'scripts', 'tables')])
+                repo.index.add(
+                    [osp.basename(meta),
+                     osp.join('postgres', 'scripts', 'tables')])
                 repo.index.commit('Updated fixed tables')
             if dbname:
                 meta_base = dbname
@@ -163,6 +166,12 @@ def import_database(meta, dbname=None, commit=False, populate=None,
                     'Added postgres dump for %s' % osp.basename(meta))
 
     return success, stdout.decode('utf-8'), sql_dump
+
+
+def replace_dots(s):
+    """Replaced '.' and 's' in the pytest report"""
+    s = re.sub(r'\[\s*\d+%\]', '', re.sub(r'(?m)^[\.s]{2,1000}', '', s))
+    return '\n'.join(filter(None, map(str.strip, s.splitlines())))
 
 
 def run_test(meta, pytest_args=[], tests=['']):
@@ -195,7 +204,7 @@ def run_test(meta, pytest_args=[], tests=['']):
                     md_report = f.read()
             success = proc.returncode == 0
 
-    return (success, replace_testdir(stdout.decode('utf-8')),
+    return (success, replace_dots(replace_testdir(stdout.decode('utf-8'))),
             replace_testdir(md_report))
 
 
@@ -340,13 +349,13 @@ def full_repo_test(local_repo):
 
     # run cricital tests
     results['Critical tests'] = crit_success, crit_log, crit_md = run_test(
-        meta, '-m critical --maxfail=20'.split())
+        meta, '-m critical -tb=line --maxfail=20'.split())
 
     if crit_success:
         results['Formatting tests'] = run_test(
-            meta, ['--maxfail=20'], tests=['test_formatting.py'])
+            meta, ['--maxfail=20', '-tb=line'], tests=['test_formatting.py'])
         results['Metadata tests'] = run_test(
-            meta, ['--maxfail=20'], tests=['test_meta.py'])
+            meta, ['--maxfail=20', '-tb=line'], tests=['test_meta.py'])
 
     test_summary = '\n\n'.join(
         textwrap.dedent("""
