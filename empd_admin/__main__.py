@@ -69,7 +69,8 @@ def main():
             sys.exit(1)
     elif args.parser == 'query':
         from empd_admin.query import query_meta
-        print(query_meta(meta, args.query, args.columns, args.count))
+        print(query_meta(meta, args.query, args.columns, args.count,
+                         args.output, args.commit))
     elif args.parser == 'rebuild':
         success, report, sql_dump = import_database(
             meta, dbname=args.database, commit=args.commit,

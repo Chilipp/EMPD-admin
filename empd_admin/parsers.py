@@ -291,9 +291,23 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
               "You can change this by setting it to 'all'"))
 
     query_parser.add_argument(
-        '-c', '--count', action='store_true',
+        '-count', action='store_true',
         help=("Display the number of not-null values (i.e. `COUNT(column)`) "
               "in the selected columns instead of the data table."))
+
+    commit_help = "Commit the generated file."
+    if pr_owner:
+        commit_help += (" and push it to the "
+                        f"{pr_branch} branch of {pr_owner}/{pr_repo}")
+
+    query_parser.add_argument(
+        '-c', '--commit', help=commit_help, action='store_true')
+
+    query_parser.add_argument(
+        '-o', '--output', default=None,
+        help=("Save the query in the `queries` directory. If not set but "
+              "`--commit` is set, then it will be saved as "
+              "`queries/query.tsv`."))
 
     query_parser.epilog = textwrap.dedent(f"""
         Examples
@@ -445,7 +459,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                         log.replace(tmpdir, 'data/'))
                         elif ns.parser == 'query':
                             ret += query_meta(meta, ns.query, ns.columns,
-                                              ns.count)
+                                              ns.count, ns.output, ns.commit)
                         elif ns.parser == 'accept':
                             if ns.query:
                                 msg = accept.accept_query(

@@ -1,9 +1,12 @@
 # A module to filter and display meta information
+import os
+import os.path as osp
 import numpy as np
 import pandas as pd
 import textwrap
 from sqlalchemy import create_engine
 import tempfile
+from git import Repo
 
 
 def query_samples(meta_df, query):
@@ -18,7 +21,8 @@ def query_samples(meta_df, query):
     return samples
 
 
-def query_meta(meta, query, columns='notnull', count=False):
+def query_meta(meta, query, columns='notnull', count=False,
+               output=None, commit=False):
     meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName').replace(
         '', np.nan)
     samples = query_samples(meta_df, query)
@@ -44,9 +48,22 @@ def query_meta(meta, query, columns='notnull', count=False):
         sub.columns = ['Column', 'Count']
     else:
         sub = sub[columns].fillna('')
+    if commit:
+        output = output or 'query.tsv'
+    if output:
+        ofile = osp.join(osp.dirname(meta), 'queries', output)
+        os.makedirs(osp.dirname(ofile), exist_ok=True)
+        sub.to_csv(ofile, '\t')
+
+    if commit:
+        repo = Repo(osp.dirname(meta))
+        repo.index.add([osp.join('queries', output)])
+        repo.index.commit(f'Added {output} [skip ci]\n\n{query}')
+
     sub = pd.concat([
         pd.DataFrame([('---', ) * len(sub.columns)], columns=sub.columns),
         sub], ignore_index=True)
+
     ret = f'<details><summary>{query}</summary>\n\n' + textwrap.indent(
         sub.to_csv(sep='|', index=False), '| ')
     if len(missing):
