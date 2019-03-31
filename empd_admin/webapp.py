@@ -168,7 +168,7 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             print(repo, branch, meta, metadata, submitter_first,
                   submitter_last, submitter_mail)
             self.write("Success: " + ', '.join([
-                repo, branch, meta, metadata, submitter_first,
+                repo, branch, meta, submitter_first,
                 submitter_last, submitter_mail]))
 
 
