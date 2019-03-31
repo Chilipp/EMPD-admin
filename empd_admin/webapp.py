@@ -153,7 +153,6 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             meta = body['meta']
 
             metadata = body['metadata']
-            pollendata = body['pollendata']
 
             submitter_first = body['submitter_firstname']
             submitter_last = body['submitter_lastname']
@@ -166,8 +165,11 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             self.set_status(404)
             self.write_error(404)
         else:
-            print(repo, branch, meta, metadata, pollendata, submitter_first,
+            print(repo, branch, meta, metadata, submitter_first,
                   submitter_last, submitter_mail)
+            self.write("Success: " + ', '.join([
+                repo, branch, meta, metadata, submitter_first,
+                submitter_last, submitter_mail]))
 
 
 def create_webapp():
