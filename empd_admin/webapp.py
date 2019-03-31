@@ -1,11 +1,13 @@
 import os
 import json
+import io
 import tornado.escape
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tempfile
 import github
+import traceback
 
 import empd_admin.repo_test as test
 import empd_admin.parsers as parsers
@@ -142,10 +144,36 @@ class TestHookHandler(tornado.web.RequestHandler):
             self.write_error(404)
 
 
+class ViewerHookHandler(tornado.web.RequestHandler):
+    def post(self):
+        body = json.loads(self.request.body, strict=False)
+        try:
+            repo = body['repo']
+            branch = body['branch']
+            meta = body['meta']
+
+            metadata = body['metadata']
+            pollendata = body['pollendata']
+
+            submitter_first = body['submitter_firstname']
+            submitter_last = body['submitter_lastname']
+            submitter_mail = body['submitter_mail']
+        except KeyError:
+            s = io.StringIO()
+            traceback.print_exc(file=s)
+            print('Unhandled request!\n\n' + s.getvalue())
+            self.set_status(404)
+            self.write_error(404)
+        else:
+            print(repo, branch, meta, metadata, pollendata, submitter_first,
+                  submitter_last, submitter_mail)
+
+
 def create_webapp():
     application = tornado.web.Application([
         (r"/empd-data/hook", TestHookHandler),
         (r"/empd-admin-command/hook", CommandHookHandler),
+        (r"/empd-viewer/hook", ViewerHookHandler),
     ])
     return application
 
