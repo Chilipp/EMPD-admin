@@ -594,7 +594,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                             remote = repo.create_remote(
                                 'push_remote',
                                 remote_url % os.environ['GH_TOKEN'])
-                            remote.push()
+                            remote.push(pr_branch)
     return ret
 
 
