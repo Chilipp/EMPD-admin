@@ -146,7 +146,7 @@ class TestHookHandler(tornado.web.RequestHandler):
 
 class ViewerHookHandler(tornado.web.RequestHandler):
     def post(self):
-        body = json.loads(self.request.body, strict=False)
+        body = tornado.escape.json_decode(self.request.body)
         try:
             repo = body['repo']
             branch = body['branch']
@@ -162,6 +162,7 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             s = io.StringIO()
             traceback.print_exc(file=s)
             print('Unhandled request!\n\n' + s.getvalue())
+            print('Body:', body)
             self.set_status(404)
             self.write_error(404)
         else:
