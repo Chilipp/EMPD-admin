@@ -8,6 +8,7 @@ import shlex
 import tempfile
 import textwrap
 from git import Repo
+import github
 import empd_admin.repo_test as test
 from empd_admin.finish import (
     finish_pr, rebase_master, look_for_changed_fixed_tables)
@@ -325,6 +326,14 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
             {parser.prog} query "SampleContext LIKE '%forest%'"
         """)
 
+    if pr_owner:
+        # add a command to enable edits of a commit
+        edit_parser = subparsers.add_parser(
+            'allow-edits', help='Allow edits through https://empd2.github.io/')
+        noedit_parser = subparsers.add_parser(
+            'disable-edits',
+            help='Disable edits through https://empd2.github.io/')
+
     # help parser
     choices = subparsers.choices
 
@@ -416,7 +425,21 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
         if ns.parser == 'help':
             ret += '```\n' + ns.format_help(ns.command) + '```'
         elif ns.parser is None:
-            ret += '```\n' + parser.format_help() + '```'
+            ret = '```\n' + parser.format_help() + '```'
+        elif ns.parser == 'allow-edits':
+            pull = github.Github(os.environ['GH_TOKEN']).get_repo(
+                'EMPD2/EMPD-data').get_pull(pr_num)
+            pull.add_to_labels('viewer-editable')
+            ret += ("Ok, I made this PR editable through "
+                    "https://empd2.github.io/. If you want to disable this "
+                    "again, tell me `@EMPD-admin disable-edits` or remove "
+                    "the `viewer-editable` label.")
+        elif ns.parser == 'disable-edits':
+            pull = github.Github(os.environ['GH_TOKEN']).get_repo(
+                'EMPD2/EMPD-data').get_pull(pr_num)
+            pull.remove_from_labels('viewer-editable')
+            ret += ("Ok, I removed the `viewer-editable` label and wont "
+                    "accept data submits through https://empd2.github.io/.")
         else:
             with tempfile.TemporaryDirectory('_empd') as tmpdir:
                 tmpdir = osp.join(tmpdir, '')

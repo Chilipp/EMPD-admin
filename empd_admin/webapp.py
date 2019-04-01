@@ -11,6 +11,7 @@ import traceback
 
 import empd_admin.repo_test as test
 import empd_admin.parsers as parsers
+from empd_admin.viewer_responses import handle_viewer_request
 
 
 class CommandHookHandler(tornado.web.RequestHandler):
@@ -157,19 +158,24 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             submitter_first = body['submitter_firstname']
             submitter_last = body['submitter_lastname']
             submitter_mail = body['submitter_mail']
+            submitter_gh = body['submitter_username']
         except KeyError:
             s = io.StringIO()
             traceback.print_exc(file=s)
             print('Unhandled request!\n\n' + s.getvalue())
-            print('Body:', body)
             self.set_status(404)
             self.write_error(404)
         else:
-            print(repo, branch, meta, metadata, submitter_first,
-                  submitter_last, submitter_mail)
-            self.write("Success: " + ', '.join([
-                repo, branch, meta, submitter_first,
-                submitter_last, submitter_mail]))
+            success, msg = handle_viewer_request(
+                metadata, (submitter_first + ' ' + submitter_last).strip(),
+                repo, branch, meta, submitter_gh)
+            if success:
+                self.write("Success: " + msg)
+            else:
+                self.write("Internal Server Error: " + msg)
+                self.set_status(500)
+                self.write_error(500)
+            print(success, msg)
 
 
 def create_webapp():
