@@ -632,7 +632,7 @@ def test_help():
     msg = process_comment_line('@EMPD-admin help',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     parser = argparse.ArgumentParser('@EMPD-admin', add_help=False)
-    setup_subparsers(parser, add_help=False)
+    setup_subparsers(parser, 'EMPD2', 'EMPD-data', 'test-data', add_help=False)
     assert '\n'.join(msg.splitlines()[1:]).strip() == \
         '```\n' + parser.format_help() + '```'
 
