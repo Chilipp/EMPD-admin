@@ -11,7 +11,6 @@ import traceback
 
 import empd_admin.repo_test as test
 import empd_admin.parsers as parsers
-from empd_admin.viewer_responses import handle_viewer_request
 
 
 class CommandHookHandler(tornado.web.RequestHandler):
@@ -166,13 +165,12 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             self.set_status(404)
             self.write_error(404)
         else:
+            from empd_admin.viewer_responses import handle_viewer_request
             success, msg = handle_viewer_request(
                 metadata, (submitter_first + ' ' + submitter_last).strip(),
                 repo, branch, meta, submitter_gh)
-            if success:
-                self.write("Success: " + msg)
-            else:
-                self.write("Internal Server Error: " + msg)
+            self.write(msg + ' ')
+            if not success:
                 self.set_status(500)
                 self.write_error(500)
             print(success, msg)
