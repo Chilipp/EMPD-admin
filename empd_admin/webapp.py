@@ -13,6 +13,10 @@ import empd_admin.repo_test as test
 import empd_admin.parsers as parsers
 
 
+# True if HEROKU env variable like true, True, yes, etc.
+ONHEROKU = os.getenv('HEROKU', 'false').lower()[0] in 'ty'
+
+
 class CommandHookHandler(tornado.web.RequestHandler):
     def post(self):
         headers = self.request.headers
@@ -171,6 +175,24 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             self.set_status(404)
             self.write_error(404)
         else:
+
+            if ONHEROKU:
+                import requests
+                recaptcha_token = body['token']
+                response = requests.post(
+                    'https://www.google.com/recaptcha/api/siteverify',
+                    data={'response': recaptcha_token,
+                          'secret': os.environ['RECAPTCHASECRET']})
+                validation = json.loads(response.text)
+                print(validation)
+                if (not validation['success'] or validation['score'] < 0.5
+                        or validation['action'] != 'submit_data'):
+                    self.write(
+                        "Failed recaptcha validation: %s " % validation)
+                    self.set_status(401)
+                    self.write_error(401)
+                    return
+
             from empd_admin.viewer_responses import handle_viewer_request
             success, msg = handle_viewer_request(
                 metadata, (submitter_first + ' ' + submitter_last).strip(),
