@@ -8,6 +8,7 @@ import tornado.web
 import tempfile
 import github
 import traceback
+import re
 
 import empd_admin.repo_test as test
 import empd_admin.parsers as parsers
@@ -202,26 +203,36 @@ class ViewerHookHandler(tornado.web.RequestHandler):
                 self.set_status(500)
                 self.write_error(500)
             print(success, msg)
+
             if ONHEROKU:
                 # send a mail to the sender
-                import sendgrid
-                import os
-                from sendgrid.helpers.mail import (
-                    Email, HtmlContent, Mail, Personalization)
+                import smtplib
+                import ssl
+                from email.mime.text import MIMEText
+                from email.mime.multipart import MIMEMultipart
 
-                sg = sendgrid.SendGridAPIClient(
-                    apikey=os.environ.get('SENDGRID_API_KEY'))
-                from_email = Email("noreply@empd.com")
+                port = 465
+                context = ssl.create_default_context()
+
                 status = "" if success else "FAILED: "
                 subject = status + f"Data contribution to {repo}:{branch}"
-                to_mail = Email(submitter_mail)
-                content = HtmlContent(msg)
-                mail = Mail(from_email, to_mail, subject,
-                            html_content=content)
-                response = sg.client.mail.send.post(request_body=mail.get())
-                print(response.status_code)
-                print(response.body)
-                print(response.headers)
+
+                message = MIMEMultipart("alternative")
+                message['Subject'] = subject
+                message['From'] = os.environ['GOOGLEMAIL']
+                message['To'] = submitter_mail
+
+                message.attach(MIMEText(re.sub(r'<.*?>', '', msg), "plain"))
+                message.attach(MIMEText(msg, "html"))
+
+                with smtplib.SMTP_SSL(
+                        "smtp.gmail.com", port, context=context) as server:
+                    server.login(os.environ['GOOGLEMAIL'],
+                                 os.environ['GOOGLEPW'])
+                    server.sendmail(
+                        os.environ['GOOGLEMAIL'],
+                        [submitter_mail, os.environ['GOOGLEMAIL']],
+                        message.as_string())
 
 
 def create_webapp():
