@@ -214,11 +214,9 @@ class ViewerHookHandler(tornado.web.RequestHandler):
                 from_email = Email("noreply@empd.com")
                 status = "" if success else "FAILED: "
                 subject = status + f"Data contribution to {repo}:{branch}"
-                to_list = Personalization()
-                to_list.add_to(Email(submitter_mail))
-                to_list.add_bcc(Email(os.environ.get('ADMIN_MAIL')))
+                to_mail = Email(submitter_mail)
                 content = HtmlContent(msg)
-                mail = Mail(from_email, to_list, subject,
+                mail = Mail(from_email, to_mail, subject,
                             html_content=content)
                 response = sg.client.mail.send.post(request_body=mail.get())
                 print(response.status_code)
