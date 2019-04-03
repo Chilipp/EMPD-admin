@@ -11,7 +11,7 @@ from git import Repo
 import github
 import empd_admin.repo_test as test
 from empd_admin.finish import (
-    finish_pr, rebase_master, look_for_changed_fixed_tables)
+    finish_pr, rebase_master, look_for_changed_fixed_tables, merge_meta)
 import empd_admin.accept as accept
 from empd_admin.query import query_meta
 
@@ -265,7 +265,7 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
             " If not set, changes are commited and pushed to the"
             f"{pr_branch} branch of {pr_owner}/{pr_repo}")
 
-    for subparser in [accept_parser, unaccept_parser, fix_parser]:
+    for subparser in [accept_parser, unaccept_parser, fix_parser, test_parser]:
         subparser.add_argument(
             '--no-commit', action='store_true', help=no_commit_help)
         subparser.add_argument(
@@ -326,6 +326,23 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
             {parser.prog} query "SampleContext LIKE '%forest%'"
         """)
 
+    merge_meta_parser = subparsers.add_parser(
+        'merge-meta', help="Merge two metafiles", add_help=add_help)
+
+    merge_meta_parser.add_argument(
+        'src', help=("The tab-separated source file that shall be merged into "
+                     "the target file"))
+
+    merge_meta_parser.add_argument(
+        'target', nargs='?', default=None,
+        help=("The meta file in which `src` should be merged into. If not "
+              "set, it is either the new meta file in the root directory of "
+              "the repository (if existent) or `meta.tsv`."))
+
+    merge_meta_parser.add_argument(
+        '--no-commit', action='store_false', dest='commit',
+        help="Do not commit the merge.")
+
     if pr_owner:
         # add a command to enable edits of a commit
         edit_parser = subparsers.add_parser(
@@ -360,10 +377,10 @@ def setup_pytest_args(namespace):
             pytest_args.append('--fix-db')
     elif namespace.parser == 'fix':
         pytest_args.extend(['-m', 'dbfix', '--fix-db'])
-        if not namespace.no_commit:
-            pytest_args.append('--commit')
-        if namespace.skip_ci:
-            pytest_args.append('--skip-ci')
+    if namespace.skip_ci:
+        pytest_args.append('--skip-ci')
+    if not namespace.no_commit:
+        pytest_args.append('--commit')
     if namespace.k:
         pytest_args.extend(['-k', namespace.k])
     if namespace.collect_only:
@@ -375,7 +392,9 @@ def setup_pytest_args(namespace):
     if getattr(namespace, 'verbose', False):
         pytest_args.append('-v')
     if getattr(namespace, 'extract_failed', False):
-        pytest_args.extend(['--extract-failed', namespace.extract_failed])
+        pytest_args.extend(
+            ['--extract-failed',
+             namespace.extract_failed.strip() or 'failed.tsv'])
 
     files = ['fixes.py'] if namespace.parser == 'fix' else ['']
 
@@ -555,6 +574,11 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                 if ns.no_commit:
                                     ret += f" (but did not push to {pr_owner}/{pr_repo})"
                                 ret += "."
+                        elif ns.parser == 'merge-meta':
+                            merge_meta(osp.join(osp.dirname(meta), ns.src),
+                                       ns.target, commit=True,
+                                       local_repo=osp.dirname(meta))
+                            ret += f"Ok, I merged {ns.src} into {ns.target}"
                         elif ns.parser == 'finish':
                             try:
                                 changed = finish_pr(meta, commit=ns.commit)

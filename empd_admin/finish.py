@@ -6,14 +6,14 @@ from functools import partial
 import pandas as pd
 from git import Repo, GitCommandError
 from empd_admin.repo_test import (
-    import_database, temporary_database, SQLSCRIPTS)
+    import_database, temporary_database, SQLSCRIPTS, get_meta_file)
 import subprocess as spr
 import textwrap
 
 
 def finish_pr(meta, commit=True):
     rebase_master(meta)
-    merge_postgres(meta, commit)
+    merge_postgres(meta, commit=commit)
     merge_meta(meta, commit)
 
     if commit and osp.basename(meta) != 'meta.tsv':
@@ -23,27 +23,34 @@ def finish_pr(meta, commit=True):
     return
 
 
-def merge_meta(meta, commit=True):
+def merge_meta(meta, target=None, commit=True, local_repo=None):
 
     read_tsv = partial(pd.read_csv, index_col='SampleName', sep='\t')
-    local_repo = osp.dirname(meta)
+    if local_repo is None:
+        local_repo = osp.dirname(meta)
+
+    if target is None:
+        target = osp.basename(get_meta_file(local_repo))
+        if osp.samefile(meta, osp.join(local_repo, target)):
+            target = 'meta.tsv'
 
     meta_df = read_tsv(meta)
 
-    base_meta = osp.join(local_repo, 'meta.tsv')
+    base_meta = osp.join(local_repo, target)
     base_meta_df = read_tsv(base_meta)
 
     # update the meta file and save
     base_meta_df = base_meta_df.join(meta_df[[]], how='outer')
-    base_meta_df.loc[meta_df.index, meta_df.columns] = meta_df
+    cols = [col for col in meta_df.columns if col in base_meta_df.columns]
+    base_meta_df.loc[meta_df.index, cols] = meta_df
 
     base_meta_df.to_csv(base_meta, sep='\t', float_format='%1.8g')
 
     if commit:
         repo = Repo(local_repo)
-        repo.index.add(['meta.tsv'])
-        repo.index.commit("Merged {} into meta.tsv [skip ci]".format(
-            osp.basename(meta)))
+        repo.index.add([target])
+        repo.index.commit("Merged {} into {} [skip ci]".format(
+            osp.basename(meta), target))
 
 
 def rebase_master(meta):

@@ -1,5 +1,6 @@
 # Main module for the empd-admin
 import sys
+import os.path as osp
 import re
 from empd_admin.parsers import setup_pytest_args, get_parser
 
@@ -41,6 +42,9 @@ def main():
     if args.parser == 'finish':
         from empd_admin.finish import finish_pr
         finish_pr(meta, commit=args.commit)
+    elif args.parser == 'merge-meta':
+        from empd_admin.finish import merge_meta
+        merge_meta(args.src, args.target, args.commit, osp.dirname(meta))
     elif args.parser == 'rebase':
         from empd_admin.finish import rebase_master
         rebase_master(meta)
