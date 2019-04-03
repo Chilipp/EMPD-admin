@@ -52,7 +52,7 @@ class CommandHookHandler(tornado.web.RequestHandler):
 
             if comment:
                 message = parsers.process_comment(
-                    comment, pr_owner, pr_repo, pr_branch)
+                    comment, pr_owner, pr_repo, pr_branch, pr_num)
                 if message:
                     test.comment_on_pr(
                         owner, repo_name, pr_num, message, force=True)
