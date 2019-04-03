@@ -116,8 +116,8 @@ class TestHookHandler(tornado.web.RequestHandler):
                 if body['sender']['login'] == 'EMPD-admin':
                     self.write('EMPD-admin pushes are skipped')
                     return
-                self.write("testing PR %i from %s/%s" % (
-                    pr_id, owner, repo_name))
+#                self.write("testing PR %i from %s/%s" % (
+#                    pr_id, owner, repo_name))
 
                 with tempfile.TemporaryDirectory('_empd') as tmp_dir:
                     test_info = test.download_pr(
