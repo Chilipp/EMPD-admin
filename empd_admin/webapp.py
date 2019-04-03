@@ -202,6 +202,28 @@ class ViewerHookHandler(tornado.web.RequestHandler):
                 self.set_status(500)
                 self.write_error(500)
             print(success, msg)
+            if ONHEROKU:
+                # send a mail to the sender
+                import sendgrid
+                import os
+                from sendgrid.helpers.mail import (
+                    Email, HtmlContent, Mail, Personalization)
+
+                sg = sendgrid.SendGridAPIClient(
+                    apikey=os.environ.get('SENDGRID_API_KEY'))
+                from_email = Email("noreply@empd.com")
+                status = "" if success else "FAILED: "
+                subject = status + f"Data contribution to {repo}:{branch}"
+                to_list = Personalization()
+                to_list.add_to(Email(submitter_mail))
+                to_list.add_bcc(Email(os.environ.get('ADMIN_MAIL')))
+                content = HtmlContent(msg)
+                mail = Mail(from_email, to_list, subject,
+                            html_content=content)
+                response = sg.client.mail.send.post(request_body=mail.get())
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
 
 
 def create_webapp():
