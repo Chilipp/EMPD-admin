@@ -661,12 +661,12 @@ def test_help():
         '```\n' + parser.format_help() + '```'
 
 
-def test_help_test():
-    msg = process_comment_line('@EMPD-admin help test',
+def test_help_merge_meta():
+    msg = process_comment_line('@EMPD-admin help merge-meta',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     parser = argparse.ArgumentParser('@EMPD-admin', add_help=False)
     subparsers = setup_subparsers(parser, add_help=False)
-    parser = subparsers.choices['test']
+    parser = subparsers.choices['merge-meta']
     assert '\n'.join(msg.splitlines()[1:]).strip() == \
         '```\n' + parser.format_help().strip() + '\n```'
 

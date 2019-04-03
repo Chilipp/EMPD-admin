@@ -29,7 +29,7 @@ def merge_meta(meta, target=None, commit=True, local_repo=None):
     if local_repo is None:
         local_repo = osp.dirname(meta)
 
-    if target is None:
+    if not target:
         target = osp.basename(get_meta_file(local_repo))
         if osp.samefile(meta, osp.join(local_repo, target)):
             target = 'meta.tsv'
