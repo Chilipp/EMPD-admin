@@ -393,8 +393,8 @@ def setup_pytest_args(namespace):
         pytest_args.append('-v')
     if getattr(namespace, 'extract_failed', False):
         pytest_args.extend(
-            ['--extract-failed',
-             namespace.extract_failed.strip() or 'failed.tsv'])
+            ['--extract-failed=' + (
+                 namespace.extract_failed.strip() or 'failed.tsv')])
 
     files = ['fixes.py'] if namespace.parser == 'fix' else ['']
 
