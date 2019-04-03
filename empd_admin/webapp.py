@@ -198,14 +198,8 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             success, msg = handle_viewer_request(
                 metadata, (submitter_first + ' ' + submitter_last).strip(),
                 repo, branch, meta, submitter_gh)
-            self.write(msg + ' ')
-            if not success:
-                self.set_status(500)
-                self.write_error(500)
-            print(success, msg)
 
-            if ONHEROKU:
-                # send a mail to the sender
+            if ONHEROKU:  # send a mail to the sender
                 import smtplib
                 import ssl
                 from email.mime.text import MIMEText
@@ -233,6 +227,12 @@ class ViewerHookHandler(tornado.web.RequestHandler):
                         os.environ['GOOGLEMAIL'],
                         [submitter_mail, os.environ['GOOGLEMAIL']],
                         message.as_string())
+
+            print(success, msg)
+            self.write(msg + ' ')
+            if not success:
+                self.set_status(500)
+                self.write_error(500)
 
 
 def create_webapp():
