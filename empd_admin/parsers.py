@@ -590,7 +590,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                     Sorry but I could not finish the PR because of the following exception:
 
                                     ```
-                                    {{}}
+                                    {}
                                     ```
 
                                     If you don't know, what is wrong here, you should ping `@Chilipp`.""").format(s.getvalue())
