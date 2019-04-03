@@ -143,6 +143,8 @@ class TestHookHandler(tornado.web.RequestHandler):
                         owner, repo_name, pr_id, test_info['message'])
                     test.set_pr_status(owner, repo_name, test_info,
                                        target_url=msg.html_url)
+                self.write("tested PR %i from %s/%s" % (
+                    pr_id, owner, repo_name))
         else:
             print('Unhandled event "{}".'.format(event))
             self.set_status(404)
