@@ -132,7 +132,7 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
 
     rebuild_parser.add_argument(
         'tables', help='The table name to rebuild.',
-        choices=['all', 'GroupID', 'SampleType', 'Country'], nargs='+')
+        choices=['all', 'SampleType', 'Country'], nargs='+')
 
     commit_help = "Dump the postgres database into a .sql file"
     if pr_owner:
