@@ -52,6 +52,8 @@ def merge_meta(meta, target=None, commit=True, local_repo=None):
         repo.index.commit("Merged {} into {} [skip ci]".format(
             osp.basename(meta), target))
 
+    return target
+
 
 def rebase_master(meta):
     # Merge the master branch into the feature branch using rebase

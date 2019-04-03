@@ -575,10 +575,10 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                     ret += f" (but did not push to {pr_owner}/{pr_repo})"
                                 ret += "."
                         elif ns.parser == 'merge-meta':
-                            merge_meta(osp.join(osp.dirname(meta), ns.src),
-                                       ns.target, commit=True,
-                                       local_repo=osp.dirname(meta))
-                            ret += f"Ok, I merged {ns.src} into {ns.target}"
+                            target = merge_meta(
+                                osp.join(osp.dirname(meta), ns.src), ns.target,
+                                commit=True, local_repo=osp.dirname(meta))
+                            ret += f"Ok, I merged {ns.src} into {target}"
                         elif ns.parser == 'finish':
                             try:
                                 changed = finish_pr(meta, commit=ns.commit)
@@ -761,3 +761,10 @@ def test_rebase():
         '@EMPD-admin rebase --no-commit', 'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'successfully rebased' in msg, "Wrong message:\n" + msg
     assert 'did not push' in msg, "Wrong message:\n" + msg
+
+
+def test_merge_meta():
+    msg = process_comment_line(
+        '@EMPD-admin merge-meta failures/failed.tsv --no-commit',
+        'EMPD2', 'EMPD-data', 'test-data', 2)
+    assert "I merged failures/failed.tsv into test.tsv" in msg
