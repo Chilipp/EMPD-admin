@@ -499,6 +499,9 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                         "PASSED" if success else "FAILED",
                                         md.replace(tmpdir, 'data/'),
                                         log.replace(tmpdir, 'data/'))
+                                if ns.extract_failed:
+                                    ret += f"\nYou can look at the extracted failures in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=failures/{ns.extract_failed}\n"
+
                         elif ns.parser == 'query':
                             ret += query_meta(meta, ns.query, ns.columns,
                                               ns.count, ns.output, ns.commit)
@@ -679,10 +682,12 @@ def test_test_collect():
 
 
 def test_test():
-    msg = process_comment_line('@EMPD-admin test precip -v -f',
-                               'EMPD2', 'EMPD-data', 'test-data', 2)
+    msg = process_comment_line(
+        '@EMPD-admin test precip -v -f --extract-failed --no-commit',
+        'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'test_precip' in msg
     assert 'test_temperature' not in msg
+    assert 'meta=failures/failed.tsv' in msg
 
 
 def test_fix():
