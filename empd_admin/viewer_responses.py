@@ -72,7 +72,7 @@ def edit_pull_request(pull, meta, metadata, submitter, submitter_gh=None,
             repo.index.add([meta])
             repo.index.commit(
                 f"Updated {nsamples} in {meta} as requested by "
-                "{submitter}")
+                f"{submitter}")
             remote_url = ('https://EMPD-admin:%s@github.com/'
                           f'{full_repo}.git')
             remote = repo.create_remote(
