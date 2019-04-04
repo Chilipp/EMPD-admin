@@ -453,6 +453,8 @@ def comment_on_pr(owner, repo_name, pr_id, message, force=False,
             if my_last_comment is None or all(
                     comment.body != message for comment in my_comments):
                 my_last_comment = issue.create_comment(message)
+    else:
+        my_last_comment = issue.create_comment(message)
 
     return my_last_comment
 
