@@ -510,14 +510,17 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                         "PASSED" if success else "FAILED",
                                         md.replace(tmpdir, 'data/'),
                                         log.replace(tmpdir, 'data/'))
-                                if ns.extract_failed:
+                                if getattr(ns, 'extract_failed', None):
                                     ret += f"\nYou can look at the extracted failures in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=failures/{ns.extract_failed}\n"
 
                         elif ns.parser == 'query':
                             ns.meta_file = ns.meta_file or osp.basename(meta)
-                            ret += query_meta(
+                            output, msg = query_meta(
                                 ns.meta_file, ns.query, ns.columns, ns.count,
                                 ns.output, ns.commit, tmpdir)
+                            ret += msg
+                            if output:
+                                ret += f"\nYou can look at the extracted data in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=queries/{output}\n"
                         elif ns.parser == 'accept':
                             ns.meta_file = ns.meta_file or osp.basename(meta)
                             if ns.query:

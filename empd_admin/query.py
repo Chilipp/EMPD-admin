@@ -72,4 +72,4 @@ def query_meta(meta, query, columns='notnull', count=False,
         sub.to_csv(sep='|', index=False), '| ')
     if len(missing):
         ret += '\n\nMissing columns ' + ', '.join(missing)
-    return ret + '\n</details>'
+    return output, ret + '\n</details>'
