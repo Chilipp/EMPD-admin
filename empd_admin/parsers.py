@@ -515,9 +515,16 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
 
                         elif ns.parser == 'query':
                             ns.meta_file = ns.meta_file or osp.basename(meta)
-                            output, msg = query_meta(
-                                ns.meta_file, ns.query, ns.columns, ns.count,
-                                ns.output, ns.commit, tmpdir)
+                            try:
+                                output, msg = query_meta(
+                                    ns.meta_file, ns.query, ns.columns,
+                                    ns.count, ns.output, ns.commit, tmpdir)
+                            except Exception:
+                                s = io.StringIO()
+                                traceback.print_exc(file=s)
+                                output = None
+                                msg = ("Sorry buy I failed to do the query:\n"
+                                       "\n```{}```").format(s.getvalue())
                             ret += msg
                             if output:
                                 ret += f"\nYou can look at the extracted data in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=queries/{output}\n"
