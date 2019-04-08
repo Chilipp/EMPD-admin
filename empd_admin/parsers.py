@@ -527,7 +527,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                        "\n```{}```").format(s.getvalue())
                             ret += msg
                             if output:
-                                ret += f"\nYou can look at the extracted data in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=queries/{output}\n"
+                                ret += f"\n\nYou can look at the extracted data in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=queries/{output}\n"
                         elif ns.parser == 'accept':
                             ns.meta_file = ns.meta_file or osp.basename(meta)
                             if ns.query:
