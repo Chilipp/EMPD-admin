@@ -39,6 +39,8 @@ def main():
         if len(meta.splitlines()) > 1:
             raise IOError("Found multiple potential meta files:\n" + meta)
 
+    local_repo = args.directory
+
     if args.parser == 'finish':
         from empd_admin.finish import finish_pr
         finish_pr(meta, commit=args.commit)
@@ -50,21 +52,27 @@ def main():
         rebase_master(meta)
     elif args.parser == 'accept':
         from empd_admin.accept import accept, accept_query
+        args.meta_file = args.meta_file or osp.basename(meta)
         if args.query:
-            accept_query(meta, args.query, [t[-1] for t in args.acceptable],
-                         not args.no_commit, raise_error=True)
+            accept_query(args.meta_file, args.query,
+                         [t[-1] for t in args.acceptable],
+                         not args.no_commit, local_repo=local_repo,
+                         raise_error=True)
         else:
-            accept(meta, args.acceptable, not args.no_commit, raise_error=True,
+            accept(args.meta_file, args.acceptable, not args.no_commit,
+                   raise_error=True, local_repo=local_repo,
                    exact=args.exact)
     elif args.parser == 'unaccept':
         from empd_admin.accept import unaccept, unaccept_query
+        args.meta_file = args.meta_file or osp.basename(meta)
         if args.query:
-            unaccept_query(meta, args.query,
-                           [t[-1] for t in args.unacceptable],
-                           not args.no_commit, raise_error=True)
+            unaccept_query(
+                args.meta_file, args.query, [t[-1] for t in args.unacceptable],
+                not args.no_commit, raise_error=True, local_repo=local_repo)
         else:
-            unaccept(meta, args.unacceptable, not args.no_commit,
-                     raise_error=True, exact=args.exact)
+            unaccept(
+                args.meta_file, args.unacceptable, not args.no_commit,
+                raise_error=True, exact=args.exact, local_repo=local_repo)
     elif args.parser == 'createdb':
         success, report, sql_dump = import_database(
             meta, dbname=args.database, commit=args.commit)
@@ -73,8 +81,9 @@ def main():
             sys.exit(1)
     elif args.parser == 'query':
         from empd_admin.query import query_meta
-        print(query_meta(meta, args.query, args.columns, args.count,
-                         args.output, args.commit))
+        args.meta_file = args.meta_file or osp.basename(meta)
+        print(query_meta(args.meta_file, args.query, args.columns, args.count,
+                         args.output, args.commit, local_repo))
     elif args.parser == 'rebuild':
         success, report, sql_dump = import_database(
             meta, dbname=args.database, commit=args.commit,

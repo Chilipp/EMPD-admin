@@ -258,6 +258,11 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
                 `SELECT SampleName FROM meta WHERE Country = 'Germany'`.
                 Note that any provided SampleName in the positional arguments
                 (`SampleName:Column`) are then ignored""")
+        subparser.add_argument(
+            '-m', '--meta-file', metavar="<<metafile>>.tsv",
+            help=("The meta file to use. If None, the default meta file of "
+                  "repository is used. The path has to be relative to the "
+                  "root of the repository."))
 
     no_commit_help = "Do not commit the changes."
     if pr_owner:
@@ -295,6 +300,12 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
         '-count', action='store_true',
         help=("Display the number of not-null values (i.e. `COUNT(column)`) "
               "in the selected columns instead of the data table."))
+
+    query_parser.add_argument(
+        '-m', '--meta-file', metavar="<<metafile>>.tsv",
+        help=("The meta file to use. If None, the default meta file of "
+              "repository is used. The path has to be relative to the "
+              "root of the repository."))
 
     commit_help = "Commit the generated file."
     if pr_owner:
@@ -503,29 +514,37 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                     ret += f"\nYou can look at the extracted failures in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=failures/{ns.extract_failed}\n"
 
                         elif ns.parser == 'query':
-                            ret += query_meta(meta, ns.query, ns.columns,
-                                              ns.count, ns.output, ns.commit)
+                            ns.meta_file = ns.meta_file or osp.basename(meta)
+                            ret += query_meta(
+                                ns.meta_file, ns.query, ns.columns, ns.count,
+                                ns.output, ns.commit, tmpdir)
                         elif ns.parser == 'accept':
+                            ns.meta_file = ns.meta_file or osp.basename(meta)
                             if ns.query:
                                 msg = accept.accept_query(
-                                    meta, ns.query,
+                                    ns.meta_file, ns.query,
                                     [t[-1] for t in ns.acceptable],
-                                    not ns.no_commit, ns.skip_ci)
+                                    not ns.no_commit, ns.skip_ci,
+                                    local_repo=tmpdir)
                             else:
                                 msg = accept.accept(
-                                    meta, ns.acceptable, not ns.no_commit,
-                                    ns.skip_ci, exact=ns.exact)
+                                    ns.meta_file, ns.acceptable,
+                                    not ns.no_commit, ns.skip_ci,
+                                    exact=ns.exact, local_repo=tmpdir)
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'unaccept':
+                            ns.meta_file = ns.meta_file or osp.basename(meta)
                             if ns.query:
                                 msg = accept.unaccept_query(
-                                    meta, ns.query,
+                                    ns.meta_file, ns.query,
                                     [t[-1] for t in ns.unacceptable],
-                                    not ns.no_commit, ns.skip_ci)
+                                    not ns.no_commit, ns.skip_ci,
+                                    local_repo=tmpdir)
                             else:
                                 msg = accept.unaccept(
-                                    meta, ns.unacceptable, not ns.no_commit,
-                                    ns.skip_ci, exact=ns.exact)
+                                    ns.meta_file, ns.unacceptable,
+                                    not ns.no_commit, ns.skip_ci,
+                                    exact=ns.exact, local_repo=tmpdir)
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'createdb':
                             success, msg, sql_dump = test.import_database(

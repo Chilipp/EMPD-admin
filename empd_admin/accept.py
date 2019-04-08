@@ -7,9 +7,15 @@ from empd_admin.query import query_samples
 
 
 def accept_query(meta, query, columns, commit=True, skip_ci=False,
-                 raise_error=False,):
+                 raise_error=False, local_repo=None):
     """Accept the columns based on a query for the pandas.DataFrame.query"""
-    repo = Repo(osp.dirname(meta))
+    if local_repo is None:
+        local_repo = osp.dirname(meta)
+        base_meta = osp.basename(meta)
+    else:
+        base_meta = meta
+        meta = osp.join(local_repo, meta)
+    repo = Repo(local_repo)
     meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName')
     samples = query_samples(meta_df, query)
     if not len(samples):
@@ -25,23 +31,32 @@ def accept_query(meta, query, columns, commit=True, skip_ci=False,
     nsamples = len(samples)
     for column in columns:
         meta_df.loc[samples, 'okexcept'] += column + ','
+        meta_df.loc[samples, 'okexcept'] = meta_df.loc[
+            samples, 'okexcept'].apply(
+                lambda s: ','.join(sorted(set(s[:-1].split(',')))) + ',')
         message = (f"Accept wrong {column} for {nsamples} samples\n\n"
                    f"based on '{query}'")
 
     if commit:
-        meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
-        repo.index.add([osp.basename(meta)])
+        meta_df.to_csv(meta, sep='\t', float_format='%1.8g')
+        repo.index.add([base_meta])
         repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
     if not commit:
-        meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
+        meta_df.to_csv(meta, sep='\t', float_format='%1.8g')
         return ("Marked the fields as accepted but without having it "
                 "commited. %i sample%s would have been affected.") % (
                     nsamples, 's' if nsamples > 1 else '')
 
 
 def accept(meta, what, commit=True, skip_ci=False, raise_error=False,
-           exact=False):
-    repo = Repo(osp.dirname(meta))
+           exact=False, local_repo=None):
+    if local_repo is None:
+        local_repo = osp.dirname(meta)
+        base_meta = osp.basename(meta)
+    else:
+        base_meta = meta
+        meta = osp.join(local_repo, meta)
+    repo = Repo(local_repo)
     meta_df = pd.read_csv(meta, sep='\t')
     samples = np.unique([t[0] for t in what])
 
@@ -67,20 +82,23 @@ def accept(meta, what, commit=True, skip_ci=False, raise_error=False,
     messages = []
     for sample, column in what:
         if sample == 'all':
-            meta_df.loc[:, 'okexcept'] += column + ','
+            slicer = slice(None)
             message = f"Accept wrong {column} for all samples"
         else:
             if exact:
-                meta_df.loc[names == sample, 'okexcept'] += column + ','
+                slicer = names == sample
             else:
-                meta_df.loc[names.str.contains(sample),
-                            'okexcept'] += column + ','
+                slicer = names.str.contains(sample)
             message = f"Accept wrong {column} for sample {sample}"
+        meta_df.loc[slicer, 'okexcept'] += column + ','
+        meta_df.loc[slicer, 'okexcept'] = meta_df.loc[
+            slicer, 'okexcept'].apply(
+                lambda s: ','.join(sorted(set(s[:-1].split(',')))) + ',')
         messages.append(message)
 
         if commit:
             meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
-            repo.index.add([osp.basename(meta)])
+            repo.index.add([base_meta])
             repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
     if not commit:
         meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
@@ -89,8 +107,14 @@ def accept(meta, what, commit=True, skip_ci=False, raise_error=False,
 
 
 def unaccept(meta, what, commit=True, skip_ci=False, raise_error=False,
-             exact=False):
-    repo = Repo(osp.dirname(meta))
+             exact=False, local_repo=None):
+    if local_repo is None:
+        local_repo = osp.dirname(meta)
+        base_meta = osp.basename(meta)
+    else:
+        base_meta = meta
+        meta = osp.join(local_repo, meta)
+    repo = Repo(local_repo)
     meta_df = pd.read_csv(meta, sep='\t')
     samples = np.unique([t[0] for t in what])
 
@@ -144,7 +168,7 @@ def unaccept(meta, what, commit=True, skip_ci=False, raise_error=False,
 
         if commit and (old_okexcept != meta_df['okexcept']).any():
             meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
-            repo.index.add([osp.basename(meta)])
+            repo.index.add([base_meta])
             repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
         old_okexcept = meta_df['okexcept'].copy(True)
     if not commit:
@@ -154,9 +178,15 @@ def unaccept(meta, what, commit=True, skip_ci=False, raise_error=False,
 
 
 def unaccept_query(meta, query, columns, commit=True, skip_ci=False,
-                   raise_error=False,):
+                   raise_error=False, local_repo=None):
     """Accept the columns based on a query for the pandas.DataFrame.query"""
-    repo = Repo(osp.dirname(meta))
+    if local_repo is None:
+        local_repo = osp.dirname(meta)
+        base_meta = osp.basename(meta)
+    else:
+        base_meta = meta
+        meta = osp.join(local_repo, meta)
+    repo = Repo(local_repo)
     meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName')
     samples = query_samples(meta_df, query)
 
@@ -184,11 +214,11 @@ def unaccept_query(meta, query, columns, commit=True, skip_ci=False,
                 f"based on '{query}'")
 
     if commit:
-        meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
-        repo.index.add([osp.basename(meta)])
+        meta_df.to_csv(meta, sep='\t', float_format='%1.8g')
+        repo.index.add([base_meta])
         repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
     if not commit:
-        meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
+        meta_df.to_csv(meta, sep='\t', float_format='%1.8g')
         return ("Marked the fields as accepted but without having it "
                 "commited. %i sample%s would have been affected.") % (
                     nsamples, 's' if nsamples > 1 else '')
