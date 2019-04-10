@@ -171,6 +171,7 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             submitter_last = body['submitter_lastname']
             submitter_mail = body['submitter_mail']
             submitter_gh = body['submitter_username']
+            commit_msg = body['commit_msg']
         except KeyError:
             s = io.StringIO()
             traceback.print_exc(file=s)
@@ -199,7 +200,7 @@ class ViewerHookHandler(tornado.web.RequestHandler):
             from empd_admin.viewer_responses import handle_viewer_request
             success, msg = handle_viewer_request(
                 metadata, (submitter_first + ' ' + submitter_last).strip(),
-                repo, branch, meta, submitter_gh)
+                repo, branch, meta, submitter_gh, commit_msg)
 
             if ONHEROKU:  # send a mail to the sender
                 import smtplib

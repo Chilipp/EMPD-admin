@@ -11,7 +11,8 @@ import textwrap
 
 
 def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
-                          branch='master', meta='meta.tsv', submitter_gh=None):
+                          branch='master', meta='meta.tsv', submitter_gh=None,
+                          commit_msg=''):
     # read the meta data json
     metadata = pd.DataFrame.from_dict(
         {d.pop('SampleName'): d for d in metadata}, 'index')
@@ -25,7 +26,8 @@ def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
                                index_col='SampleName')
 
     if repo == 'EMPD2/EMPD-data' and branch == 'master':
-        return create_new_pull_request(metadata, submitter, submitter_gh)
+        return create_new_pull_request(metadata, submitter, submitter_gh,
+                                       commit_msg)
     # check if we can find an existing pull request for the given repository
     pulls = github.Github(os.environ['GH_TOKEN']).get_repo(
         'EMPD2/EMPD-data').get_pulls()
@@ -33,18 +35,20 @@ def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
         if (pull.state == 'open' and pull.head.repo.full_name == repo and
                 pull.head.label.split(':')[1] == branch):
             return edit_pull_request(
-                pull, meta, metadata, submitter, submitter_gh)
+                pull, meta, metadata, submitter, submitter_gh,
+                commit_msg)
 
     return False, f"Could not find an open pull request for {repo}:{branch}"
 
 
-def create_new_pull_request(metadata, submitter, submitter_gh=None):
+def create_new_pull_request(metadata, submitter, submitter_gh=None,
+                            commit_msg=''):
     """Create a new branch and pull request with the given metadata"""
     return False, "Edits from EMPD2/EMPD-data:master are not yet supported"
 
 
 def edit_pull_request(pull, meta, metadata, submitter, submitter_gh=None,
-                      commit=True):
+                      commit_msg='', commit=True):
     """Edit the meta data of an existing pull request"""
     full_repo = pull.head.repo.full_name
     remote_url = f'https://github.com/{full_repo}.git'
@@ -72,7 +76,9 @@ def edit_pull_request(pull, meta, metadata, submitter, submitter_gh=None,
             old_meta.to_csv(osp.join(tmpdir, meta), sep='\t',
                             float_format='%1.8g')
             repo.index.add([meta])
+            commit_msg += '\n\n' if commit_msg else ''
             repo.index.commit(
+                commit_msg +
                 f"Updated {nsamples} in {meta} as requested by "
                 f"{submitter}")
             remote_url = ('https://EMPD-admin:%s@github.com/'
