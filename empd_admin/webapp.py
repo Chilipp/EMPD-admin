@@ -29,6 +29,9 @@ class CommandHookHandler(tornado.web.RequestHandler):
                 or event == 'pull_request_review_comment':
             # body = tornado.escape.json_decode(self.request.body)
             body = json.loads(self.request.body, strict=False)
+            if body['sender']['login'] == 'EMPD-admin':
+                self.write('EMPD-admin pushes are skipped')
+                return
             action = body["action"]
             repo_name = body['repository']['name']
             owner = body['repository']['owner']['login']
