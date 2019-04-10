@@ -22,7 +22,8 @@ def query_samples(meta_df, query):
 
 
 def query_meta(meta, query, columns='notnull', count=False,
-               output=None, commit=False, local_repo=None):
+               output=None, commit=False, local_repo=None,
+               distinct=False):
     if local_repo is None:
         local_repo = osp.dirname(meta)
     else:
@@ -67,6 +68,11 @@ def query_meta(meta, query, columns='notnull', count=False,
     sub = pd.concat([
         pd.DataFrame([('---', ) * len(sub.columns)], columns=sub.columns),
         sub], ignore_index=True)
+
+    if distinct:
+        if 'all' in distinct:
+            distinct = sub.columns
+        sub.drop_duplicates(distinct, inplace=True)
 
     ret = f'<details><summary>{query}</summary>\n\n' + textwrap.indent(
         sub.head(200).to_csv(sep='|', index=False, float_format='%1.8g'), '| ')

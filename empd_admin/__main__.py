@@ -83,7 +83,8 @@ def main():
         from empd_admin.query import query_meta
         args.meta_file = args.meta_file or osp.basename(meta)
         print(query_meta(args.meta_file, args.query, args.columns, args.count,
-                         args.output, args.commit, local_repo)[1])
+                         args.output, args.commit, local_repo,
+                         args.distinct)[1])
     elif args.parser == 'rebuild':
         success, report, sql_dump = import_database(
             meta, dbname=args.database, commit=args.commit,

@@ -301,6 +301,11 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
               "You can change this by setting it to 'all'"))
 
     query_parser.add_argument(
+        '-d', '--distinct', nargs='+', default=False, metavar='column',
+        help=("Be distinct on the given columns (i.e. drop duplicates). "
+              "It can also be `all` to consider all columns."))
+
+    query_parser.add_argument(
         '-count', action='store_true',
         help=("Display the number of not-null values (i.e. `COUNT(column)`) "
               "in the selected columns instead of the data table."))
@@ -523,7 +528,8 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                             try:
                                 output, msg = query_meta(
                                     ns.meta_file, ns.query, ns.columns,
-                                    ns.count, ns.output, ns.commit, tmpdir)
+                                    ns.count, ns.output, ns.commit, tmpdir,
+                                    distinct=ns.distinct)
                             except Exception:
                                 s = io.StringIO()
                                 traceback.print_exc(file=s)
