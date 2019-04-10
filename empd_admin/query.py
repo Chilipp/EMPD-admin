@@ -57,7 +57,7 @@ def query_meta(meta, query, columns='notnull', count=False,
     if output:
         ofile = osp.join(local_repo, 'queries', output)
         os.makedirs(osp.dirname(ofile), exist_ok=True)
-        sub.to_csv(ofile, '\t')
+        sub.to_csv(ofile, '\t', float_format='%1.8g')
 
     if commit:
         repo = Repo(local_repo)
@@ -69,7 +69,7 @@ def query_meta(meta, query, columns='notnull', count=False,
         sub], ignore_index=True)
 
     ret = f'<details><summary>{query}</summary>\n\n' + textwrap.indent(
-        sub.to_csv(sep='|', index=False), '| ')
+        sub.to_csv(sep='|', index=False), '| ', float_format='%1.8g')
     if len(missing):
         ret += '\n\nMissing columns ' + ', '.join(missing)
     return output, ret + '\n</details>'

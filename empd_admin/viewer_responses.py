@@ -19,7 +19,8 @@ def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
 
     # write the data frame and load it again to have a consistent dump
     with tempfile.TemporaryDirectory() as d2:
-        metadata.to_csv(osp.join(d2, 'tmp.tsv'), sep='\t')
+        metadata.to_csv(osp.join(d2, 'tmp.tsv'), sep='\t',
+                        float_format='%1.8g')
         metadata = pd.read_csv(osp.join(d2, 'tmp.tsv'), sep='\t',
                                index_col='SampleName')
 
@@ -68,7 +69,8 @@ def edit_pull_request(pull, meta, metadata, submitter, submitter_gh=None,
         if old_meta.shape == save_meta.shape and old_meta.equals(save_meta):
             return False, "No data has been edited."
         else:
-            old_meta.to_csv(osp.join(tmpdir, meta), sep='\t')
+            old_meta.to_csv(osp.join(tmpdir, meta), sep='\t',
+                            float_format='%1.8g')
             repo.index.add([meta])
             repo.index.commit(
                 f"Updated {nsamples} in {meta} as requested by "

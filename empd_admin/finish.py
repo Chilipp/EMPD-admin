@@ -135,7 +135,8 @@ def look_for_changed_fixed_tables(meta, pr_owner, pr_repo, pr_branch):
                   %s
                   </details>
                 """) % (len(changed) - 1,
-                        textwrap.indent(changed.to_csv(sep='|', index=False),
+                        textwrap.indent(changed.to_csv(sep='|', index=False,
+                                                       float_format='%1.8g'),
                                         '  | '))
     if changed_tables:
         if len(changed_tables) == 1:
