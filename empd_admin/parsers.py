@@ -78,6 +78,10 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
                         "example: -m 'mark1 and not mark2'.'"),
             metavar='MARKEXPR')
         subparser.add_argument(
+            '-s', '--sample', metavar='SampleName', default='.*',
+            help=("Name of samples to test. If provided, only samples that "
+                  "match the given pattern are tested."))
+        subparser.add_argument(
             'k', metavar='EXPRESSION', nargs='?',
             help=('only run tests which match the given substring'
                   'expression. An expression is a python evaluatable'
@@ -406,6 +410,7 @@ def setup_pytest_args(namespace):
         pytest_args.extend(
             ['--extract-failed=' + (
                  namespace.extract_failed.strip() or 'failed.tsv')])
+    pytest_args.append('--sample=' + namespace.sample)
 
     files = ['fixes.py'] if namespace.parser == 'fix' else ['']
 
