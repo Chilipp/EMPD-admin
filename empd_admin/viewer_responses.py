@@ -7,7 +7,11 @@ import tempfile
 import pandas as pd
 from git import Repo
 from empd_admin.repo_test import comment_on_pr
-import textwrap
+
+
+def transform_list(items):
+    return items if isinstance(items, str) else ','.join(
+        map('{:1.8g}'.format, items))
 
 
 def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
@@ -16,6 +20,10 @@ def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
     # read the meta data json
     metadata = pd.DataFrame.from_dict(
         {d.pop('SampleName'): d for d in metadata}, 'index')
+    if 'Temperature' in metadata.columns:
+        metadata['Temperature'] = metadata.Temperature.apply(transform_list)
+    if 'Precpitation' in metadata.columns:
+        metadata['Precpitation'] = metadata.Precpitation.apply(transform_list)
     metadata.index.name = 'SampleName'
 
     # write the data frame and load it again to have a consistent dump
