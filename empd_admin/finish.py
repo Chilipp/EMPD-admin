@@ -7,21 +7,33 @@ import pandas as pd
 from git import Repo, GitCommandError
 from empd_admin.repo_test import (
     import_database, temporary_database, SQLSCRIPTS, get_meta_file,
-    run_test)
+    run_test, remember_cwd)
 import subprocess as spr
 import textwrap
 
 
 def finish_pr(meta, commit=True):
     rebase_master(meta)
-    fix_sample_formats(meta, commit)
+#    fix_sample_formats(meta, commit)
     merge_postgres(meta, commit=commit)
     merge_meta(meta, commit=commit)
 
-    if commit and osp.basename(meta) != 'meta.tsv':
-        repo = Repo(osp.dirname(meta))
-        repo.git.rm(meta)
-        repo.index.commit("Removed %s to finish the PR" % osp.basename(meta))
+    with remember_cwd():
+        os.chdir(osp.dirname(meta))
+        repo = Repo('.')
+
+        if commit and osp.exists('failures'):
+            repo.git.rm('-r', 'failures')
+            repo.index.commit("Removed extracted failures")
+
+        if commit and osp.exists('queries'):
+            repo.git.rm('-r', 'queries')
+            repo.index.commit("Removed extracted queries")
+
+        if commit and osp.basename(meta) != 'meta.tsv':
+            repo.git.rm(osp.basename(meta))
+            repo.index.commit(
+                "Removed %s to finish the PR" % osp.basename(meta))
     return
 
 
@@ -88,36 +100,44 @@ def fix_sample_formats(meta, commit=True):
 def merge_postgres(meta, commit=True):
     # import the data into the EMPD2 database
     if commit:
-        import_database(meta, 'EMPD2', commit=commit)
+        success, msg, dump = import_database(meta, 'EMPD2', commit=commit)
 
-        old_sql_dump = osp.join(osp.dirname(meta), 'postgres',
-                                osp.splitext(osp.basename(meta))[0] + '.sql')
-        if osp.exists(old_sql_dump):
-            os.remove(old_sql_dump)
-            if commit:
-                repo = Repo(osp.dirname(meta))
+        assert success, msg
+
+        with remember_cwd():
+            os.chdir(osp.dirname(meta))
+            repo = Repo('.')
+            old_sql_dump = osp.join(
+                'postgres', osp.splitext(osp.basename(meta))[0] + '.sql')
+            if osp.exists(old_sql_dump):
                 repo.git.rm(osp.join('postgres', osp.basename(old_sql_dump)))
                 repo.index.commit(
                     "Removed postgres dump of %s" % osp.basename(meta))
 
-        # export database as tab-delimited tables
-        tables_dir = osp.join(osp.dirname(meta), 'tab-delimited')
-        with temporary_database('EMPD2') as db_url:
-            query = "SELECT tablename FROM pg_tables WHERE schemaname='public'"
-            tables = spr.check_output(['psql', db_url, '-Atc', query]).decode(
-                'utf-8').split()
-            copy = "COPY public.%s TO STDOUT WITH CSV HEADER DELIMITER E'\\t'"
-            for table in tables:
-                spr.check_call(['psql', db_url, '-c', copy % table,
-                                '-o', osp.join(tables_dir, table + '.tsv')])
-            if commit:
-                repo = Repo(osp.dirname(meta))
-                repo.index.add([tables_dir])
+            # export database as tab-delimited tables
+            tables_dir = 'tab-delimited'
+            with temporary_database('EMPD2') as db_url:
+                query = ("SELECT tablename FROM pg_tables "
+                         "WHERE schemaname='public'")
+                tables = spr.check_output(
+                    ['psql', db_url, '-Atc', query]).decode('utf-8').split()
+                copy = ("COPY public.%s TO STDOUT "
+                        "WITH CSV HEADER DELIMITER E'\\t'")
+                for table in tables:
+                    cmd = ['psql', db_url, '-c', copy % table, '-o',
+                           osp.join(tables_dir, table + '.tsv')]
+                    spr.check_call(cmd)
+                repo.index.add([osp.join(tables_dir, table + '.tsv')
+                                for table in tables])
                 repo.index.commit(
                     "Updated tab-delimited files from EMPD2 postgres database")
+            print('Committed')
 
     else:
-        import_database(meta, commit=True)  # to dump it to a temporary file
+        # to dump it to a temporary file
+        success, msg, dump = import_database(meta, commit=True)
+
+        assert success, msg
 
 
 def look_for_changed_fixed_tables(meta, pr_owner, pr_repo, pr_branch):
