@@ -23,8 +23,9 @@ def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
         {d.pop('SampleName'): d for d in metadata}, 'index')
     if 'Temperature' in metadata.columns:
         metadata['Temperature'] = metadata.Temperature.apply(transform_list)
-    if 'Precpitation' in metadata.columns:
-        metadata['Precpitation'] = metadata.Precpitation.apply(transform_list)
+    if 'Precipitation' in metadata.columns:
+        metadata['Precipitation'] = metadata.Precipitation.apply(
+            transform_list)
     metadata.index.name = 'SampleName'
 
     # write the data frame and load it again to have a consistent dump
