@@ -497,7 +497,6 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                     else:
                         if ns.parser in ['test', 'fix']:
                             pytest_args, files = setup_pytest_args(ns)
-                            pytest_args += ['--tb=line']
 
                             success, log, md = test.run_test(meta, pytest_args,
                                                              files)
