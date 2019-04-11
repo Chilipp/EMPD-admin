@@ -6,13 +6,15 @@ from functools import partial
 import pandas as pd
 from git import Repo, GitCommandError
 from empd_admin.repo_test import (
-    import_database, temporary_database, SQLSCRIPTS, get_meta_file)
+    import_database, temporary_database, SQLSCRIPTS, get_meta_file,
+    run_test)
 import subprocess as spr
 import textwrap
 
 
 def finish_pr(meta, commit=True):
     rebase_master(meta)
+    fix_sample_formats(meta, commit)
     merge_postgres(meta, commit=commit)
     merge_meta(meta, commit)
 
@@ -73,6 +75,14 @@ def rebase_master(meta):
         branch = repo.active_branch.name
         repo.index.commit("Merge branch 'upstream/master' into " + branch)
     repo.git.pull('--rebase')  # pull the remote origin
+
+
+def fix_sample_formats(meta, commit=True):
+    pytest_args = ['--fix-db', '-v', '-k', 'fix_sample_data_formatting']
+    if commit:
+        pytest_args.append('--commit')
+
+    run_test(meta, pytest_args, ['fixes.py'])
 
 
 def merge_postgres(meta, commit=True):
