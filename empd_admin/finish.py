@@ -16,7 +16,7 @@ def finish_pr(meta, commit=True):
     rebase_master(meta)
     fix_sample_formats(meta, commit)
     merge_postgres(meta, commit=commit)
-    merge_meta(meta, commit)
+    merge_meta(meta, commit=commit)
 
     if commit and osp.basename(meta) != 'meta.tsv':
         repo = Repo(osp.dirname(meta))
