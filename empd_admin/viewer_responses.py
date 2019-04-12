@@ -1,10 +1,10 @@
 """Module to handle requests from the EMPD2.github.io viewer"""
 import os
 import os.path as osp
-import io
 import github
 import tempfile
 import pandas as pd
+import numpy as np
 from git import Repo
 from empd_admin.repo_test import comment_on_pr
 
@@ -12,6 +12,8 @@ from empd_admin.repo_test import comment_on_pr
 def transform_list(items):
     if isinstance(items, str):
         return items.replace('[', '').replace(']', '')
+    items = [item if item is not None else np.nan
+             for item in items]
     return ','.join(map('{:1.8g}'.format, map(float, items)))
 
 
