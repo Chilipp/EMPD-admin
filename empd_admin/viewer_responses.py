@@ -12,7 +12,7 @@ from empd_admin.repo_test import comment_on_pr
 def transform_list(items):
     if isinstance(items, str):
         return items.replace('[', '').replace(']', '')
-    return ','.join(map('{:1.8g}'.format, items))
+    return ','.join(map('{:1.8g}'.format, map(float, items)))
 
 
 def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
