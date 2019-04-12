@@ -78,15 +78,15 @@ def rebase_master(meta):
         remote = repo.create_remote(
             'upstream', 'https://github.com/EMPD2/EMPD-data.git')
         remote.fetch()
+    branch = repo.active_branch.name
     # first try a rebase
     try:
         repo.git.rebase('upstream/master')
     except GitCommandError:
         repo.git.rebase('--abort')
         repo.git.pull('upstream', 'master')
-        branch = repo.active_branch.name
         repo.index.commit("Merge branch 'upstream/master' into " + branch)
-    repo.git.pull('--rebase')  # pull the remote origin
+    repo.git.pull('origin', branch, '--rebase')  # pull the remote origin
 
 
 def fix_sample_formats(meta, commit=True):
