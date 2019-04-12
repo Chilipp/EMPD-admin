@@ -76,7 +76,8 @@ def query_meta(meta, query, columns='notnull', count=False,
 
     ret = f'<details><summary>{query}</summary>\n\n' + textwrap.indent(
         sub.head(200).to_csv(sep='|', index=False, float_format='%1.8g'), '| ')
-    ret += '\n\nDisplaying %i of %i rows' % (min(len(sub), 200), len(sub))
+    ret += '\n\nDisplaying %i of %i rows' % (min(len(sub) - 1, 200),
+                                             len(sub) - 1)
     if len(missing):
         ret += '\n\nMissing columns ' + ', '.join(missing)
     return output, ret + '\n</details>'
