@@ -99,7 +99,7 @@ def get_meta_file(dirname='.'):
         meta = repo.git.diff(
             'upstream/master', '--name-only', '--diff-filter=A', *files).split()
         if meta:
-            return '\n'.join(osp.join(dirname, f) for f in meta.splitlines())
+            return '\n'.join(osp.join(dirname, f) for f in meta)
 
     return osp.join(dirname, 'meta.tsv')
 
