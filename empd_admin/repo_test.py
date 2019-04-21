@@ -77,6 +77,15 @@ def temporary_database(dbname=None):
             os.rmdir(tmpdir)
 
 
+def fetch_upstream(repo):
+    try:
+        remote = repo.remotes['upstream']
+    except IndexError:
+        remote = repo.create_remote(
+            'upstream', 'https://github.com/EMPD2/EMPD-data.git')
+    remote.fetch()
+
+
 def get_meta_file(dirname='.'):
     if not osp.exists(osp.join(dirname, 'meta.tsv')):
         raise ValueError(
@@ -85,8 +94,10 @@ def get_meta_file(dirname='.'):
         os.chdir(dirname)
         files = [f for f in os.listdir('.')
                  if osp.isfile(f) and not f.startswith('.')]
-        cmd = 'git diff origin/master --name-only --diff-filter=A'.split()
-        meta = spr.check_output(cmd + files).decode('utf-8').strip()
+        repo = Repo('.')
+        fetch_upstream(repo)
+        meta = repo.git.diff(
+            'upstream/master', '--name-only', '--diff-filter=A', *files).split()
         if meta:
             return '\n'.join(osp.join(dirname, f) for f in meta.splitlines())
 

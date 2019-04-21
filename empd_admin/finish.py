@@ -7,7 +7,7 @@ import pandas as pd
 from git import Repo, GitCommandError
 from empd_admin.repo_test import (
     import_database, temporary_database, SQLSCRIPTS, get_meta_file,
-    run_test, remember_cwd)
+    run_test, remember_cwd, fetch_upstream)
 import subprocess as spr
 import textwrap
 
@@ -72,13 +72,7 @@ def merge_meta(meta, target=None, commit=True, local_repo=None):
 def rebase_master(meta):
     # Merge the master branch into the feature branch using rebase
     repo = Repo(osp.dirname(meta))
-    try:
-        repo.remotes['upstream']
-    except IndexError:
-        remote = repo.create_remote(
-            'upstream', 'https://github.com/EMPD2/EMPD-data.git')
-        remote.fetch()
-    branch = repo.active_branch.name
+    fetch_upstream(repo)
     repo.git.pull('upstream', 'master')
 
 
