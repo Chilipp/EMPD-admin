@@ -4,7 +4,7 @@ import os.path as osp
 import shutil
 from functools import partial
 import pandas as pd
-from git import Repo, GitCommandError
+from git import Repo
 from empd_admin.repo_test import (
     import_database, temporary_database, SQLSCRIPTS, get_meta_file,
     run_test, remember_cwd, fetch_upstream)
@@ -14,7 +14,7 @@ import textwrap
 
 def finish_pr(meta, commit=True):
     rebase_master(meta)
-#    fix_sample_formats(meta, commit)
+    fix_sample_formats(meta, commit)
     merge_postgres(meta, commit=commit)
     merge_meta(meta, commit=commit)
 
