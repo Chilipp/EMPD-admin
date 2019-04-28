@@ -21,17 +21,13 @@ ONHEROKU = os.getenv('HEROKU', 'false').lower()[0] in 'ty'
 
 
 def verify_request(signature, body):
-    sha_name, sha = signature.split('=', 1)
-    if sha_name != 'sha1':
-        return False
-
     if not os.getenv('HOOKSECRET'):
         return True
-
-    mac = hmac.new(os.environb[b'HOOKSECRET'], body,
-                   hashlib.sha1)
-    print(mac.hexdigest(), sha)
-    return hmac.compare_digest(mac.hexdigest(), sha)
+    webhook_secret = os.environ['HOOKSECRET'].encode()
+    expected_hmac = hmac.new(
+        webhook_secret, body, hashlib.sha1).hexdigest()
+    expected_digest = 'sha1={}'.format(expected_hmac)
+    return signature == expected_digest
 
 
 class CommandHookHandler(tornado.web.RequestHandler):
@@ -193,7 +189,11 @@ class PushedMasterHookHandler(tornado.web.RequestHandler):
         if event == 'ping':
             self.write('pong')
         elif event == 'push':
-            if not verify_request(signature, self.request.body):
+            webhook_secret = os.environ['HOOKSECRET'].encode()
+            expected_hmac = hmac.new(
+                webhook_secret, self.request.body, hashlib.sha1).hexdigest()
+            expected_signature = 'sha1={}'.format(expected_hmac)
+            if signature != expected_signature:
                 self.set_status(401)
                 self.write_error(401)
                 return
