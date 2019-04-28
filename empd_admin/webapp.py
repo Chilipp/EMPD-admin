@@ -22,9 +22,15 @@ class CommandHookHandler(tornado.web.RequestHandler):
     def post(self):
         headers = self.request.headers
         event = headers.get('X-GitHub-Event', None)
+        secret = headers.get('X-Hub-Signature', None)
+
+        valid = secret == os.getenv('HOOKSECRET')
 
         if event == 'ping':
             self.write('pong')
+        elif not valid:
+            self.set_status(401)
+            self.write_error(401)
         elif event == 'pull_request_review' or event == 'pull_request' \
                 or event == 'pull_request_review_comment':
             # body = tornado.escape.json_decode(self.request.body)
@@ -103,9 +109,15 @@ class TestHookHandler(tornado.web.RequestHandler):
     def post(self):
         headers = self.request.headers
         event = headers.get('X-GitHub-Event', None)
+        secret = headers.get('X-Hub-Signature', None)
+
+        valid = secret == os.getenv('HOOKSECRET')
 
         if event == 'ping':
             self.write('pong')
+        elif not valid:
+            self.set_status(401)
+            self.write_error(401)
         elif event == 'pull_request':
             body = tornado.escape.json_decode(self.request.body)
             repo_name = body['repository']['name']
@@ -162,9 +174,15 @@ class PushedMasterHookHandler(tornado.web.RequestHandler):
     def post(self):
         headers = self.request.headers
         event = headers.get('X-GitHub-Event', None)
+        secret = headers.get('X-Hub-Signature', None)
+
+        valid = secret == os.getenv('HOOKSECRET')
 
         if event == 'ping':
             self.write('pong')
+        elif not valid:
+            self.set_status(401)
+            self.write_error(401)
         elif event == 'push':
             body = tornado.escape.json_decode(self.request.body)
 
