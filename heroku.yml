@@ -1,7 +1,7 @@
 build:
   docker:
     web: Dockerfile
-    #release:
+release:
     #  command:
     #- test-empd-admin -v
-    #image: web
+  image: web
