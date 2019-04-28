@@ -1,6 +1,8 @@
 import os
 import json
 import io
+import hmac
+import hashlib
 import tornado.escape
 import tornado.httpserver
 import tornado.ioloop
@@ -18,21 +20,33 @@ import empd_admin.parsers as parsers
 ONHEROKU = os.getenv('HEROKU', 'false').lower()[0] in 'ty'
 
 
+def verify_request(signature, body):
+    sha_name, sha = signature.split('=', 1)
+    if sha_name != 'sha1':
+        return False
+
+    if not os.getenv('HOOKSECRET'):
+        return
+
+    mac = hmac.new(os.environb[b'HOOKSECRET'], body,
+                   hashlib.sha1)
+    return hmac.compare_digest(mac.hexdigest(), signature)
+
+
 class CommandHookHandler(tornado.web.RequestHandler):
     def post(self):
         headers = self.request.headers
         event = headers.get('X-GitHub-Event', None)
-        secret = headers.get('X-Hub-Signature', None)
-
-        valid = secret == os.getenv('HOOKSECRET')
+        signature = headers.get('X-Hub-Signature', None)
 
         if event == 'ping':
             self.write('pong')
-        elif not valid:
-            self.set_status(401)
-            self.write_error(401)
         elif event == 'pull_request_review' or event == 'pull_request' \
                 or event == 'pull_request_review_comment':
+            if not verify_request(signature, self.request.body):
+                self.set_status(401)
+                self.write_error(401)
+                return
             # body = tornado.escape.json_decode(self.request.body)
             body = json.loads(self.request.body, strict=False)
             if body['sender']['login'] == 'EMPD-admin':
@@ -109,16 +123,15 @@ class TestHookHandler(tornado.web.RequestHandler):
     def post(self):
         headers = self.request.headers
         event = headers.get('X-GitHub-Event', None)
-        secret = headers.get('X-Hub-Signature', None)
-
-        valid = secret == os.getenv('HOOKSECRET')
+        signature = headers.get('X-Hub-Signature', None)
 
         if event == 'ping':
             self.write('pong')
-        elif not valid:
-            self.set_status(401)
-            self.write_error(401)
         elif event == 'pull_request':
+            if not verify_request(signature, self.request.body):
+                self.set_status(401)
+                self.write_error(401)
+                return
             body = tornado.escape.json_decode(self.request.body)
             repo_name = body['repository']['name']
             repo_url = body['repository']['clone_url']
@@ -174,16 +187,15 @@ class PushedMasterHookHandler(tornado.web.RequestHandler):
     def post(self):
         headers = self.request.headers
         event = headers.get('X-GitHub-Event', None)
-        secret = headers.get('X-Hub-Signature', None)
-
-        valid = secret == os.getenv('HOOKSECRET')
+        signature = headers.get('X-Hub-Signature', None)
 
         if event == 'ping':
             self.write('pong')
-        elif not valid:
-            self.set_status(401)
-            self.write_error(401)
         elif event == 'push':
+            if not verify_request(signature, self.request.body):
+                self.set_status(401)
+                self.write_error(401)
+                return
             body = tornado.escape.json_decode(self.request.body)
 
             # Only do anything if we are working with EMPD2, and an open PR.
