@@ -30,7 +30,7 @@ def verify_request(signature, body):
 
     mac = hmac.new(os.environb[b'HOOKSECRET'], body,
                    hashlib.sha1)
-    return hmac.compare_digest(mac.hexdigest(), signature)
+    return hmac.compare_digest(mac.hexdigest(), sha)
 
 
 class CommandHookHandler(tornado.web.RequestHandler):
