@@ -158,6 +158,43 @@ class TestHookHandler(tornado.web.RequestHandler):
             self.write_error(404)
 
 
+class PushedMasterHookHandler(tornado.web.RequestHandler):
+    def post(self):
+        headers = self.request.headers
+        event = headers.get('X-GitHub-Event', None)
+
+        if event == 'ping':
+            self.write('pong')
+        elif event == 'push':
+            body = tornado.escape.json_decode(self.request.body)
+
+            # Only do anything if we are working with EMPD2, and an open PR.
+            if body['ref'] == 'refs/heads/master':
+                from empd_admin.repo_test import temporary_database
+                from urllib import request
+                import subprocess as spr
+                with temporary_database() as db_url:
+                    with tempfile.TemporaryDirectory() as tmpdir:
+                        url = ('https://raw.githubusercontent.com/EMPD2/'
+                               'EMPD-data/master/postgres/EMPD2.sql')
+                        download_target = os.path.join(tmpdir, 'EMPD2.sql')
+                        request.urlretrieve(url, download_target)
+                        # create the database
+                        spr.check_call(['psql', db_url, '-f', download_target])
+                        # remove the current database
+                        spr.check_call(['dropdb', '-U', 'postgres', 'EMPD2'])
+                        # create a new EMPD2
+                        spr.check_call(['createdb', '-U', 'postgres', 'EMPD2'])
+                        # import the data
+                        spr.check_call(['psql', 'EMPD2', '-U', 'postgres',
+                                        '-f', download_target])
+                self.write("Database refreshed")
+        else:
+            print('Unhandled event "{}".'.format(event))
+            self.set_status(404)
+            self.write_error(404)
+
+
 class ViewerHookHandler(tornado.web.RequestHandler):
 
     def set_default_headers(self):
@@ -249,6 +286,7 @@ def create_webapp():
     application = tornado.web.Application([
         (r"/empd-data/hook", TestHookHandler),
         (r"/empd-admin-command/hook", CommandHookHandler),
+        (r"/update-master/hook", PushedMasterHookHandler),
         (r"/empd-viewer/hook", ViewerHookHandler),
     ])
     return application
