@@ -26,10 +26,11 @@ def verify_request(signature, body):
         return False
 
     if not os.getenv('HOOKSECRET'):
-        return
+        return True
 
     mac = hmac.new(os.environb[b'HOOKSECRET'], body,
                    hashlib.sha1)
+    print(mac.hexdigest(), sha)
     return hmac.compare_digest(mac.hexdigest(), sha)
 
 
