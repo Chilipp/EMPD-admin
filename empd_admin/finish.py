@@ -81,7 +81,8 @@ def fix_sample_formats(meta, commit=True):
     if commit:
         pytest_args.append('--commit')
 
-    run_test(meta, pytest_args, ['fixes.py'])
+    success, log, md = run_test(meta, pytest_args, ['fixes.py'])
+    assert success, log
 
 
 def merge_postgres(meta, commit=True):
