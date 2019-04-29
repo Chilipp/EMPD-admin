@@ -10,6 +10,7 @@ from empd_admin.repo_test import (
     run_test, remember_cwd, fetch_upstream)
 import subprocess as spr
 import textwrap
+from empd_admin.common import read_empd_meta
 
 
 def finish_pr(meta, commit=True):
@@ -38,8 +39,6 @@ def finish_pr(meta, commit=True):
 
 
 def merge_meta(meta, target=None, commit=True, local_repo=None):
-
-    read_tsv = partial(pd.read_csv, index_col='SampleName', sep='\t')
     if local_repo is None:
         local_repo = osp.dirname(meta)
 
@@ -48,10 +47,10 @@ def merge_meta(meta, target=None, commit=True, local_repo=None):
         if osp.samefile(meta, osp.join(local_repo, target)):
             target = 'meta.tsv'
 
-    meta_df = read_tsv(meta)
+    meta_df = read_empd_meta(meta)
 
     base_meta = osp.join(local_repo, target)
-    base_meta_df = read_tsv(base_meta)
+    base_meta_df = read_empd_meta(base_meta)
 
     # update the meta file and save
     base_meta_df = base_meta_df.join(meta_df[[]], how='outer')

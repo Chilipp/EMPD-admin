@@ -4,6 +4,7 @@ from git import Repo
 import pandas as pd
 import numpy as np
 from empd_admin.query import query_samples
+from empd_admin.common import read_empd_meta
 
 
 def accept_query(meta, query, columns, commit=True, skip_ci=False,
@@ -16,7 +17,7 @@ def accept_query(meta, query, columns, commit=True, skip_ci=False,
         base_meta = meta
         meta = osp.join(local_repo, meta)
     repo = Repo(local_repo)
-    meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName')
+    meta_df = read_empd_meta(meta)
     samples = query_samples(meta_df, query)
     if not len(samples):
         msg = "No samples selected with %r" % (query, )
@@ -57,7 +58,7 @@ def accept(meta, what, commit=True, skip_ci=False, raise_error=False,
         base_meta = meta
         meta = osp.join(local_repo, meta)
     repo = Repo(local_repo)
-    meta_df = pd.read_csv(meta, sep='\t')
+    meta_df = read_empd_meta(meta).reset_index()
     samples = np.unique([t[0] for t in what])
 
     valid = (samples == 'all')
@@ -115,7 +116,7 @@ def unaccept(meta, what, commit=True, skip_ci=False, raise_error=False,
         base_meta = meta
         meta = osp.join(local_repo, meta)
     repo = Repo(local_repo)
-    meta_df = pd.read_csv(meta, sep='\t')
+    meta_df = read_empd_meta(meta).reset_index()
     samples = np.unique([t[0] for t in what])
 
     valid = (samples == 'all')
@@ -187,7 +188,7 @@ def unaccept_query(meta, query, columns, commit=True, skip_ci=False,
         base_meta = meta
         meta = osp.join(local_repo, meta)
     repo = Repo(local_repo)
-    meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName')
+    meta_df = read_empd_meta(meta)
     samples = query_samples(meta_df, query)
 
     if not len(samples):

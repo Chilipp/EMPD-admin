@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 from git import Repo
 from empd_admin.repo_test import comment_on_pr
+from empd_admin.common import read_empd_meta
 
 
 def transform_list(items):
@@ -34,8 +35,7 @@ def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
     with tempfile.TemporaryDirectory() as d2:
         metadata.to_csv(osp.join(d2, 'tmp.tsv'), sep='\t',
                         float_format='%1.8g')
-        metadata = pd.read_csv(osp.join(d2, 'tmp.tsv'), sep='\t',
-                               index_col='SampleName')
+        metadata = read_empd_meta(osp.join(d2, 'tmp.tsv'))
 
     if repo == 'EMPD2/EMPD-data' and branch == 'master':
         return create_new_pull_request(metadata, submitter, submitter_gh,
@@ -75,8 +75,7 @@ def edit_pull_request(pull, meta, metadata, submitter, submitter_gh=None,
 
     with tempfile.TemporaryDirectory('_empd') as tmpdir:
         repo = Repo.clone_from(remote_url, tmpdir, branch=branch)
-        old_meta = pd.read_csv(osp.join(tmpdir, meta), '\t',
-                               index_col='SampleName')
+        old_meta = read_empd_meta(osp.join(tmpdir, meta))
         save_meta = old_meta.copy(True)
         cols = [col for col in metadata.columns if col in old_meta.columns]
         old_meta.loc[metadata.index, cols] = metadata

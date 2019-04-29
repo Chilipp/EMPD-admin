@@ -7,6 +7,7 @@ import textwrap
 from sqlalchemy import create_engine
 import tempfile
 from git import Repo
+from empd_admin.common import read_empd_meta
 
 
 def query_samples(meta_df, query):
@@ -28,8 +29,7 @@ def query_meta(meta, query, columns='notnull', count=False,
         local_repo = osp.dirname(meta)
     else:
         meta = osp.join(local_repo, meta)
-    meta_df = pd.read_csv(meta, sep='\t', index_col='SampleName').replace(
-        '', np.nan)
+    meta_df = read_empd_meta(meta).replace('', np.nan)
     samples = query_samples(meta_df, query)
 
     sub = meta_df.loc[samples].reset_index()
