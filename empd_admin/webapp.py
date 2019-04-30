@@ -33,6 +33,54 @@ def verify_request(signature, body):
     return hmac.compare_digest(mac.hexdigest(), sha)
 
 
+def verify_recaptcha(recaptcha_token):
+    import requests
+    response = requests.post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        data={'response': recaptcha_token,
+              'secret': os.environ['RECAPTCHASECRET']})
+    validation = json.loads(response.text)
+    if (not validation['success'] or validation['score'] < 0.5
+            or validation['action'] != 'submit_data'):
+        return False
+    else:
+        return True
+
+
+def send_verfication_mail(token, what, subject, msg, recipient):
+    import smtplib
+    import ssl
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+
+    port = 465
+    context = ssl.create_default_context()
+
+    url = 'https://empd-admin.herokuapp.com/verify?what=%s&token=%s' % (
+        what, token.hexdigest())
+
+    msg = msg.format(url=f'<a href={url}>{url}</a>')
+
+    message = MIMEMultipart("alternative")
+    message['Subject'] = subject
+    message['From'] = os.environ['GOOGLEMAIL']
+    message['To'] = recipient
+
+    message.attach(MIMEText(re.sub(r'<.*?>', '', msg), "plain"))
+    message.attach(MIMEText(msg, "html"))
+
+    with smtplib.SMTP_SSL(
+            "smtp.gmail.com", port, context=context) as server:
+        server.login(os.environ['GOOGLEMAIL'],
+                     os.environ['GOOGLEPW'])
+        server.sendmail(
+            os.environ['GOOGLEMAIL'],
+            [recipient, os.environ['GOOGLEMAIL']],
+            message.as_string())
+    return (f'Sent verification email to {recipient}. Please follow '
+            'the link in the mail to proceed.')
+
+
 class CommandHookHandler(tornado.web.RequestHandler):
     def post(self):
         headers = self.request.headers
@@ -134,7 +182,6 @@ class TestHookHandler(tornado.web.RequestHandler):
                 return
             body = tornado.escape.json_decode(self.request.body)
             repo_name = body['repository']['name']
-            repo_url = body['repository']['clone_url']
             owner = body['repository']['owner']['login']
             pr_repo = body['pull_request']['head']['repo']
             pr_owner = pr_repo['owner']['login']
@@ -255,18 +302,8 @@ class ViewerHookHandler(tornado.web.RequestHandler):
         else:
 
             if ONHEROKU:
-                import requests
-                recaptcha_token = body['token']
-                response = requests.post(
-                    'https://www.google.com/recaptcha/api/siteverify',
-                    data={'response': recaptcha_token,
-                          'secret': os.environ['RECAPTCHASECRET']})
-                validation = json.loads(response.text)
-                print(validation)
-                if (not validation['success'] or validation['score'] < 0.5
-                        or validation['action'] != 'submit_data'):
-                    self.write(
-                        "Failed recaptcha validation: %s " % validation)
+                if not verify_recaptcha(body['token']):
+                    self.write("Failed recaptcha validation ")
                     self.set_status(401)
                     self.write_error(401)
                     return
@@ -305,11 +342,93 @@ class ViewerHookHandler(tornado.web.RequestHandler):
                         [submitter_mail, os.environ['GOOGLEMAIL']],
                         message.as_string())
 
-            print(success, msg)
             self.write(msg + ' ')
             if not success:
                 self.set_status(500)
                 self.write_error(500)
+
+
+class ViewerIssuesHandler(tornado.web.RequestHandler):
+    """A handler for issues submitted through the EMPD viewer"""
+
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+
+    def post(self):
+        if not ONHEROKU:
+            from empd_admin.viewer_responses import submit_issue
+            body = tornado.escape.json_decode(self.request.body)
+            issue = submit_issue(body['issue_title'], body['issue_msg'])[1]
+            self.write(("The issue has been opened as number "
+                        f"<a href={issue.html_url}>#{issue.number}</a>"))
+        else:
+            if not verify_recaptcha(body['token']):
+                self.write("Failed recaptcha validation ")
+                self.set_status(401)
+                self.write_error(401)
+                return
+
+            from empd_admin.viewer_responses import handle_issue_submission
+            import textwrap
+            body = self.request.body
+            token = handle_issue_submission(body)
+            body = tornado.escape.json_decode(body)
+            title = body['issue_title']
+            msg = body['issue_msg']
+            body['url'] = 'https://EMPD2.github.io'
+            subject = 'Your issue submission to the EMPD - ' + title
+            msg = textwrap.dedent("""
+                Dear {submitter_firstname} {submitter_lastname},<br><br>
+
+                someone, hopefully you, found an issue within the
+                EMPD and submitted it through <a href="{url}">{url}</a>.
+                <br>
+                If it was you who submitted the request, please click the
+                following link within the next 24 hours:
+                <br>
+                {{url}}
+                <br>
+            """).format(**body)
+            success = send_verfication_mail(
+                token, 'issue', subject, msg, body['submitter_mail'])
+
+            if not success:
+                self.set_status(500)
+                self.write_error(500)
+            else:
+                self.write(success + ' ')
+
+
+class VerificationHandler(tornado.web.RequestHandler):
+    """Handler to verify requests through tokens"""
+
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+
+    def get(self):
+        what = self.get_argument('what', None)
+        token = self.get_argument('token', None)
+        if token is None or what is None:
+            self.set_status(404)
+            self.write_error(404)
+            return
+
+        if what == 'issue':
+            from empd_admin.viewer_responses import handle_verified_issue
+            success, msg = handle_verified_issue(token)
+            if success:
+                self.write(msg)
+            else:
+                self.write(msg + '<br>')
+                self.set_status(500)
+                self.write_error(500)
+        else:
+            self.set_status(404)
+            self.write_error(404)
 
 
 def create_webapp():
@@ -318,6 +437,8 @@ def create_webapp():
         (r"/empd-admin-command/hook", CommandHookHandler),
         (r"/update-master/hook", PushedMasterHookHandler),
         (r"/empd-viewer/hook", ViewerHookHandler),
+        (r"/empd-issues/hook", ViewerIssuesHandler),
+        (r"/verify", VerificationHandler),
     ])
     return application
 
