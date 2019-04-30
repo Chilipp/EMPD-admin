@@ -425,6 +425,17 @@ class VerificationHandler(tornado.web.RequestHandler):
             self.write_error(404)
 
 
+class MainHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        self.write(
+            """
+            Hey there! I am the EMPD-admin and I can help you in Pull Requests
+            at <a href="https://github.com/EMPD2/EMPD-data/pulls">github.com/EMPD2/EMPD-data</a>
+            and by submitting issues through the <a href="https://EMPD2.github.io">EMPD-viewer</a>.
+            """)
+
+
 def create_webapp():
     application = tornado.web.Application([
         (r"/empd-data/hook", TestHookHandler),
@@ -433,6 +444,7 @@ def create_webapp():
         (r"/empd-viewer/hook", ViewerHookHandler),
         (r"/empd-issues/hook", ViewerIssuesHandler),
         (r"/verify", VerificationHandler),
+        (r"/", MainHandler),
     ])
     return application
 
