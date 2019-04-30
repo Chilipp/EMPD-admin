@@ -33,7 +33,7 @@ def verify_request(signature, body):
     return hmac.compare_digest(mac.hexdigest(), sha)
 
 
-def verify_recaptcha(recaptcha_token):
+def verify_recaptcha(recaptcha_token, action):
     import requests
     response = requests.post(
         'https://www.google.com/recaptcha/api/siteverify',
@@ -41,7 +41,7 @@ def verify_recaptcha(recaptcha_token):
               'secret': os.environ['RECAPTCHASECRET']})
     validation = json.loads(response.text)
     if (not validation['success'] or validation['score'] < 0.5
-            or validation['action'] != 'submit_data'):
+            or validation['action'] != action):
         return False
     else:
         return True
@@ -302,7 +302,7 @@ class ViewerHookHandler(tornado.web.RequestHandler):
         else:
 
             if ONHEROKU:
-                if not verify_recaptcha(body['token']):
+                if not verify_recaptcha(body['token'], 'submit_data'):
                     self.write("Failed recaptcha validation ")
                     self.set_status(401)
                     self.write_error(401)
@@ -365,7 +365,7 @@ class ViewerIssuesHandler(tornado.web.RequestHandler):
                         f"<a href={issue.html_url}>#{issue.number}</a>"))
         else:
             body = tornado.escape.json_decode(self.request.body)
-            if not verify_recaptcha(body['token']):
+            if not verify_recaptcha(body['token'], 'report_issue'):
                 self.write("Failed recaptcha validation ")
                 self.set_status(401)
                 self.write_error(401)
