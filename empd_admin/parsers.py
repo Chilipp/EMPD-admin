@@ -174,6 +174,9 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
 
     finish_parser.add_argument(
         '-c', '--commit', help=finish_help, action='store_true')
+    finish_parser.add_argument(
+        '-nt', '--no-tests', help="Do not run the tests at the end.",
+        action='store_false', dest='test')
 
     # accept parser
     accept_parser = subparsers.add_parser(
@@ -639,10 +642,13 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                 ns.commit = False
                             else:
                                 if not ns.commit:
-                                    # run the tests to check if everything
-                                    # goes well
-                                    success, log, md = test.run_test(
-                                        osp.join(tmpdir, 'meta.tsv'))
+                                    if ns.test:
+                                        # run the tests to check if everything
+                                        # goes well
+                                        success, log, md = test.run_test(
+                                            osp.join(tmpdir, 'meta.tsv'))
+                                    else:
+                                        success = True
                                     if success:
                                         ret += textwrap.dedent(f"""
                                             Finished the PR and everything went fine.
@@ -738,10 +744,10 @@ def test_fix():
 
 
 def test_finish():
-    msg = process_comment_line('@EMPD-admin finish',
+    msg = process_comment_line('@EMPD-admin finish --no-tests',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
 
-    assert "Tests failed after finishing the PR" in msg, msg
+    assert "Finished the PR and everything went fine" in msg, msg
 
 
 def test_accept():
