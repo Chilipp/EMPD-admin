@@ -364,6 +364,7 @@ class ViewerIssuesHandler(tornado.web.RequestHandler):
             self.write(("The issue has been opened as number "
                         f"<a href={issue.html_url}>#{issue.number}</a>"))
         else:
+            body = tornado.escape.json_decode(self.request.body)
             if not verify_recaptcha(body['token']):
                 self.write("Failed recaptcha validation ")
                 self.set_status(401)
@@ -372,9 +373,7 @@ class ViewerIssuesHandler(tornado.web.RequestHandler):
 
             from empd_admin.viewer_responses import handle_issue_submission
             import textwrap
-            body = self.request.body
-            token = handle_issue_submission(body)
-            body = tornado.escape.json_decode(body)
+            token = handle_issue_submission(self.request.body)
             title = body['issue_title']
             msg = body['issue_msg']
             body['url'] = 'https://EMPD2.github.io'
