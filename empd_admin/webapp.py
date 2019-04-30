@@ -404,11 +404,6 @@ class ViewerIssuesHandler(tornado.web.RequestHandler):
 class VerificationHandler(tornado.web.RequestHandler):
     """Handler to verify requests through tokens"""
 
-    def set_default_headers(self):
-        self.set_header("Access-Control-Allow-Origin", "*")
-        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-
     def get(self):
         what = self.get_argument('what', None)
         token = self.get_argument('token', None)
