@@ -54,6 +54,7 @@ def main():
               'pytest',
               'pandas',
               'xlrd',
+              'PyYAML',
           ],
           classifiers=[
             'Development Status :: 2 - Pre-Alpha',
