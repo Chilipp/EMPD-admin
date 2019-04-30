@@ -192,6 +192,15 @@ def handle_verified_issue(token):
             body = json.loads(f.read(), strict=False)
         title = body['issue_title']
         msg = body['issue_msg']
+        submitter = (body['submitter_firstname'] + ' ' +
+                     body['submitter_lastname'])
+
+        if body.get('submitter_username'):
+            submitter += ' (@{submitter_username})'.format(**body)
+
+        msg += ("\n\n"
+                "<sub>This issue has been submitted via EMPD2.github.io by "
+                f"{submitter}</sub>")
         issue = submit_issue(title, msg)
         info['url'] = issue.html_url
         info['num'] = issue.number
