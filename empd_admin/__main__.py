@@ -88,6 +88,10 @@ def main():
         print(query_meta(args.meta_file, args.query, args.columns, args.count,
                          args.output, args.commit, local_repo,
                          args.distinct)[1])
+    elif args.parser == 'diff':
+        from empd_admin.diff import diff
+        print(diff(meta, args.left, args.right, args.output, args.commit,
+                   how=args.how, on=args.on, columns=args.columns)[1])
     elif args.parser == 'rebuild':
         success, report, sql_dump = import_database(
             meta, dbname=args.database, commit=args.commit,

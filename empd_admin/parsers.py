@@ -14,6 +14,7 @@ from empd_admin.finish import (
     finish_pr, rebase_master, look_for_changed_fixed_tables, merge_meta)
 import empd_admin.accept as accept
 from empd_admin.query import query_meta
+from empd_admin.diff import diff
 
 
 parser_info = dict(exited=False, errored=False, exit_message='',
@@ -349,6 +350,52 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
             {parser.prog} query "SampleContext LIKE '%forest%'"
         """)
 
+    diff_parser = subparsers.add_parser(
+        'diff', help="Compare two EMPD meta files", add_help=add_help)
+
+    diff_parser.add_argument(
+        'left', help=("The first meta file. If None, the meta file of this "
+                      "repository will be used"), default=None, nargs='?')
+
+    empd_url = ('https://raw.githubusercontent.com/EMPD2/EMPD-data/'
+                'master/meta.tsv')
+
+    diff_parser.add_argument(
+        'right', default=None, nargs='?',
+        help=("The second meta file. If None, the meta file of this "
+              "repository will be used. If that is the same as `left`, we use "
+              "the meta.tsv of the repository or " + empd_url))
+
+    diff_parser.add_argument(
+        '-how', choices=['inner', 'outer', 'left', 'right'], default='inner',
+        help=("Specify which samples to test. `inner` means the intersection "
+              "of `left` and `right`, `outer` is the outer product of `left` "
+              "and `right`, and so on. Default: %(default)s."))
+
+    diff_parser.add_argument(
+        '-on', nargs='+',
+        help=("The columns to use for computing the change. They have to be "
+              "in `left` and `right`. If `None`, all columns will be used."))
+
+    diff_parser.add_argument(
+        '-col', '--columns', nargs='*', default='leftdiff', metavar='COLUMN',
+        help=("The columns for the output. Can be `leftdiff`, to use the "
+              "differing columns from `left`, `left` to use all columns from "
+              "`left`, `rightdiff` to use differing columns from `right, "
+              "`right` to use all columns from `right`, `inner` to use the "
+              "intersection of `left` and `right`, nothing to not display any "
+              "columns, or a list of columns to display. Default: %(default)s."
+              ))
+
+    diff_parser.add_argument(
+        '-c', '--commit', help=commit_help, action='store_true')
+
+    diff_parser.add_argument(
+        '-o', '--output', default=None,
+        help=("Save the query in the `queries` directory. If not set but "
+              "`--commit` is set, then it will be saved as "
+              "`queries/diff.tsv`."))
+
     merge_meta_parser = subparsers.add_parser(
         'merge-meta', help="Merge two metafiles", add_help=add_help)
 
@@ -541,6 +588,20 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                             ret += msg
                             if output:
                                 ret += f"\n\nYou can look at the extracted data in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=queries/{output}\n"
+                        elif ns.parser == 'diff':
+                            try:
+                                msg = diff(meta, ns.left, ns.right, ns.output,
+                                           ns.commit, how=ns.how, on=ns.on,
+                                           columns=ns.columns)
+                            except Exception:
+                                s = io.StringIO()
+                                traceback.print_exc(file=s)
+                                output = None
+                                msg = ("Sorry buy I failed to do the diff:\n"
+                                       "\n```{}```").format(s.getvalue())
+                            ret += msg
+                            if output:
+                                ret += f"\n\nYou can look at the diff data in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=queries/{output}\n"
                         elif ns.parser == 'accept':
                             ns.meta_file = ns.meta_file or osp.basename(meta)
                             if ns.query:
