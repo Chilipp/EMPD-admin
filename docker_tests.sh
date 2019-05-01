@@ -7,12 +7,12 @@
 #     docker run empd2/empd-admin test-empd-admin
 start_pg_server
 git config --global user.name "EMPD-admin"
-/opt/test-env/bin/pip install --user gitpython PyGithub xlrd openpyxl pyyaml
+
 if [ -w /opt/empd-admin ]; then
     cd /opt/empd-admin
-    /opt/test-env/bin/py.test $@
+    /opt/conda/envs/empd-admin/bin/py.test $@
 else
     cp -r /opt/empd-admin $HOME
     cd $HOME/empd-admin
-    /opt/test-env/bin/py.test $@
+    /opt/conda/envs/empd-admin/bin/py.test $@
 fi

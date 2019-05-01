@@ -11,6 +11,7 @@ rm ~/starting_pg_server.lock
 " &
 # activate conda
 conda -h > /dev/null || source /root/.bashrc
+conda activate empd-admin
 
 git config --global user.name "EMPD-admin"
 
