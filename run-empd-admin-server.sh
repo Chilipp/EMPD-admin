@@ -9,8 +9,12 @@ createdb -U postgres EMPD2 &&
 curl -fsSL https://raw.githubusercontent.com/EMPD2/EMPD-data/master/postgres/EMPD2.sql | psql EMPD2 -U postgres &&
 rm ~/starting_pg_server.lock
 " &
+
+# clone latest version of the EMPD
+git -C /opt/empd-data pull origin master &
+
 # activate conda
-conda -h > /dev/null || source /root/.bashrc
+. "/opt/conda/etc/profile.d/conda.sh"
 conda activate empd-admin
 
 git config --global user.name "EMPD-admin"
