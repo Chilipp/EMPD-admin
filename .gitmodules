@@ -1,3 +1,0 @@
-[submodule "empd_admin/data"]
-	path = empd_admin/data
-	url = https://github.com/EMPD2/EMPD-data.git
