@@ -6,13 +6,18 @@
 #
 #     docker run empd2/empd-admin test-empd-admin
 start_pg_server
+
+# activate conda
+. "/opt/conda/etc/profile.d/conda.sh"
+conda activate empd-admin
+
 git config --global user.name "EMPD-admin"
 
 if [ -w /opt/empd-admin ]; then
     cd /opt/empd-admin
-    /opt/conda/envs/empd-admin/bin/py.test $@
+    py.test $@
 else
     cp -r /opt/empd-admin $HOME
     cd $HOME/empd-admin
-    /opt/conda/envs/empd-admin/bin/py.test $@
+    py.test $@
 fi
