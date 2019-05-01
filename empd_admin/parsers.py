@@ -378,7 +378,7 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
               "in `left` and `right`. If `None`, all columns will be used."))
 
     diff_parser.add_argument(
-        '-col', '--columns', nargs='*', default='leftdiff', metavar='COLUMN',
+        '-col', '--columns', nargs='*', default=['leftdiff'], metavar='COLUMN',
         help=("The columns for the output. Can be `leftdiff`, to use the "
               "differing columns from `left`, `left` to use all columns from "
               "`left`, `rightdiff` to use differing columns from `right, "

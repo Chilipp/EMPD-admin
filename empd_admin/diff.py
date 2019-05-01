@@ -84,7 +84,7 @@ def diff(meta, left=None, right=None, output=None,
     return output, ret
 
 
-def compute_diff(left, right, how='inner', on=None, columns='diff'):
+def compute_diff(left, right, how='inner', on=None, columns='leftdiff'):
     left = left.copy()
     right = right.copy()
 
@@ -115,6 +115,9 @@ def compute_diff(left, right, how='inner', on=None, columns='diff'):
     # remove the last comma
     merged['diff'] = merged['diff'].str.slice(0, -1)
 
+    if isinstance(columns, str):
+        columns = [columns]
+
     if 'leftdiff' in columns:
         columns = changed
     elif 'left' in columns:
@@ -128,7 +131,6 @@ def compute_diff(left, right, how='inner', on=None, columns='diff'):
         columns = [col for col in left.columns if col in right.columns]
     columns = [(col + '_y' if col not in merged.columns else col)
                for col in columns]
-
     return merged[columns + ['diff']].rename(
         {col: col[:-2] for col in columns if col.endswith('_y')})
 
