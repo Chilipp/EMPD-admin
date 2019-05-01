@@ -2,7 +2,7 @@ FROM empd2/empd-data
 
 USER root
 
-ADD ./ /opt/empd-admin
+COPY ./ /opt/empd-admin
 
 RUN /opt/conda/envs/empd-admin/bin/pip install /opt/empd-admin
 
