@@ -41,6 +41,9 @@ def main():
 
     local_repo = args.directory
 
+    import empd_admin.common as common
+    common.DATADIR = local_repo
+
     if args.parser == 'finish':
         from empd_admin.finish import finish_pr
         finish_pr(meta, commit=args.commit)

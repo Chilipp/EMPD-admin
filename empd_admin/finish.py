@@ -6,11 +6,11 @@ from functools import partial
 import pandas as pd
 from git import Repo
 from empd_admin.repo_test import (
-    import_database, temporary_database, SQLSCRIPTS, get_meta_file,
+    import_database, temporary_database, get_meta_file,
     run_test, remember_cwd, fetch_upstream)
 import subprocess as spr
 import textwrap
-from empd_admin.common import read_empd_meta
+from empd_admin.common import read_empd_meta, get_psql_scripts
 
 
 def finish_pr(meta, commit=True):
@@ -134,7 +134,7 @@ def look_for_changed_fixed_tables(meta, pr_owner, pr_repo, pr_branch):
     changed_tables = []
     local_tables = osp.join(osp.dirname(meta), 'postgres', 'scripts', 'tables')
     for table in fixed:
-        fname = osp.join(SQLSCRIPTS, 'tables', table + '.tsv')
+        fname = osp.join(get_psql_scripts(), 'tables', table + '.tsv')
         old = pd.read_csv(fname, sep='\t')
         new = pd.read_csv(osp.join(local_tables, table + '.tsv'), sep='\t')
         changed = set(map(tuple, new.values)) - set(map(tuple, old.values))

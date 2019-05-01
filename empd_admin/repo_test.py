@@ -11,13 +11,9 @@ import github
 import tempfile
 import textwrap
 from collections import OrderedDict
+from empd_admin.common import get_test_dir, get_psql_scripts
 
 from git import GitCommandError, Repo
-
-
-TESTDIR = osp.join(osp.dirname(__file__), 'data', 'tests')
-
-SQLSCRIPTS = osp.join(osp.dirname(__file__), 'data', 'postgres', 'scripts')
 
 
 @contextlib.contextmanager
@@ -97,7 +93,8 @@ def get_meta_file(dirname='.'):
         repo = Repo('.')
         fetch_upstream(repo)
         meta = repo.git.diff(
-            'upstream/master', '--name-only', '--diff-filter=A', *files).split()
+            'upstream/master', '--name-only', '--diff-filter=A',
+            *files).split()
         if meta:
             return '\n'.join(osp.join(dirname, f) for f in meta)
 
@@ -106,6 +103,9 @@ def get_meta_file(dirname='.'):
 
 def import_database(meta, dbname=None, commit=False, populate=None,
                     rebuild_fixed=[]):
+
+    SQLSCRIPTS = get_psql_scripts()
+
     with temporary_database(dbname) as db_url:
 
         # populate temporary database
@@ -186,6 +186,8 @@ def replace_dots(s):
 
 
 def run_test(meta, pytest_args=[], tests=['']):
+
+    TESTDIR = get_test_dir()
 
     def replace_testdir(s):
         return s.replace(my_testdir, TESTDIR).replace(my_testdir[1:], TESTDIR)
