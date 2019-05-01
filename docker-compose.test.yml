@@ -1,3 +1,5 @@
 sut:
   build: .
   command: test-empd-admin
+  environment:
+      - GH_TOKEN
