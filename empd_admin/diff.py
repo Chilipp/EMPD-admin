@@ -64,7 +64,7 @@ def diff(meta, left=None, right=None, output=None,
         target = osp.join(local_repo, 'queries', output)
         if not osp.exists(osp.dirname(target)):
             os.makedirs(osp.dirname(target))
-        diff.to_csv(target, '\t')
+        diff.to_csv(target, '\t', float_format='%1.8g')
     if commit:
         repo.index.add([osp.join('queries', output)])
         repo.index.commit(f"Added diff between {left} and {right}")
