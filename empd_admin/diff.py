@@ -108,6 +108,14 @@ def compute_diff(left, right, how='inner', on=None, exclude=[],
         if col in NUMERIC_COLS:
             diff = (merged[col].notnull() & merged[col + '_r'].notnull() &
                     (~np.isclose(merged[col], merged[col + '_r'], atol=atol)))
+        elif col in ['Temperature', 'Precipitation']:
+            s1 = np.array(merged[col].str.split(',').apply(np.array).tolist(),
+                          dtype=float)
+            s2 = np.array(
+                merged[col + '_r'].str.split(',').apply(np.array).tolist(),
+                dtype=float)
+            diff = ((~np.isnan(s1)) & (~np.isnan(s1)) &
+                    (~np.isclose(s1, s2, atol=atol))).any(axis=1)
         else:
             diff = (merged[col].notnull() & merged[col + '_r'].notnull() &
                     (merged[col] != merged[col + '_r']))
