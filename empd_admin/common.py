@@ -9,13 +9,16 @@ DATADIR = os.getenv(
     'EMPDDATA', osp.join(osp.expanduser('~'), '.local', 'share', 'EMPD-data'))
 
 
+NUMERIC_COLS = ['Latitude', 'Longitude', 'Elevation', 'AreaOfSite', 'AgeBP']
+
+
 def read_empd_meta(fname):
     fname = fname
 
     ret = pd.read_csv(str(fname), sep='\t', index_col='SampleName',
                       dtype=str)
 
-    for col in ['Latitude', 'Longitude', 'Elevation', 'AreaOfSite', 'AgeBP']:
+    for col in NUMERIC_COLS:
         if col in ret.columns:
             ret[col] = ret[col].replace('', np.nan).astype(float)
     if 'ispercent' in ret.columns:

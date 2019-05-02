@@ -378,13 +378,27 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
               "in `left` and `right`. If `None`, all columns will be used."))
 
     diff_parser.add_argument(
+        '-atol', type=float, default=1e-3,
+        help=("Absolute tolerance to use for numeric columns. "
+              "Default: %(default)s"))
+
+    diff_parser.add_argument(
+        '-e', '--exclude', nargs='+',
+        help=("The columns to exclude for computing the change. They will be "
+              "removed from the columns set by the `on` parameter."))
+
+    diff_parser.add_argument(
         '-col', '--columns', nargs='*', default=['leftdiff'], metavar='COLUMN',
         help=("The columns for the output. Can be `leftdiff`, to use the "
               "differing columns from `left`, `left` to use all columns from "
               "`left`, `rightdiff` to use differing columns from `right, "
               "`right` to use all columns from `right`, `inner` to use the "
               "intersection of `left` and `right`, nothing to not display any "
-              "columns, or a list of columns to display. Default: %(default)s."
+              "columns, or a list of columns to display. Alternatively it cah "
+              "be `both` to use the columns from `left` and `right`, or "
+              "`bothdiff`, to use the changed columns from `left` and `right`."
+              " The columns from `right` will then be suffixed with an `_r`. "
+              "Default: %(default)s."
               ))
 
     diff_parser.add_argument(
@@ -592,7 +606,8 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                             try:
                                 msg = diff(meta, ns.left, ns.right, ns.output,
                                            ns.commit, how=ns.how, on=ns.on,
-                                           columns=ns.columns)
+                                           columns=ns.columns, atol=ns.atol,
+                                           exclude=ns.exclude)
                             except Exception:
                                 s = io.StringIO()
                                 traceback.print_exc(file=s)

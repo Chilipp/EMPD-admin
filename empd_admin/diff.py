@@ -6,7 +6,8 @@ import textwrap
 from urllib import request
 import tempfile
 import pandas as pd
-from empd_admin.common import read_empd_meta
+import numpy as np
+from empd_admin.common import read_empd_meta, NUMERIC_COLS
 from git import Repo
 
 
@@ -20,8 +21,8 @@ url_regex = regex = re.compile(
     r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 
-def diff(meta, left=None, right=None, output=None,
-         commit=False, *args, **kwargs):
+def diff(meta, left=None, right=None, output=None, commit=False, *args,
+         **kwargs):
     local_repo = osp.dirname(meta)
     meta = osp.basename(meta)
     repo = Repo(local_repo)
@@ -84,16 +85,18 @@ def diff(meta, left=None, right=None, output=None,
     return output, ret
 
 
-def compute_diff(left, right, how='inner', on=None, columns='leftdiff'):
+def compute_diff(left, right, how='inner', on=None, exclude=[],
+                 columns='leftdiff', atol=1e-3):
     left = left.copy()
     right = right.copy()
 
     left['left'] = True
     right['right'] = True
     merged = left.merge(right, how=how, left_index=True, right_index=True,
-                        suffixes=['', '_y'])
+                        suffixes=['', '_r'])
     if on is None:
         on = [col for col in left.columns if col in right.columns]
+    on = [col for col in on if col not in exclude]
     changed = []
     merged['diff'] = ''
     valid_left = merged.left.notnull()
@@ -102,10 +105,14 @@ def compute_diff(left, right, how='inner', on=None, columns='leftdiff'):
     merged.loc[~valid_right, 'diff'] += 'missing in left,'
 
     for col in on:
-        diff = (merged[col].notnull() & merged[col + '_y'].notnull() &
-                (merged[col] != merged[col + '_y']))
-        diff |= merged[col].isnull() & merged[col + '_y'].notnull()
-        diff |= merged[col].notnull() & merged[col + '_y'].isnull()
+        if col in NUMERIC_COLS:
+            diff = (merged[col].notnull() & merged[col + '_r'].notnull() &
+                    (~np.isclose(merged[col], merged[col + '_r'], atol=atol)))
+        else:
+            diff = (merged[col].notnull() & merged[col + '_r'].notnull() &
+                    (merged[col] != merged[col + '_r']))
+        diff |= merged[col].isnull() & merged[col + '_r'].notnull()
+        diff |= merged[col].notnull() & merged[col + '_r'].isnull()
         diff &= valid_left & valid_right
         if diff.any():
             changed.append(col)
@@ -122,17 +129,23 @@ def compute_diff(left, right, how='inner', on=None, columns='leftdiff'):
         columns = changed
     elif 'left' in columns:
         columns = left.columns.tolist()
-    elif 'right' in columns:
-        columns = [(col + '_y' if col in merged.columns else col)
-                   for col in right.columns]
     elif 'rightdiff' in columns:
-        columns = [col + '_y' for col in changed]
+        columns = [col + '_r' for col in changed]
+    elif 'right' in columns:
+        columns = [(col + '_r' if col in merged.columns else col)
+                   for col in right.columns]
     elif 'inner' in columns:
         columns = [col for col in left.columns if col in right.columns]
-    columns = [(col + '_y' if col not in merged.columns else col)
+    elif 'bothdiff' in columns:
+        columns = changed + [col + '_r' for col in changed
+                             if col + '_r' in merged.columns]
+    elif 'both' in columns:
+        columns = merged.columns
+
+    columns = [(col + '_r' if col not in merged.columns else col)
                for col in columns]
     return merged[columns + ['diff']].rename(
-        {col: col[:-2] for col in columns if col.endswith('_y')})
+        columns={col: col[:-2] for col in columns if col.endswith('_r')})
 
 
 def test_diff():
