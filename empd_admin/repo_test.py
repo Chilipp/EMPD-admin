@@ -79,7 +79,10 @@ def fetch_upstream(repo):
     except IndexError:
         remote = repo.create_remote(
             'upstream', 'https://github.com/EMPD2/EMPD-data.git')
-    remote.fetch()
+    try:
+        remote.fetch()
+    except GitCommandError:
+        pass
 
 
 def get_meta_file(dirname='.'):
