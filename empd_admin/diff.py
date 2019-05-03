@@ -152,8 +152,13 @@ def compute_diff(left, right, how='inner', on=None, exclude=[],
 
     columns = [(col + '_r' if col not in merged.columns else col)
                for col in columns]
-    return merged[columns + ['diff']].rename(
-        columns={col: col[:-2] for col in columns if col.endswith('_r')})
+    ref_cols = [col.replace('_r', '') for col in merged.columns]
+    columns.sort(key=lambda col: (ref_cols.index(col.replace('_r', '')), col))
+    ret = merged[columns + ['diff']]
+    if 'right' in columns or 'rightdiff' in columns:
+        ret = ret.rename(columns={
+            col: col[:-2] for col in columns if col.endswith('_r')})
+    return ret
 
 
 def test_diff():
