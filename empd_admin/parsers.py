@@ -383,7 +383,7 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
               "Default: %(default)s"))
 
     diff_parser.add_argument(
-        '-e', '--exclude', nargs='+',
+        '-e', '--exclude', nargs='+', default=[],
         help=("The columns to exclude for computing the change. They will be "
               "removed from the columns set by the `on` parameter."))
 
