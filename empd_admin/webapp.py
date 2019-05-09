@@ -207,7 +207,7 @@ class TestHookHandler(tornado.web.RequestHandler):
                     # display information on the PR to the user
                     if not test_info:
                         test_info = test.pr_info(tmp_dir, pr_owner, pr_repo,
-                                                 pr_branch)
+                                                 pr_branch, pr_id)
                         if test_info:
                             msg = test.comment_on_pr(
                                 owner, repo_name, pr_id, test_info['message'],

@@ -224,9 +224,11 @@ def run_test(meta, pytest_args=[], tests=['']):
             replace_testdir(md_report))
 
 
-def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None):
+def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None,
+            pr_id=None):
     repo = Repo(local_repo)
-    sha = repo.head.commit.hexsha
+    ref_head = repo.refs[f'pull/{pr_id}/head']
+    sha = ref_head.commit.hexsha
 
     meta = get_meta_file(local_repo)
 
@@ -523,7 +525,7 @@ def test_pr_info(pr_id, tmpdir):
 
     assert not test_info
 
-    test_info = pr_info(tmpdir)
+    test_info = pr_info(tmpdir, pr_id=pr_id)
 
     assert test_info
     assert test_info['status'] == 'pending'
