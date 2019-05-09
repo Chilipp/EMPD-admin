@@ -249,12 +249,11 @@ class PushedMasterHookHandler(tornado.web.RequestHandler):
 
             # Only do anything if we are working with EMPD2, and an open PR.
             if body['ref'] == 'refs/heads/master':
-                from empd_admin.common import get_empd_master_repo
+                from empd_admin.common import (get_empd_master_repo,
+                                               lock_empd_master)
                 import subprocess as spr
                 repo = get_empd_master_repo()
-                lock_file = os.path.join(
-                    os.path.expanduser('~'), 'cloning_master.lock')
-                with open(lock_file, 'w'):
+                with lock_empd_master():
                     repo.git.pull('origin', 'master')
                     fname = os.path.join(
                         repo.working_dir, 'postgres', 'EMPD2.sql')
@@ -265,7 +264,6 @@ class PushedMasterHookHandler(tornado.web.RequestHandler):
                     # import the data
                     spr.check_call(['psql', 'EMPD2', '-U', 'postgres',
                                     '-f', fname])
-                os.remove(lock_file)
                 self.write("Database refreshed")
         else:
             print('Unhandled event "{}".'.format(event))

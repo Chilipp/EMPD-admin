@@ -5,12 +5,16 @@ import os.path as osp
 import pandas as pd
 import numpy as np
 import git
+import contextlib
 
 DATADIR = os.getenv(
     'EMPDDATA', osp.join(osp.expanduser('~'), '.local', 'share', 'EMPD-data'))
 
 
 NUMERIC_COLS = ['Latitude', 'Longitude', 'Elevation', 'AreaOfSite', 'AgeBP']
+
+
+DATA_LOCKFILE = osp.join(osp.expanduser('~'), 'cloning_master.lock')
 
 
 def read_empd_meta(fname):
@@ -33,19 +37,30 @@ def read_empd_meta(fname):
 
 def wait_for_empd_master(timeout=120):
     for i in range(timeout):
-        if not osp.exists(osp.join(
-                osp.expanduser('~'), 'cloning_master.lock')):
+        if not osp.exists(DATA_LOCKFILE):
             return
         time.sleep(1)
     raise TimeoutError(
         "Data repository has not been accessible within %i seconds" % timeout)
 
 
+@contextlib.contextmanager
+def lock_empd_master():
+    try:
+        with open(DATA_LOCKFILE, 'w') as f:
+            yield f
+    finally:
+        if osp.exists(DATA_LOCKFILE):
+            os.remove(DATA_LOCKFILE)
+
+
 def get_empd_master_repo():
     """Get the repository to the data directory and download it if necessary"""
+    wait_for_empd_master()
     if not osp.exists(DATADIR):
-        return git.Repo.clone_from('https://github.com/EMPD2/EMPD-data.git',
-                                   DATADIR)
+        with lock_empd_master():
+            git.Repo.clone_from('https://github.com/EMPD2/EMPD-data.git',
+                                DATADIR)
     return git.Repo(DATADIR)
 
 
