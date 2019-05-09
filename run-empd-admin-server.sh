@@ -16,13 +16,15 @@ rm ~/starting_pg_server.lock
 " &
 
 # clone latest version of the EMPD in the herokuapp
-bash -c '
+bash -c "
 if [[ $ONHEROKU ]]; then
+    echo 'Cloning master' > ~/cloning_master.lock &&
     git -C /opt/empd-data remote set-url origin https://github.com/EMPD2/EMPD-data.git &&
     git -C /opt/empd-data remote set-branches origin master &&
     git -C /opt/empd-data fetch origin &&
-    git -C /opt/empd-data pull origin master;
-fi' &
+    git -C /opt/empd-data pull origin master &&
+    rm ~/cloning_master.lock;
+fi" &
 
 git config --global user.name "EMPD-admin"
 

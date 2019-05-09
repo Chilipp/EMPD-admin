@@ -249,24 +249,23 @@ class PushedMasterHookHandler(tornado.web.RequestHandler):
 
             # Only do anything if we are working with EMPD2, and an open PR.
             if body['ref'] == 'refs/heads/master':
-                from empd_admin.repo_test import temporary_database
-                from urllib import request
+                from empd_admin.common import get_empd_master_repo
                 import subprocess as spr
-                with temporary_database() as db_url:
-                    with tempfile.TemporaryDirectory() as tmpdir:
-                        url = ('https://raw.githubusercontent.com/EMPD2/'
-                               'EMPD-data/master/postgres/EMPD2.sql')
-                        download_target = os.path.join(tmpdir, 'EMPD2.sql')
-                        request.urlretrieve(url, download_target)
-                        # create the database
-                        spr.check_call(['psql', db_url, '-f', download_target])
-                        # remove the current database
-                        spr.check_call(['dropdb', '-U', 'postgres', 'EMPD2'])
-                        # create a new EMPD2
-                        spr.check_call(['createdb', '-U', 'postgres', 'EMPD2'])
-                        # import the data
-                        spr.check_call(['psql', 'EMPD2', '-U', 'postgres',
-                                        '-f', download_target])
+                repo = get_empd_master_repo()
+                lock_file = os.path.join(
+                    os.path.expanduser('~'), 'cloning_master.lock')
+                with open(lock_file, 'w'):
+                    repo.git.pull('origin', 'master')
+                    fname = os.path.join(
+                        repo.working_dir, 'postgres', 'EMPD2.sql')
+                    # remove the current database
+                    spr.check_call(['dropdb', '-U', 'postgres', 'EMPD2'])
+                    # create a new EMPD2
+                    spr.check_call(['createdb', '-U', 'postgres', 'EMPD2'])
+                    # import the data
+                    spr.check_call(['psql', 'EMPD2', '-U', 'postgres',
+                                    '-f', fname])
+                os.remove(lock_file)
                 self.write("Database refreshed")
         else:
             print('Unhandled event "{}".'.format(event))

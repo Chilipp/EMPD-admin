@@ -1,5 +1,6 @@
 # Common functions for the EMPD-admin modules
 import os
+import time
 import os.path as osp
 import pandas as pd
 import numpy as np
@@ -28,6 +29,16 @@ def read_empd_meta(fname):
         ret['okexcept'] = ''
 
     return ret
+
+
+def wait_for_empd_master(timeout=120):
+    for i in range(timeout):
+        if not osp.exists(osp.join(
+                osp.expanduser('~'), 'cloning_master.lock')):
+            return
+        time.sleep(1)
+    raise TimeoutError(
+        "Data repository has not been accessible within %i seconds" % timeout)
 
 
 def get_empd_master_repo():
