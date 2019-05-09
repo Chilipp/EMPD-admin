@@ -357,10 +357,10 @@ def download_pr(repo_owner, repo_name, pr_id, target_dir, force=False):
     return {}
 
 
-def full_repo_test(local_repo):
+def full_repo_test(local_repo, pr_id):
     local_repo = osp.join(local_repo, '')
     repo = Repo(local_repo)
-    sha = repo.head.commit.hexsha
+    sha = repo.refs['pull/{pr}/head'.format(pr=pr_id)].commit.hexsha
 
     meta = get_meta_file(local_repo)
     results = OrderedDict()
@@ -512,7 +512,7 @@ def test_repo_test(pr_id, tmpdir):
 
     assert not test_info
 
-    test_info = full_repo_test(tmpdir)
+    test_info = full_repo_test(tmpdir, pr_id)
 
     assert test_info
     assert test_info['status'] == 'failure'

@@ -217,7 +217,7 @@ class TestHookHandler(tornado.web.RequestHandler):
                                                target_url=msg.html_url)
 
                         # run the tests
-                        test_info = test.full_repo_test(tmp_dir)
+                        test_info = test.full_repo_test(tmp_dir, pr_id)
 
                 if test_info and test_info['status'] != 'skipped':
                     msg = test.comment_on_pr(
