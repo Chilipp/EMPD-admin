@@ -33,7 +33,8 @@ def read_empd_meta(fname):
 def get_empd_master_repo():
     """Get the repository to the data directory and download it if necessary"""
     if not osp.exists(DATADIR):
-        return git.Repo.clone_from('https://github.com/EMPD2/EMPD-data.git')
+        return git.Repo.clone_from('https://github.com/EMPD2/EMPD-data.git',
+                                   DATADIR)
     return git.Repo(DATADIR)
 
 
