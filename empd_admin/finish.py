@@ -103,7 +103,8 @@ def merge_postgres(meta, commit=True):
 
             # export database as tab-delimited tables
             tables_dir = 'tab-delimited'
-            with temporary_database('EMPD2') as db_url:
+            with temporary_database() as db_url:
+                spr.check_call(['psql', db_url, '-f', dump])
                 query = ("SELECT tablename FROM pg_tables "
                          "WHERE schemaname='public'")
                 tables = spr.check_output(
