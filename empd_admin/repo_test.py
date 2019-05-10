@@ -11,9 +11,12 @@ import github
 import tempfile
 import textwrap
 from collections import OrderedDict
-from empd_admin.common import get_test_dir, get_psql_scripts
+from empd_admin.common import get_test_dir, get_psql_scripts, read_empd_meta
 
 from git import GitCommandError, Repo
+
+
+ONHEROKU = os.getenv('HEROKU', 'false').lower()[0] in 'ty'
 
 
 @contextlib.contextmanager
@@ -422,7 +425,11 @@ def full_repo_test(local_repo, pr_id):
 
     if status in ['mixed', 'good']:
         # test the import into postgres
-        success, log, sql_dump = import_database(meta)
+        if ONHEROKU and len(read_empd_meta(meta)) > 700:
+            message += "\n\nSkipping postgres import because of too many rows"
+            success = True
+        else:
+            success, log, sql_dump = import_database(meta)
         if not success:
             message += '\n\n' + textwrap.dedent("""
                 ## Postgres import
