@@ -108,7 +108,7 @@ def get_meta_file(dirname='.'):
 
 
 def import_database(meta, dbname=None, commit=False, populate=None,
-                    rebuild_fixed=[]):
+                    rebuild_fixed=[], sql_dump=None):
 
     SQLSCRIPTS = get_psql_scripts()
 
@@ -132,13 +132,16 @@ def import_database(meta, dbname=None, commit=False, populate=None,
                     fill_tables = not bool(res)
                     populate = fill_tables
         if dbname is None or populate:
-            if create_tables:
-                spr.check_call(['psql', db_url, '-q', '-f',
-                                osp.join(SQLSCRIPTS, 'create_empd2.sql')])
-            if fill_tables:
-                spr.check_call([
-                    sys.executable, osp.join(SQLSCRIPTS, 'makeFixedTables.py'),
-                    db_url])
+            if isinstance(populate, str):
+                spr.check_call(['psql', db_url, '-q', '-f', populate])
+            else:
+                if create_tables:
+                    spr.check_call(['psql', db_url, '-q', '-f',
+                                    osp.join(SQLSCRIPTS, 'create_empd2.sql')])
+                if fill_tables:
+                    spr.check_call([
+                        sys.executable,
+                        osp.join(SQLSCRIPTS, 'makeFixedTables.py'), db_url])
 
         # import the data
         if rebuild_fixed:
@@ -155,8 +158,6 @@ def import_database(meta, dbname=None, commit=False, populate=None,
         stdout, stderr = proc.communicate()
         success = proc.returncode == 0
 
-        sql_dump = None
-
         if success and commit:
             repo = Repo(osp.dirname(meta))
             if repo.git.diff(osp.join('postgres', 'scripts', 'tables')):
@@ -171,8 +172,9 @@ def import_database(meta, dbname=None, commit=False, populate=None,
             else:
                 meta_base = osp.splitext(osp.basename(meta))[0]
 
-            sql_dump = osp.join(osp.dirname(meta), 'postgres',
-                                meta_base + '.sql')
+            sql_dump = sql_dump or osp.join(osp.dirname(meta), 'postgres',
+                                            meta_base + '.sql')
+
             with open(sql_dump, 'w') as f:
                 proc = spr.Popen(['pg_dump', db_url], stdout=f)
                 proc.communicate()

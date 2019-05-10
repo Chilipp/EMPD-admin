@@ -87,12 +87,16 @@ def fix_sample_formats(meta, commit=True):
 def merge_postgres(meta, commit=True):
     # import the data into the EMPD2 database
     if commit:
-        success, msg, dump = import_database(meta, 'EMPD2', commit=commit)
-
-        assert success, msg
-
         with remember_cwd():
             os.chdir(osp.dirname(meta))
+
+            success, msg, dump = import_database(
+                meta, commit=True,
+                populate=osp.join('postgres', 'EMPD2.sql'),
+                sql_dump=osp.join('postgres', 'EMPD2.sql'))
+
+            assert success, msg
+
             repo = Repo('.')
             old_sql_dump = osp.join(
                 'postgres', osp.splitext(osp.basename(meta))[0] + '.sql')
@@ -119,7 +123,6 @@ def merge_postgres(meta, commit=True):
                                 for table in tables])
                 repo.index.commit(
                     "Updated tab-delimited files from EMPD2 postgres database")
-            print('Committed')
 
     else:
         # to dump it to a temporary file
