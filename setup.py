@@ -26,8 +26,8 @@ def readme():
 
 
 def main():
-    setup(name='empd-admin',
-          version='1.0',
+    setup(name='EMPD-admin',
+          version='0.0.1.dev0',
           description='Automatic adminstrator of the EMPD',
           long_description=readme(),
           author='Philipp S. Sommer',
@@ -53,7 +53,12 @@ def main():
               'gitpython',
               'pytest',
               'pandas',
-              'xlrd',
+              'netCDF4',
+              'shapely',
+              'sqlalchemy',
+              'psycopg2',
+              'requests',
+              'geopandas',
               'PyYAML',
           ],
           classifiers=[
