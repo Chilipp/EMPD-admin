@@ -8,10 +8,11 @@ env:
 install:
     - docker build . -t empd2/empd-admin
     - docker build docs -t empd2/empd-admin-docs
+    - mkdir -p docs/_build/html
 
 script:
     - docker run -e GH_TOKEN=$GH_TOKEN empd2/empd-admin test-empd-admin -v
-    - docker run -v $(pwd)/_build/html:/opt/empd-admin-docs empd2/empd-admin-docs build-empd-admin-docs /opt/empd-admin-docs
+    - docker run -v $(pwd)/docs/_build/html:/opt/empd-admin-docs empd2/empd-admin-docs build-empd-admin-docs /opt/empd-admin-docs
 
 deploy:
   provider: pages
@@ -19,6 +20,6 @@ deploy:
   github-token:
     secure: "RJ0tutmOjquhgE7+TBXIJU/6KWxxR8uNGhoDDcCl4lNWsRVg3Vw8QByQktmaldRiQtcPl9yfxPX0PPSblF/kUjD4djecOf3P+45Q8sBrHgwnCQx7bS6fUJnUwxRCg5VcX1O+vjBFKA6jMW9qOngCIBFTDeeDU1CylffAwN/bTUEWZ79gzv41HUsr9VsbEtBUR2hSDiw3Y6ywWFynj+l1TUgGJwWI7hZ0noRS2lFG4yCgcwl5GQeNwSLs+LYx0cEGnFyLxCLwYumIsJEGPm17vYs9T08wX59mAP49mjqkjHZV2s0RaAOjM2J5qbNcMW+ZH2C8aWLyvSRYXVpMKvAJcZ4v6GSdVG+1d7qqLMiyU4amNSi4yHpwtVGcidRMgozhNqSa41PGyo7fSw5agg2k7jDAfCqJQ+BsciCxlQdz4yogkyjCa4xLSiWDKyZyP7Wy5qkxiGLa+I2gyvSdguWa4jYqGwkzMojS3+EBQvt0HQ+BZS/NnyQGFoRmeY98CQLsgDfxnnfMHaSMMXuIkTYDNziZ3wenvWcvkk+KG08GSWR3eQ2QnzN4faMVKaE70TyWK8QBSG8DdqCYSJiCIAnDszKkna4DzptvUsVkab9+bKd87K4vNzJO454q2vkPKskgGBhzEOA/RTGTgrv85nGfDoBWLjsJlkMwfx80OETGHmo="
   keep-history: true
-  local-dir: _build/html
+  local-dir: docs/_build/html
   on:
     branch: master
