@@ -12,7 +12,7 @@ it's performance. So you might want to install it locally to speed up the
 data contribution.
 
 At the moment, we support installation from source or using the
-`edmp2/empd-admin`_ docker image. The latter has the advantage that it avoids
+`edmp2/empd-admin docker image`_. The latter has the advantage that it avoids
 the installation of additional dependencies (that are quite heavy) and it
 runs in a virtual machine, separated from the rest of your system.
 
