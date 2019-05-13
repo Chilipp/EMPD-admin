@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>empd_admin.finish module &#8212; EMPD-admin 0.0.1.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="empd_admin.parsers module" href="empd_admin.parsers.html" />
+    <link rel="prev" title="empd_admin.diff module" href="empd_admin.diff.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          EMPD-admin</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://EMPD2.github.io">EMPD2.github.io</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pulls.html">EMPD-data pull requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">empd-admin Command Line Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="empd_admin.html">Python API Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">empd_admin.finish module</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="empd_admin.diff.html" title="Previous Chapter: empd_admin.diff module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; empd_admin.di...</span>
+    </a>
+  </li>
+  <li>
+    <a href="empd_admin.parsers.html" title="Next Chapter: empd_admin.parsers module"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">empd_admin.pa... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/api/empd_admin.finish.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="module-empd_admin.finish">
+<span id="empd-admin-finish-module"></span><h1>empd_admin.finish module<a class="headerlink" href="#module-empd_admin.finish" title="Permalink to this headline">¶</a></h1>
+<p>Command to finish the merging of a PR</p>
+<dl class="function">
+<dt id="empd_admin.finish.finish_pr">
+<code class="descclassname">empd_admin.finish.</code><code class="descname">finish_pr</code><span class="sig-paren">(</span><em>meta</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.finish_pr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.finish.fix_sample_formats">
+<code class="descclassname">empd_admin.finish.</code><code class="descname">fix_sample_formats</code><span class="sig-paren">(</span><em>meta</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.fix_sample_formats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.finish.look_for_changed_fixed_tables">
+<code class="descclassname">empd_admin.finish.</code><code class="descname">look_for_changed_fixed_tables</code><span class="sig-paren">(</span><em>meta</em>, <em>pr_owner</em>, <em>pr_repo</em>, <em>pr_branch</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.look_for_changed_fixed_tables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.finish.merge_meta">
+<code class="descclassname">empd_admin.finish.</code><code class="descname">merge_meta</code><span class="sig-paren">(</span><em>meta</em>, <em>target=None</em>, <em>commit=True</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.merge_meta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.finish.merge_postgres">
+<code class="descclassname">empd_admin.finish.</code><code class="descname">merge_postgres</code><span class="sig-paren">(</span><em>meta</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.merge_postgres" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.finish.rebase_master">
+<code class="descclassname">empd_admin.finish.</code><code class="descname">rebase_master</code><span class="sig-paren">(</span><em>meta</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.rebase_master" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Philipp S. Sommer.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

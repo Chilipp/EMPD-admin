@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Installation &#8212; EMPD-admin 0.0.1.dev0 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting started" href="getting-started.html" />
+    <link rel="prev" title="EMPD-data pull requests" href="pulls.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          EMPD-admin</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://EMPD2.github.io">EMPD2.github.io</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pulls.html">EMPD-data pull requests</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">empd-admin Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/empd_admin.html">Python API Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#installing-the-empd-admin-locally">Installing the EMPD-admin locally</a><ul>
+<li><a class="reference internal" href="#installation-through-docker">Installation through Docker</a></li>
+<li><a class="reference internal" href="#installation-from-source">Installation from source</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#building-the-docs">Building the docs</a></li>
+<li><a class="reference internal" href="#testing-the-empd-admin">Testing the EMPD-admin</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="pulls.html" title="Previous Chapter: EMPD-data pull requests"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; EMPD-data pul...</span>
+    </a>
+  </li>
+  <li>
+    <a href="getting-started.html" title="Next Chapter: Getting started"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Getting started &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/install.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="installation">
+<span id="install"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing-the-empd-admin-locally">
+<h2>Installing the EMPD-admin locally<a class="headerlink" href="#installing-the-empd-admin-locally" title="Permalink to this headline">¶</a></h2>
+<p>The EMPD-admin runs as a webapp (see <a class="reference internal" href="pulls.html#pulls"><span class="std std-ref">EMPD-data pull requests</span></a>), so you actually do not
+have to install it on your own laptop. However, the webapp has limitations in
+it’s performance. So you might want to install it locally to speed up the
+data contribution.</p>
+<p>At the moment, we support installation from source or using the
+<a href="#id4"><span class="problematic" id="id5">`edmp2/empd-admin docker image`_</span></a>. The latter has the advantage that it avoids
+the installation of additional dependencies (that are quite heavy) and it
+runs in a virtual machine, separated from the rest of your system.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#installation-through-docker" id="id2">Installation through Docker</a></p></li>
+<li><p><a class="reference internal" href="#installation-from-source" id="id3">Installation from source</a></p></li>
+</ul>
+</div>
+<div class="section" id="installation-through-docker">
+<span id="docker-install"></span><h3><a class="toc-backref" href="#id2">Installation through Docker</a><a class="headerlink" href="#installation-through-docker" title="Permalink to this headline">¶</a></h3>
+<p>The easiest way to get the EMPD-admin is to use the docker image that we
+provide as <a class="reference external" href="https://hub.docker.com/r/empd2/empd-admin">empd2/empd-admin</a>. Here you do not have to install anything,
+instead you pull the latest image from the docker hub. <cite>Install docker</cite> for
+your system, and then pull the latest image via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">pull</span> <span class="n">empd2</span><span class="o">/</span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span>
+</pre></div>
+</div>
+<p>And then run the command line utility via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="n">empd2</span><span class="o">/</span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">empd</span><span class="o">-</span><span class="n">admin</span>
+</pre></div>
+</div>
+<p>The docker image also has the latest version of the <a class="reference external" href="https://github.com/EMPD2/EMPD-data">EMPD-data</a> repository
+under <code class="docutils literal notranslate"><span class="pre">/opt/empd-data</span></code>. This is what the <code class="docutils literal notranslate"><span class="pre">empd-admin</span></code> command uses. If you
+want to use your own data contribution, mount it at that directory via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">v</span> <span class="n">PATH</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">YOUR</span><span class="o">-</span><span class="n">REPO</span><span class="p">:</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">empd</span><span class="o">-</span><span class="n">data</span> <span class="n">empd2</span><span class="o">/</span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">empd</span><span class="o">-</span><span class="n">admin</span>
+</pre></div>
+</div>
+<p>For example, to use the <a class="reference external" href="https://github.com/EMPD2/EMPD-data/tree/test-data">test-data branch of the EMPD2/EMPD-data</a> repository,
+as we use it in our <a class="reference internal" href="getting-started.html#getting-started"><span class="std std-ref">Getting started</span></a> guide, you can clone it via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">-</span><span class="n">q</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">EMPD2</span><span class="o">/</span><span class="n">EMPD</span><span class="o">-</span><span class="n">data</span> <span class="o">-</span><span class="n">b</span> <span class="n">test</span><span class="o">-</span><span class="n">data</span>
+</pre></div>
+</div>
+<p>And then test it via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run -v `pwd`/EMPD-data:/opt/empd-data empd2/empd-admin empd-admin test
+</pre></div>
+</div>
+</div>
+<div class="section" id="installation-from-source">
+<span id="install-source"></span><h3><a class="toc-backref" href="#id3">Installation from source</a><a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h3>
+<p>To install the EMPD-admin, clone the repository from github via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">EMPD2</span><span class="o">/</span><span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span>
+</pre></div>
+</div>
+<p>or <a class="reference download external" download="" href="https://github.com/EMPD2/EMPD-admin/archive/master.zip"><code class="xref download docutils literal notranslate"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">zipped</span> <span class="pre">source</span> <span class="pre">files</span> <span class="pre">from</span> <span class="pre">Github</span></code></a>.</p>
+<p>The dependencies of the EMPD-admin are quite heavy, in particularly we rely on</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.python.org/">python</a> &gt;= 3.7, <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a>: The python operating system</p></li>
+<li><p><a class="reference external" href="http://pandas.pydata.org/">pandas</a>: For handling and processing the EMPD data</p></li>
+<li><p><a class="reference external" href="https://git-scm.com/">git</a>, <a class="reference external" href="https://github.com/gitpython-developers/GitPython">gitpython</a> and <a class="reference external" href="http://pygithub.github.io/PyGithub/v1/index.html">pygithub</a>: To use the version control features of the EMPD</p></li>
+<li><p><a class="reference external" href="https://docs.pytest.org/en/latest/">pytest</a>, <a class="reference external" href="http://geopandas.org/">geopandas</a>, <a class="reference external" href="http://github.com/Unidata/netcdf4-python">netcdf4</a>, <a class="reference external" href="https://github.com/Chilipp/latlon-utils">latlon-utils</a>, <a class="reference external" href="https://github.com/Toblerity/Shapely">shapely</a>: To run the tests of the EMPD</p></li>
+<li><p><a class="reference external" href="http://www.sqlalchemy.org/">sqlalchemy</a> and <a class="reference external" href="http://initd.org/psycopg/">psycopg2</a>: To use the EMPD as a relational postgres database</p></li>
+<li><p><a class="reference external" href="http://www.tornadoweb.org/">tornado</a>, <a class="reference external" href="http://python-requests.org/">requests</a>, <a class="reference external" href="http://pyyaml.org/wiki/PyYAML">pyyaml</a>: optional dependencies for the webapp</p></li>
+</ul>
+<p>We highly recommend to use <a class="reference external" href="https://conda.io/docs/">conda</a> to install these dependencies. Here you can
+either the <a class="reference external" href="https://www.anaconda.com/download/">anaconda</a> or <a class="reference external" href="https://conda.io/miniconda.html">miniconda</a> installer.</p>
+<p>Please download the conda <a class="reference download external" download="" href="https://raw.githubusercontent.com/EMPD2/empd-admin-base/master/empd-admin-environment.yml"><code class="xref download docutils literal notranslate"><span class="pre">environment</span> <span class="pre">file</span></code></a> and create a new conda environment for conda via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">PATH</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DOWNLOADED</span><span class="o">-</span><span class="n">FILE</span>
+</pre></div>
+</div>
+<p>and activate it via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">activate</span> <span class="n">empd</span><span class="o">-</span><span class="n">admin</span>
+</pre></div>
+</div>
+<p>Finally install the EMPD-admin via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span>
+</pre></div>
+</div>
+<p>You can then run the empd-admin via</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ empd-admin --help
+usage: empd-admin [-h] [-d DIRECTORY]
+                  {test,fix,createdb,rebuild,rebase,finish,accept,unaccept,query,diff,merge-meta,help,filter-log}
+                  ...
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DIRECTORY, --directory DIRECTORY
+                        Path to the local EMPD2/EMPD-data repository. Default:
+                        .
+
+Commands:
+  {test,fix,createdb,rebuild,rebase,finish,accept,unaccept,query,diff,merge-meta,help,filter-log}
+    test                test the database
+    fix                 fix the database
+    createdb            Create a postgres database out of the data
+    rebuild             Rebuild the fixed tables of the postgres database
+    rebase              Merge the master branch of EMPD2/EMPD-data into the
+                        current branch to resolve merge conflicts
+    finish              Finish this PR and merge the data into meta.tsv
+    accept              Mark incomplete or erroneous meta data as accepted
+    unaccept            Reverse the acceptance of incomplete or erroneous meta
+                        data.
+    query               Query and display the meta data
+    diff                Compare two EMPD meta files
+    merge-meta          Merge two metafiles
+    help                Print the help on a command
+    filter-log          Filter pytest runs with lots of dots
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also skip the installation of the dependencies through conda, and
+directly run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">EMPD-admin</span></code>, but do that on your own risk.
+There is no guarantee that packages like netCDF4 or pandas work through
+<code class="docutils literal notranslate"><span class="pre">pip</span></code> installation</p>
+</div>
+</div>
+</div>
+<div class="section" id="building-the-docs">
+<span id="build-docs"></span><h2>Building the docs<a class="headerlink" href="#building-the-docs" title="Permalink to this headline">¶</a></h2>
+<p>The docs are also built through the <a class="reference internal" href="#docker-install"><span class="std std-ref">docker image</span></a>.
+Clone the EMPD-admin repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">EMPD2</span><span class="o">/</span><span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span>
+</pre></div>
+</div>
+<p>Then use the <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> in <code class="docutils literal notranslate"><span class="pre">docs/Dockerfile</span></code> to built the
+<cite>empd-admin-docs</cite> image:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="n">empd</span><span class="o">-</span><span class="n">admin</span><span class="o">-</span><span class="n">docs</span> <span class="n">docs</span>
+</pre></div>
+</div>
+<p>Now mount the directory where you want the documentation to be generated (in
+the example below <code class="docutils literal notranslate"><span class="pre">docs/_build/html</span></code>) as <code class="docutils literal notranslate"><span class="pre">/opt/empd-admin-docs</span></code> and run the
+`` build-empd-admin-docs``command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run -v `pwd`/docs/_build/html:/opt/empd-admin-docs build-empd-admin-docs /opt/empd-admin-docs
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing-the-empd-admin">
+<span id="run-tests"></span><h2>Testing the EMPD-admin<a class="headerlink" href="#testing-the-empd-admin" title="Permalink to this headline">¶</a></h2>
+<p>Testing the EMPD-admin requires a <a class="reference external" href="https://github.blog/2013-05-16-personal-api-tokens/">Github API token</a> to test the webapp
+features. Login to Github and create a token (without any scopes) at
+<a class="reference external" href="https://github.com/settings/tokens">https://github.com/settings/tokens</a>. Copy the token and run the tests of the
+EMPD-admin through the docker image:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">e</span> <span class="n">GH_TOKEN</span><span class="o">=</span><span class="n">YOUR</span><span class="o">-</span><span class="n">SECRET</span><span class="o">-</span><span class="n">TOKEN</span> <span class="n">empd2</span><span class="o">/</span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">test</span><span class="o">-</span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span>
+</pre></div>
+</div>
+<p>Alternatively, if you installed the EMPD-admin
+<a class="reference internal" href="#install-source"><span class="std std-ref">from source</span></a>, you can run the tests by executing
+<code class="docutils literal notranslate"><span class="pre">pytest</span></code> from within the downloaded Github repository, i.e.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">EMPD2</span><span class="o">/</span><span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span>
+<span class="n">pytest</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Philipp S. Sommer.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

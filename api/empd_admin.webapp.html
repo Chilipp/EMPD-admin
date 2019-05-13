@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>empd_admin.webapp module &#8212; EMPD-admin 0.0.1.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="empd_admin.viewer_responses module" href="empd_admin.viewer_responses.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          EMPD-admin</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://EMPD2.github.io">EMPD2.github.io</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pulls.html">EMPD-data pull requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">empd-admin Command Line Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="empd_admin.html">Python API Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">empd_admin.webapp module</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="empd_admin.viewer_responses.html" title="Previous Chapter: empd_admin.viewer_responses module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; empd_admin.vi...</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/api/empd_admin.webapp.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="module-empd_admin.webapp">
+<span id="empd-admin-webapp-module"></span><h1>empd_admin.webapp module<a class="headerlink" href="#module-empd_admin.webapp" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="empd_admin.webapp.CommandHookHandler">
+<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">CommandHookHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.CommandHookHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
+<dl class="method">
+<dt id="empd_admin.webapp.CommandHookHandler.post">
+<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.CommandHookHandler.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="empd_admin.webapp.MainHandler">
+<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">MainHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.MainHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
+<dl class="method">
+<dt id="empd_admin.webapp.MainHandler.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.MainHandler.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="empd_admin.webapp.MainHandler.set_default_headers">
+<code class="descname">set_default_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.MainHandler.set_default_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this to set HTTP headers at the beginning of the request.</p>
+<p>For example, this is the place to set a custom <code class="docutils literal notranslate"><span class="pre">Server</span></code> header.
+Note that setting such headers in the normal flow of request
+processing may not do what you want, since headers may be reset
+during error handling.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="empd_admin.webapp.PushedMasterHookHandler">
+<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">PushedMasterHookHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.PushedMasterHookHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
+<dl class="method">
+<dt id="empd_admin.webapp.PushedMasterHookHandler.post">
+<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.PushedMasterHookHandler.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="empd_admin.webapp.TestHookHandler">
+<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">TestHookHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.TestHookHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
+<dl class="method">
+<dt id="empd_admin.webapp.TestHookHandler.post">
+<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.TestHookHandler.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="empd_admin.webapp.VerificationHandler">
+<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">VerificationHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.VerificationHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
+<p>Handler to verify requests through tokens</p>
+<dl class="method">
+<dt id="empd_admin.webapp.VerificationHandler.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.VerificationHandler.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="empd_admin.webapp.ViewerHookHandler">
+<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">ViewerHookHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerHookHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
+<dl class="method">
+<dt id="empd_admin.webapp.ViewerHookHandler.post">
+<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerHookHandler.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="empd_admin.webapp.ViewerHookHandler.set_default_headers">
+<code class="descname">set_default_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerHookHandler.set_default_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this to set HTTP headers at the beginning of the request.</p>
+<p>For example, this is the place to set a custom <code class="docutils literal notranslate"><span class="pre">Server</span></code> header.
+Note that setting such headers in the normal flow of request
+processing may not do what you want, since headers may be reset
+during error handling.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="empd_admin.webapp.ViewerIssuesHandler">
+<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">ViewerIssuesHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerIssuesHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
+<p>A handler for issues submitted through the EMPD viewer</p>
+<dl class="method">
+<dt id="empd_admin.webapp.ViewerIssuesHandler.post">
+<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerIssuesHandler.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="empd_admin.webapp.ViewerIssuesHandler.set_default_headers">
+<code class="descname">set_default_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerIssuesHandler.set_default_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this to set HTTP headers at the beginning of the request.</p>
+<p>For example, this is the place to set a custom <code class="docutils literal notranslate"><span class="pre">Server</span></code> header.
+Note that setting such headers in the normal flow of request
+processing may not do what you want, since headers may be reset
+during error handling.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.webapp.create_webapp">
+<code class="descclassname">empd_admin.webapp.</code><code class="descname">create_webapp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.create_webapp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.webapp.main">
+<code class="descclassname">empd_admin.webapp.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.webapp.send_verfication_mail">
+<code class="descclassname">empd_admin.webapp.</code><code class="descname">send_verfication_mail</code><span class="sig-paren">(</span><em>token</em>, <em>what</em>, <em>subject</em>, <em>msg</em>, <em>recipient</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.send_verfication_mail" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.webapp.verify_recaptcha">
+<code class="descclassname">empd_admin.webapp.</code><code class="descname">verify_recaptcha</code><span class="sig-paren">(</span><em>recaptcha_token</em>, <em>action</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.verify_recaptcha" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.webapp.verify_request">
+<code class="descclassname">empd_admin.webapp.</code><code class="descname">verify_request</code><span class="sig-paren">(</span><em>signature</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.verify_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Philipp S. Sommer.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

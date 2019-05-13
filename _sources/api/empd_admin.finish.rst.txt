@@ -1,0 +1,7 @@
+empd\_admin.finish module
+=========================
+
+.. automodule:: empd_admin.finish
+    :members:
+    :undoc-members:
+    :show-inheritance:

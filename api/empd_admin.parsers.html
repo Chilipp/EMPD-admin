@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>empd_admin.parsers module &#8212; EMPD-admin 0.0.1.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="empd_admin.query module" href="empd_admin.query.html" />
+    <link rel="prev" title="empd_admin.finish module" href="empd_admin.finish.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          EMPD-admin</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://EMPD2.github.io">EMPD2.github.io</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pulls.html">EMPD-data pull requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">empd-admin Command Line Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="empd_admin.html">Python API Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">empd_admin.parsers module</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="empd_admin.finish.html" title="Previous Chapter: empd_admin.finish module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; empd_admin.fi...</span>
+    </a>
+  </li>
+  <li>
+    <a href="empd_admin.query.html" title="Next Chapter: empd_admin.query module"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">empd_admin.qu... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/api/empd_admin.parsers.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="module-empd_admin.parsers">
+<span id="empd-admin-parsers-module"></span><h1>empd_admin.parsers module<a class="headerlink" href="#module-empd_admin.parsers" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="empd_admin.parsers.WebParser">
+<em class="property">class </em><code class="descclassname">empd_admin.parsers.</code><code class="descname">WebParser</code><span class="sig-paren">(</span><em>prog=None</em>, <em>usage=None</em>, <em>description=None</em>, <em>epilog=None</em>, <em>parents=[]</em>, <em>formatter_class=&lt;class 'argparse.HelpFormatter'&gt;</em>, <em>prefix_chars='-'</em>, <em>fromfile_prefix_chars=None</em>, <em>argument_default=None</em>, <em>conflict_handler='error'</em>, <em>add_help=True</em>, <em>allow_abbrev=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.WebParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code></p>
+<p>An ArgumentParser that does not sys.exit</p>
+<dl class="method">
+<dt id="empd_admin.parsers.WebParser.error">
+<code class="descname">error</code><span class="sig-paren">(</span><em>message: string</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.WebParser.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a usage message incorporating the message to stderr and
+exits.</p>
+<p>If you override this in a subclass, it should not return – it
+should either exit or raise an exception.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="empd_admin.parsers.WebParser.exit">
+<code class="descname">exit</code><span class="sig-paren">(</span><em>status=0</em>, <em>message=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.WebParser.exit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="empd_admin.parsers.WebParser.parse_known_args">
+<code class="descname">parse_known_args</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.WebParser.parse_known_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.get_parser">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.get_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.process_comment">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">process_comment</code><span class="sig-paren">(</span><em>comment</em>, <em>pr_owner</em>, <em>pr_repo</em>, <em>pr_branch</em>, <em>pr_num</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.process_comment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.process_comment_line">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">process_comment_line</code><span class="sig-paren">(</span><em>line</em>, <em>pr_owner</em>, <em>pr_repo</em>, <em>pr_branch</em>, <em>pr_num</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.process_comment_line" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.setup_pytest_args">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">setup_pytest_args</code><span class="sig-paren">(</span><em>namespace</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.setup_pytest_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.setup_subparsers">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">setup_subparsers</code><span class="sig-paren">(</span><em>parser</em>, <em>pr_owner=None</em>, <em>pr_repo=None</em>, <em>pr_branch=None</em>, <em>add_help=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.setup_subparsers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_accept">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_accept</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_accept" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_accept_query">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_accept_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_accept_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_createdb">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_createdb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_createdb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_finish">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_finish</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_finish" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_fix">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_fix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_fix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_help">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_help</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_help_merge_meta">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_help_merge_meta</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_help_merge_meta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_merge_meta">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_merge_meta</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_merge_meta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_no_command">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_no_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_no_command" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_query">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_rebase">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_rebase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_rebase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_rebuild">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_rebuild</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_rebuild" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_test">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_test" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_test_collect">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_test_collect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_test_collect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_unaccept">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_unaccept</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_unaccept" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_unaccept_query">
+<code class="descclassname">empd_admin.parsers.</code><code class="descname">test_unaccept_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_unaccept_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Philipp S. Sommer.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

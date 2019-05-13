@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Getting started &#8212; EMPD-admin 0.0.1.dev0 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="empd-admin Command Line Interface" href="cli.html" />
+    <link rel="prev" title="Installation" href="install.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          EMPD-admin</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://EMPD2.github.io">EMPD2.github.io</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pulls.html">EMPD-data pull requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">empd-admin Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/empd_admin.html">Python API Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Getting started</a><ul>
+<li><a class="reference internal" href="#downloading-the-test-data">Downloading the test data</a></li>
+<li><a class="reference internal" href="#testing-the-repository">Testing the repository</a></li>
+<li><a class="reference internal" href="#query-the-repository">Query the repository</a></li>
+<li><a class="reference internal" href="#transform-into-postgres">Transform into postgres</a></li>
+<li><a class="reference internal" href="#finishing-a-data-contribution">Finishing a data contribution</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="install.html" title="Previous Chapter: Installation"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Installation</span>
+    </a>
+  </li>
+  <li>
+    <a href="cli.html" title="Next Chapter: empd-admin Command Line Interface"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">empd-admin Co... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/getting-started.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="getting-started">
+<span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>In this small tutorial, we will guide you through a standard procedure of how
+to merge a new data contribution into the EMPD. In the following sections, the
+three main steps are described shortly, that are:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#contrib-test"><span class="std std-ref">Testing and fixing the contribution</span></a></p></li>
+<li><p><a class="reference internal" href="#contrib-query"><span class="std std-ref">Analysing the contribution</span></a></p></li>
+<li><p><a class="reference internal" href="#contrib-finish"><span class="std std-ref">Finishing the contribution</span></a></p></li>
+</ol>
+<p>Note that, as a contributor to the EMPD, you do not have to work through this
+guide. Of course, you are welcomed to do this, but it is the objective of the
+core-maintainers to validate your contribution with the methods presented here.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The commands here are run from an interactive python session (ipython). For
+this reason, we are prefixing and shell command with an exclamation mark
+(<code class="docutils literal notranslate"><span class="pre">!</span></code>). If you run the examples locally, leave them away.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note, we run the commands here locally using the <code class="docutils literal notranslate"><span class="pre">empd-admin</span></code> shell
+command. But if you use it from a Pull Request into the EMPD-data
+repository, you have to use <code class="docutils literal notranslate"><span class="pre">&#64;EMPD-admin</span></code>. If you are using the
+EMPD-admin through Docker, you can type
+<a href="#id2"><span class="problematic" id="id3">``</span></a>docker run -t empd2/empd-admin empd-admin `` instead.</p>
+</div>
+<div class="section" id="downloading-the-test-data">
+<span id="contrib-download"></span><h2>Downloading the test data<a class="headerlink" href="#downloading-the-test-data" title="Permalink to this headline">¶</a></h2>
+<p>For our tutorial, we will use the test-data branch of the EMPD (see
+<a class="reference external" href="https://empd2.github.io/?repo=EMPD2/EMPD-data&amp;branch=test-data&amp;meta=test.tsv">here</a>).
+It contains artificial data that we use for testing. If you want to test the
+commands here with your own contribution to the EMPD, you can also use your
+own fork of the <a class="reference external" href="https://github.com/EMPD-data">EMPD-data</a> repository.</p>
+<p>The following two commands clone the branch from
+<a class="reference external" href="https://github.com/EMPD2/EMPD-data/tree/test-data">Github</a> and changes
+the working directory to the downloaded directory.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="o">!</span>git clone -q https://github.com/EMPD2/EMPD-data -b test-data
+
+<span class="gp">In [2]: </span><span class="n">cd</span> <span class="n">EMPD</span><span class="o">-</span><span class="n">data</span>
+
+<span class="gp">In [3]: </span><span class="n">ls</span>
+<span class="go">CODE_OF_CONDUCT.md  README.rst		     meta.tsv	     templates/</span>
+<span class="go">CONTRIBUTING.md     docker-compose.test.yml  postgres/	     test.tsv</span>
+<span class="go">Dockerfile	    docker_tests.sh*	     samples/	     tests/</span>
+<span class="go">LICENSE		    failures/		     tab-delimited/</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing-the-repository">
+<span id="contrib-test"></span><h2>Testing the repository<a class="headerlink" href="#testing-the-repository" title="Permalink to this headline">¶</a></h2>
+<p>The first step is now, to test the data contribution. For this, we can use
+the <a class="reference internal" href="cli.html#test"><span class="std std-ref">empd-admin test</span></a> command. For the test-data
+branch this will fail due to an invalid country in the <em>test_a1</em> sample.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="o">!</span>empd-admin test
+<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmphpsjst1r_test/report.md --commit --maxfail=20 --sample=.* /tmp/tmphpsjst1r_test/tests/</span>
+<span class="go">============================= test session starts ==============================</span>
+<span class="go">platform linux -- Python 3.7.3, pytest-4.4.1, py-1.8.0, pluggy-0.9.0</span>
+<span class="go">rootdir: /tmp/tmpv0o22dd_/tests, inifile: pytest.ini</span>
+<span class="go">collected 38 items / 7 deselected / 31 selected</span>
+<span class="go">/tmphpsjst1r_test/tests/test_critical.py ...</span>
+<span class="go">/tmphpsjst1r_test/tests/test_formatting.py ..sssss</span>
+<span class="go">/tmphpsjst1r_test/tests/test_meta.py ..F..................</span>
+<span class="go">=================================== FAILURES ===================================</span>
+<span class="go">_________________________________ test_country _________________________________</span>
+<span class="go">meta =            OriginalSampleName   SiteName  ... empd_countries  Country_ok</span>
+<span class="go">SampleName                                ......    Germany        True</span>
+<span class="go">test_a3          orig_test_a2  somewhere  ...        Germany        True</span>
+<span class="go">[3 rows x 76 columns]</span>
+<span class="go">countries = natural_earth</span>
+<span class="go">Albania                                           Albania</span>
+<span class="go">Algeria                                       ...      United Kingdom</span>
+<span class="go">Yemen                                               Yemen</span>
+<span class="go">Name: country, Length: 82, dtype: object</span>
+<span class="go">nat_earth_countries = SampleName</span>
+<span class="go">test_a1    Germany</span>
+<span class="go">test_a2    Germany</span>
+<span class="go">test_a3    Germany</span>
+<span class="go">dtype: object</span>
+<span class="go">okexcept = &lt;function okexcept.&lt;locals&gt;.okexcept at 0x7fb17b63b510&gt;</span>
+<span class="go">record_property = &lt;function record_property.&lt;locals&gt;.append_property at 0x7fb1752839d8&gt;</span>
+<span class="go">def test_country(meta, countries, nat_earth_countries, okexcept,</span>
+<span class="go">record_property):</span>
+<span class="go">ref = countries</span>
+<span class="go">meta = meta.copy()</span>
+<span class="go">s = meta[&#39;Country&#39;].fillna(&#39;&#39;)</span>
+<span class="go">s_ok = okexcept(s.name)</span>
+<span class="go">s_ok |= (okexcept(&quot;Latitude&quot;) &amp; okexcept(&quot;Longitude&quot;)).values</span>
+<span class="go">meta = meta.join(s_ok)</span>
+<span class="go">meta[&#39;nat_earth&#39;] = nat_earth_countries</span>
+<span class="go">meta[&#39;empd_countries&#39;] = [</span>
+<span class="go">&#39;; &#39;.join(ref.loc[[n]]) if n in ref.index else c</span>
+<span class="go">for c, n in meta[[s.name, &#39;nat_earth&#39;]].values]</span>
+<span class="go">meta[s.name + &#39;_ok&#39;] = [n in ref.index and c in ref.loc[[n]].values</span>
+<span class="go">for c, n in meta[[s.name, &#39;nat_earth&#39;]].values]</span>
+<span class="go">failed = meta[~(s_ok | meta.Country_ok)]</span>
+<span class="go">if len(failed):</span>
+<span class="go">record_property(&#39;failed_samples&#39;,</span>
+<span class="go">failed[[s.name, &#39;nat_earth&#39;, &#39;empd_countries&#39;, s_ok.name,</span>
+<span class="go">s.name + &#39;_ok&#39;]]</span>
+<span class="go">)</span>
+<span class="go">msg = &quot;Found %i invalid %s: %s&quot; % (</span>
+<span class="go">len(failed), s.name if len(failed) == 1 else &#39;Countries&#39;,</span>
+<span class="go">textwrap.shorten(</span>
+<span class="go">&#39;, &#39;.join(failed.index), 80, placeholder=&#39;...&#39;))</span>
+<span class="go">&gt;       assert not len(failed), msg</span>
+<span class="go">E       AssertionError: Found 1 invalid Country: test_a1</span>
+<span class="go">E       assert not 1</span>
+<span class="go">E        +  where 1 = len(           OriginalSampleName   SiteName  ... empd_countries  Country_ok\nSampleName                                ......                       \ntest_a1          orig_test_a1  somewhere  ...        Germany       False\n\n[1 rows x 76 columns])</span>
+<span class="go">/tmphpsjst1r_test/tests/test_meta.py:80: AssertionError</span>
+<span class="go">=============================== warnings summary ===============================</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/socks.py:58</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/socks.py:58: DeprecationWarning: Using or importing the ABCs from &#39;collections&#39; instead of from &#39;collections.abc&#39; is deprecated, and in 3.8 it will stop working</span>
+<span class="go">from collections import Callable</span>
+<span class="go">test_meta.py::test_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:45: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">test_meta.py::test_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:153: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">test_meta.py::test_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:192: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">test_meta.py::test_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:222: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">test_meta.py::test_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:250: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">-- Docs: https://docs.pytest.org/en/latest/warnings.html</span>
+<span class="go">=== 1 failed, 25 passed, 5 skipped, 7 deselected, 6 warnings in 6.33 seconds ===</span>
+</pre></div>
+</div>
+<p>The failed sample can be extracted using the <cite>-e</cite> option:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [5]: </span><span class="o">!</span>empd-admin <span class="nb">test</span> -e failed.tsv
+</pre></div>
+</div>
+<p>which extracted the failed metadata into <code class="docutils literal notranslate"><span class="pre">failures/failed.tsv</span></code>:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [6]: </span><span class="n">ls</span> <span class="n">failures</span><span class="o">/</span><span class="n">failed</span><span class="o">.</span><span class="n">tsv</span>
+<span class="go">failures/failed.tsv</span>
+</pre></div>
+</div>
+<p>and allows you to analyse it further. In our case, we can fix the failed sample
+with the <a class="reference internal" href="cli.html#fix"><span class="std std-ref">fix</span></a> command:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="o">!</span>empd-admin fix country -s test_a1
+<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmpno6dm45n_test/report.md -m dbfix --fix-db --commit -k country --sample=test_a1 /tmp/tmpno6dm45n_test/tests/fixes.py</span>
+<span class="go">============================= test session starts ==============================</span>
+<span class="go">platform linux -- Python 3.7.3, pytest-4.4.1, py-1.8.0, pluggy-0.9.0</span>
+<span class="go">rootdir: /tmp/tmpv0o22dd_/tests, inifile: pytest.ini</span>
+<span class="go">collected 7 items / 6 deselected / 1 selected</span>
+<span class="go">/tmpno6dm45n_test/tests/fixes.py .</span>
+<span class="go">=============================== warnings summary ===============================</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/socks.py:58</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/socks.py:58: DeprecationWarning: Using or importing the ABCs from &#39;collections&#39; instead of from &#39;collections.abc&#39; is deprecated, and in 3.8 it will stop working</span>
+<span class="go">from collections import Callable</span>
+<span class="go">fixes.py::fix_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:45: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">fixes.py::fix_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:153: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">fixes.py::fix_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:192: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">fixes.py::fix_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:222: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">fixes.py::fix_country</span>
+<span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/shapely/affinity.py:250: DeprecationWarning: invalid escape sequence \</span>
+<span class="go">&quot;&quot;&quot;</span>
+<span class="go">-- Docs: https://docs.pytest.org/en/latest/warnings.html</span>
+<span class="go">============== 1 passed, 6 deselected, 6 warnings in 5.71 seconds ==============</span>
+</pre></div>
+</div>
+<p>This now fixed the country for the <em>test_a1</em> sample and the tests will run through</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [8]: </span><span class="o">!</span>empd-admin test
+<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmp9a9vwb66_test/report.md --commit --maxfail=20 --sample=.* /tmp/tmp9a9vwb66_test/tests/</span>
+<span class="go">All tests passed</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="query-the-repository">
+<span id="contrib-query"></span><h2>Query the repository<a class="headerlink" href="#query-the-repository" title="Permalink to this headline">¶</a></h2>
+<p>The empd-admin provides several diagnostics to investigate the data
+contribution. You already saw one of them: the extraction of failures with the
+<code class="docutils literal notranslate"><span class="pre">-e</span></code> option the the <a class="reference internal" href="cli.html#test"><span class="std std-ref">test</span></a> command.</p>
+<p>Another one is the <a class="reference internal" href="cli.html#query"><span class="std std-ref">query</span></a> command to query the database. This will use an
+sql query to display a subset of your metadata. The syntax is like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">query</span> <span class="n">WHERE_CLAUSE</span> <span class="p">[</span><span class="n">Column1</span><span class="p">,</span> <span class="p">[</span><span class="n">Column2</span><span class="p">,</span> <span class="p">[</span><span class="n">Column2</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Which will transform into a query like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="n">Column1</span><span class="p">,</span> <span class="n">Column2</span><span class="p">,</span> <span class="n">Column3</span> <span class="n">FROM</span> <span class="n">metadata</span> <span class="n">WHERE</span> <span class="n">WHERE_CLAUSE</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">query</span> <span class="s1">&#39;Country = &quot;Germany&quot;&#39;</span> <span class="n">SampleName</span>
+</pre></div>
+</div>
+<p>will transform into:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="n">SampleName</span> <span class="n">FROM</span> <span class="n">metadata</span> <span class="n">WHERE</span> <span class="n">Country</span> <span class="o">=</span> <span class="s2">&quot;Germany&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>and result in a markdown table for the SampleName:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [9]: </span><span class="o">!</span>empd-admin query <span class="s1">&#39;Country = &quot;Germany&quot;&#39;</span> SampleName
+<span class="go">&lt;details&gt;&lt;summary&gt;Country = &quot;Germany&quot;&lt;/summary&gt;</span>
+
+<span class="go">| SampleName</span>
+<span class="go">| ---</span>
+<span class="go">| test_a1</span>
+<span class="go">| test_a2</span>
+<span class="go">| test_a3</span>
+
+
+<span class="go">Displaying 3 of 3 rows</span>
+<span class="go">&lt;/details&gt;</span>
+</pre></div>
+</div>
+<p>When combining this with <a class="reference external" href="https://pandoc.org/">pandoc</a>, you can also directly transform it to HTML</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [10]: </span><span class="o">!</span>empd-admin query <span class="s1">&#39;Country = &quot;Germany&quot;&#39;</span> SampleName <span class="p">|</span> pandoc -o query.html
+</pre></div>
+</div>
+<details>
+Country = "Germany"
+<table>
+<thead><tr class="header"><th>SampleName</th></tr></thead>
+<tbody>
+<tr class="odd"><td>test_a1</td></tr>
+<tr class="even"><td>test_a2</td></tr>
+<tr class="odd"><td>test_a3</td></tr>
+</tbody>
+</table>
+Displaying 3 of 3 rows
+</details><p>You can also dump them as a file to the <cite>queries</cite> folder of your repository
+with the <code class="docutils literal notranslate"><span class="pre">--output</span></code> and <code class="docutils literal notranslate"><span class="pre">--commit</span></code> options:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="o">!</span>empd-admin query <span class="s1">&#39;Country = &quot;Germany&quot;&#39;</span> SampleName -c
+<span class="go">&lt;details&gt;&lt;summary&gt;Country = &quot;Germany&quot;&lt;/summary&gt;</span>
+
+<span class="go">| SampleName</span>
+<span class="go">| ---</span>
+<span class="go">| test_a1</span>
+<span class="go">| test_a2</span>
+<span class="go">| test_a3</span>
+
+
+<span class="go">Displaying 3 of 3 rows</span>
+<span class="go">&lt;/details&gt;</span>
+
+<span class="gp">In [12]: </span><span class="n">cat</span> <span class="n">queries</span><span class="o">/</span><span class="n">query</span><span class="o">.</span><span class="n">tsv</span>
+<span class="go">                                                                                                                                                 SampleName</span>
+<span class="go">test_a1</span>
+<span class="go">test_a2</span>
+<span class="go">test_a3</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transform-into-postgres">
+<span id="contrib-postgres"></span><h2>Transform into postgres<a class="headerlink" href="#transform-into-postgres" title="Permalink to this headline">¶</a></h2>
+<p>Assuming you have Postgres installed on your system and a running postgres
+database server, you can transform the EMPD meta data in a relational database,
+<a class="reference external" href="https://github.com/EMPD2/EMPD-data/blob/master/postgres/EMPD2.sql">as it is available in the EMPD-data repository</a>.</p>
+<p>Just create postgres database using</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="o">!</span>createdb MyEMPD
+</pre></div>
+</div>
+<p>and then incorporate your data as</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="o">!</span>empd-admin createdb -db MyEMPD
+<span class="go">Importing in postgresql://postgres@localhost/MyEMPD with /opt/conda/envs/empd-admin/bin/python /tmp/tmpv0o22dd_/postgres/scripts/import_into_empd2.py ./test.tsv --database-url postgresql://postgres@localhost/MyEMPD --no-dump</span>
+</pre></div>
+</div>
+<p>Then you can access it via</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="o">!</span>psql MyEMPD
+</pre></div>
+</div>
+</div>
+<div class="section" id="finishing-a-data-contribution">
+<span id="contrib-finish"></span><h2>Finishing a data contribution<a class="headerlink" href="#finishing-a-data-contribution" title="Permalink to this headline">¶</a></h2>
+<p>When you are satisfied with your data contribution, you can <a class="reference internal" href="cli.html#finish"><span class="std std-ref">finish</span></a> the
+contribution.</p>
+<p>This will remove all the intermediate working files (e.g. our new meta data
+<code class="docutils literal notranslate"><span class="pre">test.tsv</span></code> or the failed samples <code class="docutils literal notranslate"><span class="pre">failures/failed.tsv</span></code>) and merge the new
+data into the base meta file <cite>meta.tsv</cite> of the EMPD.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="o">!</span>empd-admin finish --commit
+<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmp172o24l8_test/report.md --fix-db -v -k fix_sample_data_formatting --commit /tmp/tmp172o24l8_test/tests/fixes.py</span>
+<span class="go">Importing in postgresql://postgres@localhost/tmpj3ehnwvu_empd with /opt/conda/envs/empd-admin/bin/python /tmp/tmpv0o22dd_/postgres/scripts/import_into_empd2.py ./test.tsv --database-url postgresql://postgres@localhost/tmpj3ehnwvu_empd</span>
+
+<span class="gp">In [17]: </span><span class="n">log</span> <span class="o">=</span> <span class="o">!</span>git log -8
+<span class="gp">   ....: </span><span class="k">print</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">   ....: </span>
+<span class="go">                                                                                                                                                                                                                                                                                                                                                                                                                                                                           commit 23e8a3145c5c462326af0d4ab55a0ffcc9b2bcd0</span>
+<span class="go">Author: EMPD-admin &lt;postgres@d9ad1ca6c7f9&gt;</span>
+<span class="go">Date:   Mon May 13 22:15:18 2019 +0000</span>
+
+<span class="go">    Removed test.tsv to finish the PR</span>
+
+<span class="go">commit 7eb84c8677470c842fe07f85f4ed8ebb4afddcc3</span>
+<span class="go">Author: EMPD-admin &lt;postgres@d9ad1ca6c7f9&gt;</span>
+<span class="go">Date:   Mon May 13 22:15:18 2019 +0000</span>
+
+<span class="go">    Removed extracted queries</span>
+
+<span class="go">commit 1af642d3cdc4f752926b88fba6aa9d7154a08208</span>
+<span class="go">Author: EMPD-admin &lt;postgres@d9ad1ca6c7f9&gt;</span>
+<span class="go">Date:   Mon May 13 22:15:18 2019 +0000</span>
+
+<span class="go">    Removed extracted failures</span>
+
+<span class="go">commit 02be2e8843948f10b493154c6f698dd2a5f03ed4</span>
+<span class="go">Author: EMPD-admin &lt;postgres@d9ad1ca6c7f9&gt;</span>
+<span class="go">Date:   Mon May 13 22:15:17 2019 +0000</span>
+
+<span class="go">    Merged test.tsv into meta.tsv [skip ci]</span>
+
+<span class="go">commit e940d659e8f29f581a6af10d0f6194be6506c01c</span>
+<span class="go">Author: EMPD-admin &lt;postgres@d9ad1ca6c7f9&gt;</span>
+<span class="go">Date:   Mon May 13 22:15:16 2019 +0000</span>
+
+<span class="go">    Updated tab-delimited files from EMPD2 postgres database</span>
+
+<span class="go">commit 2f0234be88e7fcf49b267ad1b4e6e2f6f7809b00</span>
+<span class="go">Author: EMPD-admin &lt;postgres@d9ad1ca6c7f9&gt;</span>
+<span class="go">Date:   Mon May 13 22:15:13 2019 +0000</span>
+
+<span class="go">    Added postgres dump for test.tsv</span>
+
+<span class="go">commit 1c4e707239ed75559f93acb95b66078f21a9346f</span>
+<span class="go">Author: EMPD-admin &lt;postgres@d9ad1ca6c7f9&gt;</span>
+<span class="go">Date:   Mon May 13 22:15:11 2019 +0000</span>
+
+<span class="go">    Updated fixed tables</span>
+
+<span class="go">commit 9bd00f14c8a39016d822138929c272e011546a53</span>
+<span class="go">Author: EMPD-admin &lt;postgres@d9ad1ca6c7f9&gt;</span>
+<span class="go">Date:   Mon May 13 22:15:08 2019 +0000</span>
+
+<span class="go">    Fixed formatting of samples data</span>
+</pre></div>
+</div>
+<p>That’s it. Now we could merge this contribution into the EMPD from within
+Github.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Philipp S. Sommer.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

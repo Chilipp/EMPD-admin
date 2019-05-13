@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome to EMPD-admin’s documentation! &#8212; EMPD-admin 0.0.1.dev0 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="EMPD-data pull requests" href="pulls.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          EMPD-admin</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://EMPD2.github.io">EMPD2.github.io</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pulls.html">EMPD-data pull requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">empd-admin Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/empd_admin.html">Python API Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Welcome to EMPD-admin’s documentation!</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="pulls.html" title="Next Chapter: EMPD-data pull requests"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">EMPD-data pul... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/index.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="welcome-to-empd-admin-s-documentation">
+<h1>Welcome to EMPD-admin’s documentation!<a class="headerlink" href="#welcome-to-empd-admin-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>The EMPD-admin is a python package to administer the
+<a class="reference external" href="https://EMPD2.github.io">Eurasian Modern Pollen Database</a> (EMPD). This package helps contributors and
+especially maintainers to test and fix new data contributions.</p>
+<p>The main objective of the EMPD-admin is to be used in Github pull requests
+in the <a class="reference external" href="https://github.com/EMPD-data">EMPD-data</a> repository. If you write:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@EMPD</span><span class="o">-</span><span class="n">admin</span> <span class="n">help</span>
+</pre></div>
+</div>
+<p>in a comment in a pull request (see <a class="reference external" href="https://github.com/EMPD2/EMPD-data/pull/2#issuecomment-491545548">here</a>
+for example), or any other command from the
+<a class="reference internal" href="cli.html#cli"><span class="std std-ref">command line interface</span></a>, it will be handled by a webapp at
+<a class="reference external" href="https://empd-admin.herokuapp.com">https://empd-admin.herokuapp.com</a>. See the <a class="reference internal" href="pulls.html#pulls"><span class="std std-ref">EMPD-data pull requests</span></a> section for more
+details.</p>
+<p>The EMPD-admin, however, can also be installed locally to test the contribution
+before entering a pull request on Github. See the <a class="reference internal" href="getting-started.html#getting-started"><span class="std std-ref">Getting started</span></a>
+section for an overview on how to use the EMPD-admin for new contributions and
+the <a class="reference internal" href="install.html#install"><span class="std std-ref">Installation</span></a> instructions on how to install the EMPD-admin locally.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p>The interactive viewer of the EMPD: <a class="reference external" href="https://EMPD2.github.io">https://EMPD2.github.io</a></p></li>
+<li><p>The data repository of the EMPD: <a class="reference external" href="https://github.com/EMPD2/EMPD-data">https://github.com/EMPD2/EMPD-data</a></p></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pulls.html">EMPD-data pull requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#installing-the-empd-admin-locally">Installing the EMPD-admin locally</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#building-the-docs">Building the docs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-empd-admin">Testing the EMPD-admin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#downloading-the-test-data">Downloading the test data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#testing-the-repository">Testing the repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#query-the-repository">Query the repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#transform-into-postgres">Transform into postgres</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#finishing-a-data-contribution">Finishing a data contribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">empd-admin Command Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#Commands">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#Sub-commands:">Sub-commands:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/empd_admin.html">Python API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/empd_admin.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Philipp S. Sommer.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+Python API Reference
+====================
+
+.. automodule:: empd_admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   empd_admin.accept
+   empd_admin.common
+   empd_admin.diff
+   empd_admin.finish
+   empd_admin.parsers
+   empd_admin.query
+   empd_admin.repo_test
+   empd_admin.viewer_responses
+   empd_admin.webapp
+

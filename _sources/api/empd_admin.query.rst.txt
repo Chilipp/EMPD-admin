@@ -1,0 +1,7 @@
+empd\_admin.query module
+========================
+
+.. automodule:: empd_admin.query
+    :members:
+    :undoc-members:
+    :show-inheritance:

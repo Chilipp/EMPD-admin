@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>empd_admin.viewer_responses module &#8212; EMPD-admin 0.0.1.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="empd_admin.webapp module" href="empd_admin.webapp.html" />
+    <link rel="prev" title="empd_admin.repo_test module" href="empd_admin.repo_test.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          EMPD-admin</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://EMPD2.github.io">EMPD2.github.io</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pulls.html">EMPD-data pull requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">empd-admin Command Line Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="empd_admin.html">Python API Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">empd_admin.viewer_responses module</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="empd_admin.repo_test.html" title="Previous Chapter: empd_admin.repo_test module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; empd_admin.re...</span>
+    </a>
+  </li>
+  <li>
+    <a href="empd_admin.webapp.html" title="Next Chapter: empd_admin.webapp module"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">empd_admin.we... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/api/empd_admin.viewer_responses.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="module-empd_admin.viewer_responses">
+<span id="empd-admin-viewer-responses-module"></span><h1>empd_admin.viewer_responses module<a class="headerlink" href="#module-empd_admin.viewer_responses" title="Permalink to this headline">¶</a></h1>
+<p>Module to handle requests from the EMPD2.github.io viewer</p>
+<dl class="function">
+<dt id="empd_admin.viewer_responses.create_new_pull_request">
+<code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">create_new_pull_request</code><span class="sig-paren">(</span><em>metadata</em>, <em>submitter</em>, <em>submitter_gh=None</em>, <em>commit_msg=''</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.create_new_pull_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new branch and pull request with the given metadata</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.viewer_responses.edit_pull_request">
+<code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">edit_pull_request</code><span class="sig-paren">(</span><em>pull</em>, <em>meta</em>, <em>metadata</em>, <em>submitter</em>, <em>submitter_gh=None</em>, <em>commit_msg=''</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.edit_pull_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit the meta data of an existing pull request</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.viewer_responses.handle_issue_submission">
+<code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">handle_issue_submission</code><span class="sig-paren">(</span><em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.handle_issue_submission" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.viewer_responses.handle_verified_issue">
+<code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">handle_verified_issue</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.handle_verified_issue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.viewer_responses.handle_viewer_request">
+<code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">handle_viewer_request</code><span class="sig-paren">(</span><em>metadata</em>, <em>submitter</em>, <em>repo='EMPD2/EMPD-data'</em>, <em>branch='master'</em>, <em>meta='meta.tsv'</em>, <em>submitter_gh=None</em>, <em>commit_msg=''</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.handle_viewer_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.viewer_responses.submit_issue">
+<code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">submit_issue</code><span class="sig-paren">(</span><em>title</em>, <em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.submit_issue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.viewer_responses.transform_list">
+<code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">transform_list</code><span class="sig-paren">(</span><em>items</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.transform_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Philipp S. Sommer.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
