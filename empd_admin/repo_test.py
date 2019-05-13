@@ -108,7 +108,7 @@ def get_meta_file(dirname='.'):
 
 
 def import_database(meta, dbname=None, commit=False, populate=None,
-                    rebuild_fixed=[], sql_dump=None):
+                    rebuild_fixed=[], sql_dump=None, dump_tables=True):
 
     SQLSCRIPTS = get_psql_scripts()
 
@@ -133,7 +133,8 @@ def import_database(meta, dbname=None, commit=False, populate=None,
                     populate = fill_tables
         if dbname is None or populate:
             if isinstance(populate, str):
-                spr.check_call(['psql', db_url, '-q', '-f', populate])
+                spr.check_call(['psql', db_url, '-q', '-f', populate],
+                               stdout=spr.DEVNULL)
             else:
                 if create_tables:
                     spr.check_call(['psql', db_url, '-q', '-f',
@@ -152,6 +153,8 @@ def import_database(meta, dbname=None, commit=False, populate=None,
             cmd = [sys.executable,
                    osp.join(SQLSCRIPTS, 'import_into_empd2.py'),
                    meta, '--database-url', db_url]
+            if not dump_tables:
+                cmd.append('--no-dump')
 
         print("Importing in %s with %s" % (db_url, ' '.join(cmd)))
         proc = spr.Popen(cmd, stdout=spr.PIPE, stderr=spr.STDOUT)
