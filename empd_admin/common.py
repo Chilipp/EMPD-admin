@@ -35,6 +35,16 @@ def read_empd_meta(fname):
     return ret
 
 
+def dump_empd_meta(meta, fname=None, **kwargs):
+    if meta.index.name == 'SampleName':
+        kwargs.setdefault('index', True)
+    else:
+        kwargs.setdefault('index', False)
+    kwargs.setdefault('sep', '\t')
+    kwargs.setdefault('float_format', '%1.8g')
+    return meta.to_csv(fname, **kwargs)
+
+
 def wait_for_empd_master(timeout=120):
     for i in range(timeout):
         if not osp.exists(DATA_LOCKFILE):

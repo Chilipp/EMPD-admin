@@ -7,7 +7,7 @@ from urllib import request
 import tempfile
 import pandas as pd
 import numpy as np
-from empd_admin.common import read_empd_meta, NUMERIC_COLS
+from empd_admin.common import read_empd_meta, NUMERIC_COLS, dump_empd_meta
 from git import Repo
 
 
@@ -65,7 +65,7 @@ def diff(meta, left=None, right=None, output=None, commit=False, *args,
         target = osp.join(local_repo, 'queries', output)
         if not osp.exists(osp.dirname(target)):
             os.makedirs(osp.dirname(target))
-        diff.to_csv(target, '\t', float_format='%1.8g')
+        dump_empd_meta(diff, target)
     if commit:
         repo.index.add([osp.join('queries', output)])
         repo.index.commit(f"Added diff between {left} and {right}")
@@ -77,7 +77,7 @@ def diff(meta, left=None, right=None, output=None, commit=False, *args,
         diff], ignore_index=True)
 
     ret = f'<details><summary>{left}..{right}</summary>\n\n' + textwrap.indent(
-        diff.head(200).to_csv(sep='|', index=False, float_format='%1.8g'),
+        dump_empd_meta(diff.head(200), sep='|'),
         '| ')
     ret += '\n\nDisplaying %i of %i rows' % (min(len(diff) - 1, 200),
                                              len(diff) - 1)

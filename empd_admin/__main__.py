@@ -78,7 +78,8 @@ def main():
                 raise_error=True, exact=args.exact, local_repo=local_repo)
     elif args.parser == 'createdb':
         success, report, sql_dump = import_database(
-            meta, dbname=args.database, commit=args.commit)
+            meta, dbname=args.database, commit=args.commit,
+            dump_tables=args.commit)
         print(report)
         if not success:
             sys.exit(1)

@@ -7,7 +7,7 @@ import textwrap
 from sqlalchemy import create_engine
 import tempfile
 from git import Repo
-from empd_admin.common import read_empd_meta
+from empd_admin.common import read_empd_meta, dump_empd_meta
 
 
 def query_samples(meta_df, query):
@@ -58,7 +58,7 @@ def query_meta(meta, query, columns='notnull', count=False,
     if output:
         ofile = osp.join(local_repo, 'queries', output)
         os.makedirs(osp.dirname(ofile), exist_ok=True)
-        sub.to_csv(ofile, '\t', float_format='%1.8g')
+        dump_empd_meta(sub, ofile)
 
     if commit:
         repo = Repo(local_repo)
@@ -75,7 +75,7 @@ def query_meta(meta, query, columns='notnull', count=False,
         sub.drop_duplicates(distinct, inplace=True)
 
     ret = f'<details><summary>{query}</summary>\n\n' + textwrap.indent(
-        sub.head(200).to_csv(sep='|', index=False, float_format='%1.8g'), '| ')
+        dump_empd_meta(sub.head(200), sep='|'), '| ')
     ret += '\n\nDisplaying %i of %i rows' % (min(len(sub) - 1, 200),
                                              len(sub) - 1)
     if len(missing):

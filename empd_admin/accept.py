@@ -4,7 +4,7 @@ from git import Repo
 import pandas as pd
 import numpy as np
 from empd_admin.query import query_samples
-from empd_admin.common import read_empd_meta
+from empd_admin.common import read_empd_meta, dump_empd_meta
 
 
 def accept_query(meta, query, columns, commit=True, skip_ci=False,
@@ -39,11 +39,11 @@ def accept_query(meta, query, columns, commit=True, skip_ci=False,
                    f"based on '{query}'")
 
     if commit:
-        meta_df.to_csv(meta, sep='\t', float_format='%1.8g')
+        dump_empd_meta(meta_df, meta)
         repo.index.add([base_meta])
         repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
     if not commit:
-        meta_df.to_csv(meta, sep='\t', float_format='%1.8g')
+        dump_empd_meta(meta_df, meta)
         return ("Marked the fields as accepted but without having it "
                 "commited. %i sample%s would have been affected.") % (
                     nsamples, 's' if nsamples > 1 else '')
@@ -98,11 +98,11 @@ def accept(meta, what, commit=True, skip_ci=False, raise_error=False,
         messages.append(message)
 
         if commit:
-            meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
+            dump_empd_meta(meta_df, meta)
             repo.index.add([base_meta])
             repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
     if not commit:
-        meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
+        dump_empd_meta(meta_df, meta)
         return ("Marked the fields as accepted but without having it "
                 "commited\n\n- " + "\n- ".join(messages))
 
@@ -168,12 +168,12 @@ def unaccept(meta, what, commit=True, skip_ci=False, raise_error=False,
             messages.append(message)
 
         if commit and (old_okexcept != meta_df['okexcept']).any():
-            meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
+            dump_empd_meta(meta_df, meta)
             repo.index.add([base_meta])
             repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
         old_okexcept = meta_df['okexcept'].copy(True)
     if not commit:
-        meta_df.to_csv(meta, sep='\t', index=False, float_format='%1.8g')
+        dump_empd_meta(meta_df, meta)
         return ("Reverted the acceptance of mentioned erroneous fields but "
                 "did not commit.\n\n- " + "\n- ".join(messages))
 
@@ -215,11 +215,11 @@ def unaccept_query(meta, query, columns, commit=True, skip_ci=False,
                 f"based on '{query}'")
 
     if commit:
-        meta_df.to_csv(meta, sep='\t', float_format='%1.8g')
+        dump_empd_meta(meta_df, meta)
         repo.index.add([base_meta])
         repo.index.commit(message + ('\n\n[skip ci]' if skip_ci else ''))
     if not commit:
-        meta_df.to_csv(meta, sep='\t', float_format='%1.8g')
+        dump_empd_meta(meta_df, meta)
         return ("Marked the fields as accepted but without having it "
                 "commited. %i sample%s would have been affected.") % (
                     nsamples, 's' if nsamples > 1 else '')

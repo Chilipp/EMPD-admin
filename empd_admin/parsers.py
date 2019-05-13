@@ -647,7 +647,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'createdb':
                             success, msg, sql_dump = test.import_database(
-                                meta, commit=ns.commit)
+                                meta, commit=ns.commit, dump_tables=ns.commit)
                             if success:
                                 ret += "Postgres import succeded "
                                 if sql_dump:

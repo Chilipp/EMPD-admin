@@ -10,7 +10,7 @@ from git import Repo, GitCommandError
 import hmac
 import yaml
 from empd_admin.repo_test import comment_on_pr
-from empd_admin.common import read_empd_meta
+from empd_admin.common import read_empd_meta, dump_empd_meta
 
 
 def transform_list(items):
@@ -36,8 +36,7 @@ def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
 
     # write the data frame and load it again to have a consistent dump
     with tempfile.TemporaryDirectory() as d2:
-        metadata.to_csv(osp.join(d2, 'tmp.tsv'), sep='\t',
-                        float_format='%1.8g')
+        dump_empd_meta(metadata, osp.join(d2, 'tmp.tsv'))
         metadata = read_empd_meta(osp.join(d2, 'tmp.tsv'))
 
     if repo == 'EMPD2/EMPD-data' and branch == 'master':
@@ -87,8 +86,7 @@ def edit_pull_request(pull, meta, metadata, submitter, submitter_gh=None,
         if old_meta.shape == save_meta.shape and old_meta.equals(save_meta):
             return False, "No data has been edited."
         else:
-            old_meta.to_csv(osp.join(tmpdir, meta), sep='\t',
-                            float_format='%1.8g')
+            dump_empd_meta(old_meta, osp.join(tmpdir, meta))
             repo.index.add([meta])
             commit_msg += '\n\n' if commit_msg else ''
             repo.index.commit(

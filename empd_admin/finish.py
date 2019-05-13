@@ -2,7 +2,6 @@
 import os
 import os.path as osp
 import shutil
-from functools import partial
 import pandas as pd
 from git import Repo
 from empd_admin.repo_test import (
@@ -10,7 +9,7 @@ from empd_admin.repo_test import (
     run_test, remember_cwd, fetch_upstream)
 import subprocess as spr
 import textwrap
-from empd_admin.common import read_empd_meta, get_psql_scripts
+from empd_admin.common import read_empd_meta, get_psql_scripts, dump_empd_meta
 
 
 def finish_pr(meta, commit=True):
@@ -57,7 +56,7 @@ def merge_meta(meta, target=None, commit=True, local_repo=None):
     cols = [col for col in meta_df.columns if col in base_meta_df.columns]
     base_meta_df.loc[meta_df.index, cols] = meta_df
 
-    base_meta_df.to_csv(base_meta, sep='\t', float_format='%1.8g')
+    dump_empd_meta(base_meta_df, base_meta)
 
     if commit:
         repo = Repo(local_repo)
@@ -108,7 +107,8 @@ def merge_postgres(meta, commit=True):
             # export database as tab-delimited tables
             tables_dir = 'tab-delimited'
             with temporary_database() as db_url:
-                spr.check_call(['psql', db_url, '-f', dump])
+                spr.check_call(['psql', db_url, '-q', '-f', dump],
+                               stdout=spr.DEVNULL)
                 query = ("SELECT tablename FROM pg_tables "
                          "WHERE schemaname='public'")
                 tables = spr.check_output(
@@ -116,7 +116,7 @@ def merge_postgres(meta, commit=True):
                 copy = ("COPY public.%s TO STDOUT "
                         "WITH CSV HEADER DELIMITER E'\\t'")
                 for table in tables:
-                    cmd = ['psql', db_url, '-c', copy % table, '-o',
+                    cmd = ['psql', db_url, '-q', '-c', copy % table, '-o',
                            osp.join(tables_dir, table + '.tsv')]
                     spr.check_call(cmd)
                 repo.index.add([osp.join(tables_dir, table + '.tsv')
@@ -156,8 +156,7 @@ def look_for_changed_fixed_tables(meta, pr_owner, pr_repo, pr_branch):
                   %s
                   </details>
                 """) % (len(changed) - 1,
-                        textwrap.indent(changed.to_csv(sep='|', index=False,
-                                                       float_format='%1.8g'),
+                        textwrap.indent(dump_empd_meta(changed, sep='|'),
                                         '  | '))
     if changed_tables:
         if len(changed_tables) == 1:
