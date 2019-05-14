@@ -180,11 +180,6 @@ as we use it in our <a class="reference internal" href="getting-started.html#get
 </div>
 <div class="section" id="installation-from-source">
 <span id="install-source"></span><h3><a class="toc-backref" href="#id3">Installation from source</a><a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h3>
-<p>To install the EMPD-admin, clone the repository from github via:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">EMPD2</span><span class="o">/</span><span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span>
-</pre></div>
-</div>
-<p>or <a class="reference download external" download="" href="https://github.com/EMPD2/EMPD-admin/archive/master.zip"><code class="xref download docutils literal notranslate"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">zipped</span> <span class="pre">source</span> <span class="pre">files</span> <span class="pre">from</span> <span class="pre">Github</span></code></a>.</p>
 <p>The dependencies of the EMPD-admin are quite heavy, in particularly we rely on</p>
 <ul class="simple">
 <li><p><a class="reference external" href="http://www.python.org/">python</a> &gt;= 3.7, <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a>: The python operating system</p></li>
@@ -195,20 +190,26 @@ as we use it in our <a class="reference internal" href="getting-started.html#get
 <li><p><a class="reference external" href="http://www.tornadoweb.org/">tornado</a>, <a class="reference external" href="http://python-requests.org/">requests</a>, <a class="reference external" href="http://pyyaml.org/wiki/PyYAML">pyyaml</a>: optional dependencies for the webapp</p></li>
 </ul>
 <p>We highly recommend to use <a class="reference external" href="https://conda.io/docs/">conda</a> to install these dependencies. Here you can
-either the <a class="reference external" href="https://www.anaconda.com/download/">anaconda</a> or <a class="reference external" href="https://conda.io/miniconda.html">miniconda</a> installer.</p>
-<p>Please download the conda <a class="reference download external" download="" href="https://raw.githubusercontent.com/EMPD2/empd-admin-base/master/empd-admin-environment.yml"><code class="xref download docutils literal notranslate"><span class="pre">environment</span> <span class="pre">file</span></code></a> and create a new conda environment for conda via:</p>
+either use the <a class="reference external" href="https://www.anaconda.com/download/">anaconda</a> or <a class="reference external" href="https://conda.io/miniconda.html">miniconda</a> installer.</p>
+<p>When conda is installed on your system, download the conda <a class="reference download external" download="" href="https://raw.githubusercontent.com/EMPD2/empd-admin-base/master/empd-admin-environment.yml"><code class="xref download docutils literal notranslate"><span class="pre">environment</span> <span class="pre">file</span></code></a> and create a new conda environment for the EMPD-admin via:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">PATH</span><span class="o">-</span><span class="n">TO</span><span class="o">-</span><span class="n">DOWNLOADED</span><span class="o">-</span><span class="n">FILE</span>
 </pre></div>
 </div>
-<p>and activate it via:</p>
+<p>Now, activate the environment via:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">activate</span> <span class="n">empd</span><span class="o">-</span><span class="n">admin</span>
 </pre></div>
 </div>
+<p>To get the source files, you have to clone the <a class="reference external" href="https://github.com/EMPD2/EMPD-admin">EMPD-admin repository from Github</a> via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">EMPD2</span><span class="o">/</span><span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Alternatively you can <a class="reference download external" download="" href="https://github.com/EMPD2/EMPD-admin/archive/master.zip"><code class="xref download docutils literal notranslate"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">zipped</span> <span class="pre">source</span> <span class="pre">files</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">master</span> <span class="pre">branch</span></code></a>.</p>
 <p>Finally install the EMPD-admin via:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span>
 </pre></div>
 </div>
-<p>You can then run the empd-admin via</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">EMPD-admin</span></code> is the path to the folder you just downloaded.</p>
+<p>That’s it! Now you can then run the <code class="docutils literal notranslate"><span class="pre">empd-admin</span></code> via</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ empd-admin --help
 usage: empd-admin [-h] [-d DIRECTORY]
                   {test,fix,createdb,rebuild,rebase,finish,accept,unaccept,query,diff,merge-meta,help,filter-log}
@@ -267,6 +268,13 @@ the example below <code class="docutils literal notranslate"><span class="pre">d
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run -v `pwd`/docs/_build/html:/opt/empd-admin-docs build-empd-admin-docs /opt/empd-admin-docs
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Depending in how you set up docker, you might have to change permissions to make the mounted directory writable from within the docker image. On OS X and Linux, you can do this via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="n">docs</span><span class="o">/</span><span class="n">_build</span><span class="o">/</span><span class="n">html</span> <span class="o">&amp;&amp;</span> <span class="n">chmod</span> <span class="mi">0777</span> <span class="n">docs</span><span class="o">/</span><span class="n">_build</span><span class="o">/</span><span class="n">html</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="testing-the-empd-admin">
 <span id="run-tests"></span><h2>Testing the EMPD-admin<a class="headerlink" href="#testing-the-empd-admin" title="Permalink to this headline">¶</a></h2>
@@ -282,7 +290,7 @@ EMPD-admin through the docker image:</p>
 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> from within the downloaded Github repository, i.e.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">EMPD2</span><span class="o">/</span><span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span><span class="o">.</span><span class="n">git</span>
 <span class="n">cd</span> <span class="n">EMPD</span><span class="o">-</span><span class="n">admin</span>
-<span class="n">pytest</span>
+<span class="n">GH_TOKEN</span><span class="o">=</span><span class="n">YOUR</span><span class="o">-</span><span class="n">SECRET</span><span class="o">-</span><span class="n">TOKEN</span> <span class="n">pytest</span>
 </pre></div>
 </div>
 </div>
