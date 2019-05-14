@@ -60,11 +60,6 @@ And then test it via::
 
 Installation from source
 ************************
-To install the EMPD-admin, clone the repository from github via::
-
-	git clone https://github.com/EMPD2/EMPD-admin
-
-or :download:`download the zipped source files from Github <https://github.com/EMPD2/EMPD-admin/archive/master.zip>`.
 
 The dependencies of the EMPD-admin are quite heavy, in particularly we rely on
 
@@ -99,21 +94,29 @@ The dependencies of the EMPD-admin are quite heavy, in particularly we rely on
 .. _pyyaml: http://pyyaml.org/wiki/PyYAML
 
 We highly recommend to use conda_ to install these dependencies. Here you can
-either the anaconda_ or miniconda_ installer.
+either use the anaconda_ or miniconda_ installer.
 
-Please download the conda :download:`environment file <https://raw.githubusercontent.com/EMPD2/empd-admin-base/master/empd-admin-environment.yml>` and create a new conda environment for conda via::
+When conda is installed on your system, download the conda :download:`environment file <https://raw.githubusercontent.com/EMPD2/empd-admin-base/master/empd-admin-environment.yml>` and create a new conda environment for the EMPD-admin via::
 
 	conda env create -f PATH-TO-DOWNLOADED-FILE
 
-and activate it via::
+Now, activate the environment via::
 
 	conda activate empd-admin
+
+To get the source files, you have to clone the `EMPD-admin repository from Github`_ via::
+
+	git clone https://github.com/EMPD2/EMPD-admin.git
+
+Alternatively you can :download:`download the zipped source files of the master branch <https://github.com/EMPD2/EMPD-admin/archive/master.zip>`.
 
 Finally install the EMPD-admin via::
 
 	pip install EMPD-admin
 
-You can then run the empd-admin via
+where ``EMPD-admin`` is the path to the folder you just downloaded.
+
+That's it! Now you can then run the ``empd-admin`` via
 
 .. command-output:: empd-admin --help
 
@@ -123,6 +126,8 @@ You can then run the empd-admin via
 	directly run ``pip install EMPD-admin``, but do that on your own risk.
 	There is no guarantee that packages like netCDF4 or pandas work through
 	``pip`` installation
+
+.. _EMPD-admin repository from Github: https://github.com/EMPD2/EMPD-admin
 
 
 .. _build-docs:
@@ -146,6 +151,12 @@ the example below ``docs/_build/html``) as ``/opt/empd-admin-docs`` and run the
 
 	docker run -v `pwd`/docs/_build/html:/opt/empd-admin-docs build-empd-admin-docs /opt/empd-admin-docs
 
+.. note::
+
+	Depending in how you set up docker, you might have to change permissions to make the mounted directory writable from within the docker image. On OS X and Linux, you can do this via::
+
+		mkdir -p docs/_build/html && chmod 0777 docs/_build/html
+
 
 .. _run-tests:
 
@@ -164,6 +175,6 @@ Alternatively, if you installed the EMPD-admin
 
 	git clone https://github.com/EMPD2/EMPD-admin.git
 	cd EMPD-admin
-	pytest
+	GH_TOKEN=YOUR-SECRET-TOKEN pytest
 
 .. _Github API token: https://github.blog/2013-05-16-personal-api-tokens/
