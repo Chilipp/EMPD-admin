@@ -50,9 +50,6 @@ def get_parser():
               'Default: %(default)s'))
 
     subparsers = setup_subparsers(parser)
-    subparsers.add_parser(
-        'filter-log',
-        help="Filter pytest runs with lots of dots")
     return parser
 
 

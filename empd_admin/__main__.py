@@ -5,16 +5,6 @@ import re
 from empd_admin.parsers import setup_pytest_args, get_parser
 
 
-def filter_pytest():
-    """Filter lines that only contain dots and s from pytest runs"""
-    perc_pat = re.compile(r'\[\s*\d+%\]')
-    dot_pat = re.compile(r'(?m)^[\.s]{2,1000}')
-    for s in sys.stdin:
-        s = perc_pat.sub('', dot_pat.sub('', s)).strip()
-        if s:
-            print(s)
-
-
 def main():
     parser = get_parser()
     args = parser.parse_args()
@@ -24,8 +14,6 @@ def main():
     elif args.parser is None:
         parser.print_help()
         parser.exit()
-    elif args.parser == 'filter-log':
-        filter_pytest()
         return
     else:
         from empd_admin.repo_test import \
