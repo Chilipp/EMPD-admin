@@ -124,43 +124,219 @@
       
   <div class="section" id="module-empd_admin.common">
 <span id="empd-admin-common-module"></span><h1>empd_admin.common module<a class="headerlink" href="#module-empd_admin.common" title="Permalink to this headline">¶</a></h1>
+<p><strong>Data</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.common.DATADIR" title="empd_admin.common.DATADIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DATADIR</span></code></a></p></td>
+<td><p>Path to the local directory of the cloned EMPD2/EMPD-data repository.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.common.DATA_LOCKFILE" title="empd_admin.common.DATA_LOCKFILE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DATA_LOCKFILE</span></code></a></p></td>
+<td><p>Lock file to lock the repository <a class="reference internal" href="#empd_admin.common.DATADIR" title="empd_admin.common.DATADIR"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DATADIR</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.common.NUMERIC_COLS" title="empd_admin.common.NUMERIC_COLS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NUMERIC_COLS</span></code></a></p></td>
+<td><p>Columns in the EMPD-data metadata sheet that hold numeric values</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.common.dump_empd_meta" title="empd_admin.common.dump_empd_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump_empd_meta</span></code></a>(meta[, fname])</p></td>
+<td><p>Dump the EMPD meta data to a file</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.common.get_empd_master_repo" title="empd_admin.common.get_empd_master_repo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_empd_master_repo</span></code></a>()</p></td>
+<td><p>Get the repository to the data directory and download it if necessary</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.common.get_psql_scripts" title="empd_admin.common.get_psql_scripts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_psql_scripts</span></code></a>()</p></td>
+<td><p>The path to the postgres scripts in the EMPD-data repository</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.common.get_test_dir" title="empd_admin.common.get_test_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_test_dir</span></code></a>()</p></td>
+<td><p>The path to the tests directory in the data directory</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.common.lock_empd_master" title="empd_admin.common.lock_empd_master"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lock_empd_master</span></code></a>()</p></td>
+<td><p>Lock the data repository</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_empd_meta</span></code></a>([fname])</p></td>
+<td><p>Read an EMPD-data metadata file into a pandas DataFrame</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.common.wait_for_empd_master" title="empd_admin.common.wait_for_empd_master"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_for_empd_master</span></code></a>([timeout])</p></td>
+<td><p>Wait until the data repository is available</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="data">
+<dt id="empd_admin.common.DATADIR">
+<code class="descclassname">empd_admin.common.</code><code class="descname">DATADIR</code><em class="property"> = '/opt/empd-data'</em><a class="headerlink" href="#empd_admin.common.DATADIR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the local directory of the cloned EMPD2/EMPD-data repository. The
+path can be set through the <code class="docutils literal notranslate"><span class="pre">EMPDDATA</span></code> environment variable. Otherwise,
+it is assumed to be <code class="docutils literal notranslate"><span class="pre">'$HOME/.local/share/EMPD-data'</span></code></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="empd_admin.common.DATA_LOCKFILE">
+<code class="descclassname">empd_admin.common.</code><code class="descname">DATA_LOCKFILE</code><em class="property"> = '/var/lib/postgresql/cloning_master.lock'</em><a class="headerlink" href="#empd_admin.common.DATA_LOCKFILE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock file to lock the repository <a class="reference internal" href="#empd_admin.common.DATADIR" title="empd_admin.common.DATADIR"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DATADIR</span></code></a>. By default, this is at
+<code class="docutils literal notranslate"><span class="pre">'$HOME/cloning_master.lock'</span></code> and is used by the <a class="reference internal" href="#empd_admin.common.lock_empd_master" title="empd_admin.common.lock_empd_master"><code class="xref py py-func docutils literal notranslate"><span class="pre">lock_empd_master()</span></code></a>
+and <a class="reference internal" href="#empd_admin.common.wait_for_empd_master" title="empd_admin.common.wait_for_empd_master"><code class="xref py py-func docutils literal notranslate"><span class="pre">wait_for_empd_master()</span></code></a> functions.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="empd_admin.common.NUMERIC_COLS">
+<code class="descclassname">empd_admin.common.</code><code class="descname">NUMERIC_COLS</code><em class="property"> = ['Latitude', 'Longitude', 'Elevation', 'AreaOfSite', 'AgeBP']</em><a class="headerlink" href="#empd_admin.common.NUMERIC_COLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Columns in the EMPD-data metadata sheet that hold numeric values</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="empd_admin.common.dump_empd_meta">
 <code class="descclassname">empd_admin.common.</code><code class="descname">dump_empd_meta</code><span class="sig-paren">(</span><em>meta</em>, <em>fname=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.dump_empd_meta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Dump the EMPD meta data to a file</p>
+<p>This function dumps the meta data of the EMPD to a file with some standard
+formatting</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.2)"><em>pandas.DataFrame</em></a>) – The dataframe holding the meta data (see <a class="reference internal" href="#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_empd_meta()</span></code></a>)</p></li>
+<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The filename where to save it (see <code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.DataFrame.to_csv()</span></code>)</p></li>
+<li><p><strong>**kwargs</strong> – Any other argument that is parsed to the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.DataFrame.to_csv()</span></code> function</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Read the EMPD meta file and dump it again:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">empd_admin.common</span> <span class="k">import</span> <span class="n">read_empd_meta</span><span class="p">,</span> <span class="n">dump_empd_meta</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">read_empd_meta</span><span class="p">(</span><span class="s1">&#39;EMPD-data/meta.tsv&#39;</span><span class="p">)</span>
+<span class="n">dump_empd_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;EMPD-data/meta.tsv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.common.get_empd_master_repo">
 <code class="descclassname">empd_admin.common.</code><code class="descname">get_empd_master_repo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.get_empd_master_repo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the repository to the data directory and download it if necessary</p>
+<p>This function returns a <code class="xref py py-class docutils literal notranslate"><span class="pre">git.Repo</span></code> instance for the <a class="reference internal" href="#empd_admin.common.DATADIR" title="empd_admin.common.DATADIR"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DATADIR</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The local repository of the EMPD-data. If necessary, it has been cloned
+from <a class="reference external" href="https://github.com/EMPD2/EMPD-data.git">https://github.com/EMPD2/EMPD-data.git</a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>git.Repo</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.common.get_psql_scripts">
 <code class="descclassname">empd_admin.common.</code><code class="descname">get_psql_scripts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.get_psql_scripts" title="Permalink to this definition">¶</a></dt>
-<dd><p>The path to the postgres scripts directory</p>
+<dd><p>The path to the postgres scripts in the EMPD-data repository</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The path to the postgres scripts of the data repository</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#empd_admin.common.get_empd_master_repo" title="empd_admin.common.get_empd_master_repo"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_empd_master_repo()</span></code></a></dt><dd><p>To get the data repository</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.common.get_test_dir">
 <code class="descclassname">empd_admin.common.</code><code class="descname">get_test_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.get_test_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>The path to the tests directory</p>
+<dd><p>The path to the tests directory in the data directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The path to the tests of the data repository</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#empd_admin.common.get_empd_master_repo" title="empd_admin.common.get_empd_master_repo"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_empd_master_repo()</span></code></a></dt><dd><p>To get the data repository</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.common.lock_empd_master">
 <code class="descclassname">empd_admin.common.</code><code class="descname">lock_empd_master</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.lock_empd_master" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Lock the data repository</p>
+<p>This will lock the data repository and blocks any access to it. The locking
+is done through a lock file (usually in <code class="docutils literal notranslate"><span class="pre">'$HOME/cloning_master.lock'</span></code>,
+see the <a class="reference internal" href="#empd_admin.common.DATA_LOCKFILE" title="empd_admin.common.DATA_LOCKFILE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DATA_LOCKFILE</span></code></a>).</p>
+<p>Use this function as a context manager, i.e. such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">lock_empd_master</span><span class="p">():</span>
+    <span class="c1"># now the repository is locked</span>
+    <span class="n">do_something</span><span class="p">()</span>
+<span class="c1"># now it is not locked anymore</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.common.read_empd_meta">
-<code class="descclassname">empd_admin.common.</code><code class="descname">read_empd_meta</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.read_empd_meta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">empd_admin.common.</code><code class="descname">read_empd_meta</code><span class="sig-paren">(</span><em>fname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.read_empd_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read an EMPD-data metadata file into a pandas DataFrame</p>
+<p>This function is the same as <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html#pandas.read_csv" title="(in pandas v0.24.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.read_csv()</span></code></a> but it also ensures
+the correct dtype for the various columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the (tab-delimited) meta data file. If None, it will
+default to the meta data in the <a class="reference internal" href="#empd_admin.common.DATADIR" title="empd_admin.common.DATADIR"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DATADIR</span></code></a>, i.e.
+<code class="docutils literal notranslate"><span class="pre">DATADIR</span> <span class="pre">+</span> <span class="pre">'/meta.tsv'</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The given <cite>fname</cite> as a data frame. The index column will be the
+<cite>SampleName</cite> column in <cite>fname</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.2)">pandas.DataFrame</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Read the meta data of the EMPD-data repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">git</span>
+<span class="kn">from</span> <span class="nn">empd_admin.common</span> <span class="k">import</span> <span class="n">read_empd_meta</span>
+<span class="n">git</span><span class="o">.</span><span class="n">Repo</span><span class="o">.</span><span class="n">clone_from</span><span class="p">(</span><span class="s1">&#39;https://github.com/EMPD2/EMPD-data.git&#39;</span><span class="p">)</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">read_empd_meta</span><span class="p">(</span><span class="s1">&#39;EMPD-data/meta.tsv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#empd_admin.common.dump_empd_meta" title="empd_admin.common.dump_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">dump_empd_meta()</span></code></a></dt><dd><p>To save the meta data</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.common.wait_for_empd_master">
 <code class="descclassname">empd_admin.common.</code><code class="descname">wait_for_empd_master</code><span class="sig-paren">(</span><em>timeout=120</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.wait_for_empd_master" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Wait until the data repository is available</p>
+<p>This convenience function makes sure, that there is no process locking the
+EMPD-data repository that is accessed through the EMPD-admin</p>
+</dd></dl>
 
 </div>
 

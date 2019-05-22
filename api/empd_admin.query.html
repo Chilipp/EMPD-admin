@@ -124,15 +124,87 @@
       
   <div class="section" id="module-empd_admin.query">
 <span id="empd-admin-query-module"></span><h1>empd_admin.query module<a class="headerlink" href="#module-empd_admin.query" title="Permalink to this headline">¶</a></h1>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.query.query_meta" title="empd_admin.query.query_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query_meta</span></code></a>(meta, query[, columns, count, …])</p></td>
+<td><p>Query the meta data of a data contribution</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.query.query_samples" title="empd_admin.query.query_samples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query_samples</span></code></a>(meta_df, query)</p></td>
+<td><p>Query the samples based on their metadata</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="empd_admin.query.query_meta">
 <code class="descclassname">empd_admin.query.</code><code class="descname">query_meta</code><span class="sig-paren">(</span><em>meta</em>, <em>query</em>, <em>columns='notnull'</em>, <em>count=False</em>, <em>output=None</em>, <em>commit=False</em>, <em>local_repo=None</em>, <em>distinct=False</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.query.query_meta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Query the meta data of a data contribution</p>
+<p>This function uses the <a class="reference internal" href="#empd_admin.query.query_samples" title="empd_admin.query.query_samples"><code class="xref py py-func docutils literal notranslate"><span class="pre">query_samples()</span></code></a> function to return a subset
+of the EMPD metadata. The performed query is such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="n">columns</span> <span class="n">FROM</span> <span class="n">meta</span> <span class="n">WHERE</span> <span class="n">query</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the metadata that shall be queried (see
+<a class="reference internal" href="empd_admin.common.html#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_empd_meta()</span></code></a>)</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The WHERE clause of the SQL query</p></li>
+<li><p><strong>columns</strong> (<em>list of str</em>) – The columns that shall be returned. It can either be a list of columns,
+<code class="docutils literal notranslate"><span class="pre">'all'</span></code> to return all columns, or <code class="docutils literal notranslate"><span class="pre">'notnull'</span></code> (default) to return
+the non-empty columns</p></li>
+<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, do not return the values per column but the number of valid
+entries per column (i.e. <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">COUNT(*)</span> <span class="pre">FROM</span> <span class="pre">meta</span> <span class="pre">WHERE</span> <span class="pre">query</span></code>)</p></li>
+<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path where to save the tab-delimited result of the query. If None
+and <cite>commit</cite> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, it will be saved to <code class="docutils literal notranslate"><span class="pre">queries/query.tsv</span></code>,
+relative to the <cite>local_repo</cite></p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes in the repository <cite>local_repo</cite></p></li>
+<li><p><strong>local_repo</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path of the local EMPD-data repository. If None, it will be assumed
+to be the directory of the given <cite>meta</cite>.</p></li>
+<li><p><strong>distinct</strong> (<em>list of str</em>) – If not null, return a distinct query based on the columns listed in
+this parameter. For example <code class="docutils literal notranslate"><span class="pre">distinct=['Country',</span> <span class="pre">'SampleContext']</span></code>
+will result in <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">DISTINCT</span> <span class="pre">ON</span> <span class="pre">('Country',</span> <span class="pre">'SampleContext')</span> <span class="pre">...</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – The path where the query has been saved (see <cite>output</cite> and <cite>commit</cite>) or
+None</p></li>
+<li><p><em>str</em> – The result of the query as a markdown table, at maximum 200 rows</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.query.query_samples">
 <code class="descclassname">empd_admin.query.</code><code class="descname">query_samples</code><span class="sig-paren">(</span><em>meta_df</em>, <em>query</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.query.query_samples" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Query the samples based on their metadata</p>
+<p>This function saves the given <cite>meta_df</cite> to a sqlite database and queries
+it based on the given filter. The performed query is such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="n">SampleName</span> <span class="n">FROM</span> <span class="n">meta_df</span> <span class="n">WHERE</span> <span class="n">query</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta_df</strong> (<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.2)"><em>pandas.DataFrame</em></a>) – The EMPD meta data (see <a class="reference internal" href="empd_admin.common.html#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">empd_admin.common.read_empd_meta()</span></code></a>)</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The WHERE clause of the SQL query</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The samples that have been selected by the given <cite>query</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 

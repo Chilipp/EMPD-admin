@@ -125,42 +125,162 @@
   <div class="section" id="module-empd_admin.viewer_responses">
 <span id="empd-admin-viewer-responses-module"></span><h1>empd_admin.viewer_responses module<a class="headerlink" href="#module-empd_admin.viewer_responses" title="Permalink to this headline">¶</a></h1>
 <p>Module to handle requests from the EMPD2.github.io viewer</p>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.viewer_responses.create_new_pull_request" title="empd_admin.viewer_responses.create_new_pull_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_new_pull_request</span></code></a>(metadata, submitter)</p></td>
+<td><p>Create a new branch and pull request with the given metadata</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.viewer_responses.edit_pull_request" title="empd_admin.viewer_responses.edit_pull_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edit_pull_request</span></code></a>(pull, meta, metadata, …)</p></td>
+<td><p>Edit the meta data of an existing pull request</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.viewer_responses.handle_issue_submission" title="empd_admin.viewer_responses.handle_issue_submission"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_issue_submission</span></code></a>(body)</p></td>
+<td><p>Handle the submission of issues to the EMPD</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.viewer_responses.handle_verified_issue" title="empd_admin.viewer_responses.handle_verified_issue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_verified_issue</span></code></a>(token)</p></td>
+<td><p>Handle a token and submit an issue</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.viewer_responses.handle_viewer_request" title="empd_admin.viewer_responses.handle_viewer_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_viewer_request</span></code></a>(metadata, submitter[, …])</p></td>
+<td><p>Handle data contribution through the viewer</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.viewer_responses.submit_issue" title="empd_admin.viewer_responses.submit_issue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_issue</span></code></a>(title, msg)</p></td>
+<td><p>Submit an issue to the EMPD2/EMPD-data repository</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.viewer_responses.transform_list" title="empd_admin.viewer_responses.transform_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_list</span></code></a>(items)</p></td>
+<td><p>Transform a list of temperature or precipitation into a string</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="empd_admin.viewer_responses.create_new_pull_request">
 <code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">create_new_pull_request</code><span class="sig-paren">(</span><em>metadata</em>, <em>submitter</em>, <em>submitter_gh=None</em>, <em>commit_msg=''</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.create_new_pull_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new branch and pull request with the given metadata</p>
+<p>Not yet implemented…</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.viewer_responses.edit_pull_request">
 <code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">edit_pull_request</code><span class="sig-paren">(</span><em>pull</em>, <em>meta</em>, <em>metadata</em>, <em>submitter</em>, <em>submitter_gh=None</em>, <em>commit_msg=''</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.edit_pull_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edit the meta data of an existing pull request</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pull</strong> (<em>github.PullRequest</em>) – The pull request on github</p></li>
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the meta file for the contribution</p></li>
+<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – The meta data as JSON from the viewer</p></li>
+<li><p><strong>submitter</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the submitter</p></li>
+<li><p><strong>submitter_gh</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The github username of the <cite>submitter</cite></p></li>
+<li><p><strong>commit_msg</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The message that shall be used for the commit</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.viewer_responses.handle_issue_submission">
 <code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">handle_issue_submission</code><span class="sig-paren">(</span><em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.handle_issue_submission" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handle the submission of issues to the EMPD</p>
+<p>This will create a token for the submitted body and saves it to the private
+EMPD-issues repository at</p>
+<p><a class="reference external" href="https://github.com/Chilipp/EMPD-issues.git">https://github.com/Chilipp/EMPD-issues.git</a></p>
+<p>This token will then be handled by the <a class="reference internal" href="#empd_admin.viewer_responses.handle_verified_issue" title="empd_admin.viewer_responses.handle_verified_issue"><code class="xref py py-func docutils literal notranslate"><span class="pre">handle_verified_issue()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>body</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The body of the issue</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The sha1 token for the issue that can be send in a verifcation mail</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.viewer_responses.handle_verified_issue">
 <code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">handle_verified_issue</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.handle_verified_issue" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handle a token and submit an issue</p>
+<p>This function continues what has been began with the
+<a class="reference internal" href="#empd_admin.viewer_responses.handle_issue_submission" title="empd_admin.viewer_responses.handle_issue_submission"><code class="xref py py-func docutils literal notranslate"><span class="pre">handle_issue_submission()</span></code></a> and creates the issue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>token</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The sha1 token as it has been created with the
+<a class="reference internal" href="#empd_admin.viewer_responses.handle_issue_submission" title="empd_admin.viewer_responses.handle_issue_submission"><code class="xref py py-func docutils literal notranslate"><span class="pre">handle_issue_submission()</span></code></a> function</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>bool</em> – True if it was successful</p></li>
+<li><p><em>str</em> – An html-formatted message of the status</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.viewer_responses.handle_viewer_request">
 <code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">handle_viewer_request</code><span class="sig-paren">(</span><em>metadata</em>, <em>submitter</em>, <em>repo='EMPD2/EMPD-data'</em>, <em>branch='master'</em>, <em>meta='meta.tsv'</em>, <em>submitter_gh=None</em>, <em>commit_msg=''</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.handle_viewer_request" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handle data contribution through the viewer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – The meta data as JSON from the viewer</p></li>
+<li><p><strong>submitter</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the submitter</p></li>
+<li><p><strong>repo</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the repository (‘EMPD2/EMPD-data’)</p></li>
+<li><p><strong>branch</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The branch of the repo</p></li>
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the meta file for the contribution</p></li>
+<li><p><strong>submitter_gh</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The github username of the <cite>submitter</cite></p></li>
+<li><p><strong>commit_msg</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The message that shall be used for the commit</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>bool</em> – True, if everything went fine</p></li>
+<li><p><em>str</em> – a html-formatted report whether everything worked as expected</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.viewer_responses.submit_issue">
 <code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">submit_issue</code><span class="sig-paren">(</span><em>title</em>, <em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.submit_issue" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Submit an issue to the EMPD2/EMPD-data repository</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The title for the issue</p></li>
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The comment for the issue</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The newly created issue</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>github.Issue</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.viewer_responses.transform_list">
 <code class="descclassname">empd_admin.viewer_responses.</code><code class="descname">transform_list</code><span class="sig-paren">(</span><em>items</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.viewer_responses.transform_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Transform a list of temperature or precipitation into a string</p>
+<p>The EMPD-data meta data holds the temperature and precipitation as
+comma-delimited string of the numbers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>items</strong> (<em>list of floats</em><em> or </em><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – floats will be combined using <code class="docutils literal notranslate"><span class="pre">','.join</span></code>, a string is returned</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 

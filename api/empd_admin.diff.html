@@ -124,20 +124,157 @@
       
   <div class="section" id="module-empd_admin.diff">
 <span id="empd-admin-diff-module"></span><h1>empd_admin.diff module<a class="headerlink" href="#module-empd_admin.diff" title="Permalink to this headline">¶</a></h1>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.diff.compute_diff" title="empd_admin.diff.compute_diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_diff</span></code></a>(left, right[, how, on, …])</p></td>
+<td><p>Compute the difference between two EMPD meta dataframes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.diff.diff" title="empd_admin.diff.diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diff</span></code></a>(meta[, left, right, output, commit])</p></td>
+<td><p>Compute the diff between two EMPD metadata files</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.diff.test_diff" title="empd_admin.diff.test_diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_diff</span></code></a>()</p></td>
+<td><p>Test function for <a class="reference internal" href="#empd_admin.diff.compute_diff" title="empd_admin.diff.compute_diff"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_diff()</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="empd_admin.diff.compute_diff">
 <code class="descclassname">empd_admin.diff.</code><code class="descname">compute_diff</code><span class="sig-paren">(</span><em>left</em>, <em>right</em>, <em>how='inner'</em>, <em>on=None</em>, <em>exclude=[]</em>, <em>columns='leftdiff'</em>, <em>atol=0.001</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.diff.compute_diff" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compute the difference between two EMPD meta dataframes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left</strong> (<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.2)"><em>pandas.DataFrame</em></a>) – The first EMPD-data metadata (see
+<a class="reference internal" href="empd_admin.common.html#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_empd_meta()</span></code></a>)</p></li>
+<li><p><strong>right</strong> (<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.2)"><em>pandas.DataFrame</em></a>) – The second EMPD-data metadata(see
+<a class="reference internal" href="empd_admin.common.html#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_empd_meta()</span></code></a>).</p></li>
+<li><p><strong>how</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – <p>How to merge <cite>right</cite> into <cite>left</cite>. Possiblities are</p>
+<dl class="simple">
+<dt>inner (default)</dt><dd><p>use intersection of samples from both frames, similar to a SQL
+inner join; preserve the order of the left keys.</p>
+</dd>
+<dt>outer</dt><dd><p>use union of samples from both frames, similar to a SQL full outer
+join; sort keys lexicographically.</p>
+</dd>
+<dt>left</dt><dd><p>use only samples from left frame, similar to a SQL left outer join;
+preserve key order.</p>
+</dd>
+<dt>right</dt><dd><p>use only samples from right frame, similar to a SQL right outer
+join; preserve key order.</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>on</strong> (<em>list of str</em>) – The names of the columns to compute the diff on. If None, we use the
+intersection of columns between <cite>left</cite> and <cite>right.</cite></p></li>
+<li><p><strong>exclude</strong> (<em>list of str</em>) – Columns names that should be excluded in the diff.</p></li>
+<li><p><strong>columns</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>list of str</em>) – <p>The columns of the returned dataframe. It can either be a list of
+column names to use or one of</p>
+<dl class="simple">
+<dt>leftdiff (default)</dt><dd><p>To use the columns from <cite>left</cite> that differ from <cite>right</cite></p>
+</dd>
+<dt>left</dt><dd><p>To use all columns from <cite>left</cite></p>
+</dd>
+<dt>rightdiff</dt><dd><p>To use the columns from <cite>right</cite> that differ from <cite>left</cite></p>
+</dd>
+<dt>right</dt><dd><p>To use all columns from <cite>right</cite></p>
+</dd>
+<dt>inner</dt><dd><p>To use the intersection of <cite>left</cite> and <cite>right</cite></p>
+</dd>
+<dt>bothdiff</dt><dd><p>To use the differing columns from <cite>right</cite> and <cite>left</cite> (columns from
+<cite>right</cite> are suffixed with an <code class="docutils literal notranslate"><span class="pre">'_r'</span></code>)</p>
+</dd>
+<dt>both</dt><dd><p>To use all columns from <cite>left</cite> and <cite>right</cite> (columns from <cite>right</cite>
+are suffixed with an <code class="docutils literal notranslate"><span class="pre">'_r'</span></code>)</p>
+</dd>
+</dl>
+<p>In any of these cases (except if you specify the column names
+explicitly), the columns the data frame will include a <code class="docutils literal notranslate"><span class="pre">diff</span></code> column
+that contains for each sample the columns names of the differing cells.</p>
+</p></li>
+<li><p><strong>atol</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Absolute tolerance to use for numeric columns (see the
+<a class="reference internal" href="empd_admin.common.html#empd_admin.common.NUMERIC_COLS" title="empd_admin.common.NUMERIC_COLS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">empd_admin.common.NUMERIC_COLS</span></code></a>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The dataframe highlighting the difference between <cite>left</cite> and <cite>right</cite>.
+The index is the sample name, the colums are determined by the
+<cite>columns</cite> parameter</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.2)">pandas.DataFrame</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.diff.diff">
 <code class="descclassname">empd_admin.diff.</code><code class="descname">diff</code><span class="sig-paren">(</span><em>meta</em>, <em>left=None</em>, <em>right=None</em>, <em>output=None</em>, <em>commit=False</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.diff.diff" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compute the diff between two EMPD metadata files</p>
+<p>This function computes the difference between two EMPD-data files using the
+<a class="reference internal" href="#empd_admin.diff.compute_diff" title="empd_admin.diff.compute_diff"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_diff()</span></code></a> function. It takes the meta data of an EMPD-data
+repository and compares it to another</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the tab-delimited meta data of a cloned EMPD-data
+repository</p></li>
+<li><p><strong>left</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the first meta data file, relative to the directory of
+<cite>meta</cite>. Alternatively it can also be a url. If <cite>left</cite> is None, the
+<cite>meta</cite> will be used</p></li>
+<li><p><strong>right</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the second meta data file, relative to the directory of
+<cite>meta</cite>. Alternatively it can also be a url. If <cite>right</cite> is None, the
+<cite>meta</cite> will be used, or (if <cite>left</cite> is the same as <cite>meta</cite> or None),
+the meta data of the EMPD2/EMPD-data repository at
+<a class="reference external" href="https://raw.githubusercontent.com/EMPD2/EMPD-data/master/meta.tsv">https://raw.githubusercontent.com/EMPD2/EMPD-data/master/meta.tsv</a>
+is used.</p></li>
+<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The filename to use for saving the diff. If set, it will be saved in
+the <code class="docutils literal notranslate"><span class="pre">'queries'</span></code> directory, relative to <cite>meta</cite>. If not set but
+<cite>commit</cite> is True, it will be saved to <code class="docutils literal notranslate"><span class="pre">'queries/diff.tsv'</span></code>.</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the added <cite>output</cite> to the git repository of <cite>meta</cite></p></li>
+<li><p><strong>*args</strong><strong>,</strong><strong>**kwargs</strong> – Any other parameter for the <a class="reference internal" href="#empd_admin.diff.compute_diff" title="empd_admin.diff.compute_diff"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_diff()</span></code></a> function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – The path where the data has been saved (if <cite>output</cite> is set or <cite>commit</cite>
+is True)</p></li>
+<li><p><em>str</em> – The computed difference as markdown table</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>For a data contribution, e.g. the test-data branch, you can compute the
+difference to the EMPD meta.tsv via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">git</span>
+<span class="n">git</span><span class="o">.</span><span class="n">Repo</span><span class="o">.</span><span class="n">clone_from</span><span class="p">(</span><span class="s1">&#39;https://github.com/EMPD2/EMPD-data&#39;</span><span class="p">,</span>
+                    <span class="n">branch</span><span class="o">=</span><span class="s1">&#39;test-data&#39;</span><span class="p">)</span>
+<span class="n">diff</span><span class="p">(</span><span class="s1">&#39;EMPD-data/test.tsv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which is essentially the same as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span><span class="p">(</span><span class="s1">&#39;EMPD-data/test.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;test.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;meta.tsv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You will reveive nothing, however, because <cite>how</cite> is set to <code class="docutils literal notranslate"><span class="pre">'inner'</span></code> and
+<code class="docutils literal notranslate"><span class="pre">'test.tsv'</span></code> contains new samples. Instead, you can set <cite>how</cite> to
+<code class="docutils literal notranslate"><span class="pre">'left'</span></code> to include the samples of <code class="docutils literal notranslate"><span class="pre">'test.tsv'</span></code> that are not in
+<code class="docutils literal notranslate"><span class="pre">'meta.tsv'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span><span class="p">(</span><span class="s1">&#39;EMPD-data/test.tsv&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.diff.test_diff">
 <code class="descclassname">empd_admin.diff.</code><code class="descname">test_diff</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.diff.test_diff" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <a class="reference internal" href="#empd_admin.diff.compute_diff" title="empd_admin.diff.compute_diff"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_diff()</span></code></a></p>
+</dd></dl>
 
 </div>
 

@@ -134,7 +134,6 @@
 <li><a class="reference internal" href="#Positional Arguments_repeat8">Positional Arguments</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#filter-log">filter-log</a></li>
 </ul>
 </li>
 </ul>
@@ -206,13 +205,12 @@
 <li><p><a class="reference internal" href="#diff" id="id13">diff</a></p></li>
 <li><p><a class="reference internal" href="#merge-meta" id="id14">merge-meta</a></p></li>
 <li><p><a class="reference internal" href="#help" id="id15">help</a></p></li>
-<li><p><a class="reference internal" href="#filter-log" id="id16">filter-log</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DIRECTORY</span><span class="p">]</span>
-                  <span class="p">{</span><span class="n">test</span><span class="p">,</span><span class="n">fix</span><span class="p">,</span><span class="n">createdb</span><span class="p">,</span><span class="n">rebuild</span><span class="p">,</span><span class="n">rebase</span><span class="p">,</span><span class="n">finish</span><span class="p">,</span><span class="n">accept</span><span class="p">,</span><span class="n">unaccept</span><span class="p">,</span><span class="n">query</span><span class="p">,</span><span class="n">diff</span><span class="p">,</span><span class="n">merge</span><span class="o">-</span><span class="n">meta</span><span class="p">,</span><span class="n">help</span><span class="p">,</span><span class="nb">filter</span><span class="o">-</span><span class="n">log</span><span class="p">}</span>
+                  <span class="p">{</span><span class="n">test</span><span class="p">,</span><span class="n">fix</span><span class="p">,</span><span class="n">createdb</span><span class="p">,</span><span class="n">rebuild</span><span class="p">,</span><span class="n">rebase</span><span class="p">,</span><span class="n">finish</span><span class="p">,</span><span class="n">accept</span><span class="p">,</span><span class="n">unaccept</span><span class="p">,</span><span class="n">query</span><span class="p">,</span><span class="n">diff</span><span class="p">,</span><span class="n">merge</span><span class="o">-</span><span class="n">meta</span><span class="p">,</span><span class="n">help</span><span class="p">}</span>
                   <span class="o">...</span>
 </pre></div>
 </div>
@@ -229,7 +227,7 @@
 <h2><a class="toc-backref" href="#id2">Commands</a><a class="headerlink" href="#Commands" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>parser</kbd></dt>
-<dd><p>Possible choices: test, fix, createdb, rebuild, rebase, finish, accept, unaccept, query, diff, merge-meta, help, filter-log</p>
+<dd><p>Possible choices: test, fix, createdb, rebuild, rebase, finish, accept, unaccept, query, diff, merge-meta, help</p>
 </dd>
 </dl>
 </div>
@@ -472,17 +470,28 @@ Note that any provided SampleName in the positional arguments
 <div class="section" id="examples">
 <h4>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h4>
 <ul>
-<li><p>Accept wrong countries for samples starting with “sample_a”:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">accept</span> <span class="n">sample_a</span><span class="p">:</span><span class="n">Country</span>
+<li><p>Accept wrong countries for all samples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">accept</span> <span class="nb">all</span><span class="p">:</span><span class="n">Country</span>
 </pre></div>
 </div>
 </li>
-<li><p>Accept a wrong Country for the sample “sample_a1”:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">accept</span> <span class="o">-</span><span class="n">e</span> <span class="n">sample_a1</span><span class="p">:</span><span class="n">Country</span>
+<li><p>Accept wrong latitudes and longitudes for all samples that start with
+<code class="docutils literal notranslate"><span class="pre">'Barboni'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">accept</span> <span class="n">Barboni</span><span class="p">:</span><span class="n">Latitude</span> <span class="n">Barboni</span><span class="p">:</span><span class="n">Longitude</span>
 </pre></div>
 </div>
 </li>
-<li><p>To accept missing Latitudes and Longitudes, use:</p>
+<li><p>Accept wrong Temperature for the sample <code class="docutils literal notranslate"><span class="pre">'Beaudouin_a1'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">accept</span> <span class="o">-</span><span class="n">e</span> <span class="n">Beaudouin_a1</span><span class="p">:</span><span class="n">Temperature</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you skip the <code class="docutils literal notranslate"><span class="pre">-e</span></code> option above, wrong temperatures would
+also be accepted for the sample <code class="docutils literal notranslate"><span class="pre">Beaudouin_a10</span></code></p>
+</div>
+</li>
+<li><p>Accept missing Latitudes and Longitudes:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">accept</span> <span class="n">Country</span> <span class="o">-</span><span class="n">q</span> <span class="s2">&quot;Latitude is NULL or Longitude is NULL&quot;</span>
 </pre></div>
 </div>
@@ -541,16 +550,25 @@ Note that any provided SampleName in the positional arguments
 <div class="section" id="examples_repeat1">
 <h4>Examples<a class="headerlink" href="#examples_repeat1" title="Permalink to this headline">¶</a></h4>
 <ul>
-<li><p>Do not accept any failure for the Country column for samples
-starting with “sample_a”:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">unaccept</span> <span class="n">sample_a</span><span class="p">:</span><span class="n">Country</span>
+<li><p>Do not accept any failure for any column:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">unaccept</span> <span class="nb">all</span><span class="p">:</span><span class="nb">all</span>
 </pre></div>
 </div>
 </li>
-<li><p>Do not accept any failure for the Country column and one single
-sample “sample_a1”:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">unaccept</span> <span class="o">-</span><span class="n">e</span> <span class="n">sample_a1</span><span class="p">:</span><span class="n">Country</span>
+<li><p>Do not accept any failure for latitudes or longitudes with samples
+that start with <code class="docutils literal notranslate"><span class="pre">'Barboni'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">unaccept</span> <span class="n">Barboni</span><span class="p">:</span><span class="n">Latitude</span> <span class="n">Barboni</span><span class="p">:</span><span class="n">Longitude</span>
 </pre></div>
+</div>
+</li>
+<li><p>Do not accept wrong Temperature for the sample <code class="docutils literal notranslate"><span class="pre">'Beaudouin_a1'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">unaccept</span> <span class="o">-</span><span class="n">e</span> <span class="n">Beaudouin_a1</span><span class="p">:</span><span class="n">Temperature</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you skip the <cite>exact</cite> parameter above, wrong temperatures would
+also be not accepted anymore for the sample <code class="docutils literal notranslate"><span class="pre">Beaudouin_a10</span></code>!</p>
 </div>
 </li>
 <li><p>Do not accept any failure for samples where the Country equals
@@ -619,6 +637,10 @@ sample “sample_a1”:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">query</span> <span class="s2">&quot;SampleContext LIKE &#39;</span><span class="si">%f</span><span class="s2">orest%&#39;&quot;</span>
 </pre></div>
 </div>
+<p>Display the distinct countries of a certain data contribution:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">query</span> <span class="o">-</span><span class="n">d</span> <span class="s2">&quot;SampleName LIKE &#39;%Barboni_%&#39;&quot;</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="diff">
@@ -669,7 +691,7 @@ sample “sample_a1”:</p>
 <p>Default: False</p>
 </dd>
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>Save the query in the <cite>queries</cite> directory. If not set but <cite>–commit</cite> is set, then it will be saved as <cite>queries/diff.tsv</cite>.</p>
+<dd><p>Save the difference in the <cite>queries</cite> directory. If not set but <cite>–commit</cite> is set, then it will be saved as <cite>queries/diff.tsv</cite>.</p>
 </dd>
 </dl>
 </div>
@@ -705,24 +727,17 @@ sample “sample_a1”:</p>
 <h3><a class="toc-backref" href="#id15">help</a><a class="headerlink" href="#help" title="Permalink to this headline">¶</a></h3>
 <p>Print the help on a command</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">help</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span>
-                <span class="p">[{</span><span class="n">test</span><span class="p">,</span><span class="n">fix</span><span class="p">,</span><span class="n">createdb</span><span class="p">,</span><span class="n">rebuild</span><span class="p">,</span><span class="n">rebase</span><span class="p">,</span><span class="n">finish</span><span class="p">,</span><span class="n">accept</span><span class="p">,</span><span class="n">unaccept</span><span class="p">,</span><span class="n">query</span><span class="p">,</span><span class="n">diff</span><span class="p">,</span><span class="n">merge</span><span class="o">-</span><span class="n">meta</span><span class="p">,</span><span class="n">help</span><span class="p">,</span><span class="nb">filter</span><span class="o">-</span><span class="n">log</span><span class="p">}]</span>
+                <span class="p">[{</span><span class="n">test</span><span class="p">,</span><span class="n">fix</span><span class="p">,</span><span class="n">createdb</span><span class="p">,</span><span class="n">rebuild</span><span class="p">,</span><span class="n">rebase</span><span class="p">,</span><span class="n">finish</span><span class="p">,</span><span class="n">accept</span><span class="p">,</span><span class="n">unaccept</span><span class="p">,</span><span class="n">query</span><span class="p">,</span><span class="n">diff</span><span class="p">,</span><span class="n">merge</span><span class="o">-</span><span class="n">meta</span><span class="p">,</span><span class="n">help</span><span class="p">}]</span>
 </pre></div>
 </div>
 <div class="section" id="Positional Arguments_repeat8">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>command</kbd></dt>
-<dd><p>Possible choices: test, fix, createdb, rebuild, rebase, finish, accept, unaccept, query, diff, merge-meta, help, filter-log</p>
+<dd><p>Possible choices: test, fix, createdb, rebuild, rebase, finish, accept, unaccept, query, diff, merge-meta, help</p>
 <p>Command for which to request the help</p>
 </dd>
 </dl>
-</div>
-</div>
-<div class="section" id="filter-log">
-<h3><a class="toc-backref" href="#id16">filter-log</a><a class="headerlink" href="#filter-log" title="Permalink to this headline">¶</a></h3>
-<p>Filter pytest runs with lots of dots</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="nb">filter</span><span class="o">-</span><span class="n">log</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span>
-</pre></div>
 </div>
 </div>
 </div>

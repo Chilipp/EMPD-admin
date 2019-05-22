@@ -212,7 +212,7 @@ either use the <a class="reference external" href="https://www.anaconda.com/down
 <p>That’s it! Now you can then run the <code class="docutils literal notranslate"><span class="pre">empd-admin</span></code> via</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ empd-admin --help
 usage: empd-admin [-h] [-d DIRECTORY]
-                  {test,fix,createdb,rebuild,rebase,finish,accept,unaccept,query,diff,merge-meta,help,filter-log}
+                  {test,fix,createdb,rebuild,rebase,finish,accept,unaccept,query,diff,merge-meta,help}
                   ...
 
 optional arguments:
@@ -222,7 +222,7 @@ optional arguments:
                         .
 
 Commands:
-  {test,fix,createdb,rebuild,rebase,finish,accept,unaccept,query,diff,merge-meta,help,filter-log}
+  {test,fix,createdb,rebuild,rebase,finish,accept,unaccept,query,diff,merge-meta,help}
     test                test the database
     fix                 fix the database
     createdb            Create a postgres database out of the data
@@ -237,7 +237,6 @@ Commands:
     diff                Compare two EMPD meta files
     merge-meta          Merge two metafiles
     help                Print the help on a command
-    filter-log          Filter pytest runs with lots of dots
 </pre></div>
 </div>
 <div class="admonition note">

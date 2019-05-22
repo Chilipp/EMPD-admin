@@ -125,35 +125,136 @@
   <div class="section" id="module-empd_admin.finish">
 <span id="empd-admin-finish-module"></span><h1>empd_admin.finish module<a class="headerlink" href="#module-empd_admin.finish" title="Permalink to this headline">¶</a></h1>
 <p>Command to finish the merging of a PR</p>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.finish.finish_pr" title="empd_admin.finish.finish_pr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finish_pr</span></code></a>(meta[, commit])</p></td>
+<td><p>Finish a data contribution to the EMPD</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.finish.fix_sample_formats" title="empd_admin.finish.fix_sample_formats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fix_sample_formats</span></code></a>(meta[, commit])</p></td>
+<td><p>Fix the sample formats changing the order, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.finish.look_for_changed_fixed_tables" title="empd_admin.finish.look_for_changed_fixed_tables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">look_for_changed_fixed_tables</span></code></a>(meta, …)</p></td>
+<td><p>Check whether any of the fixed tables has been changed</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.finish.merge_meta" title="empd_admin.finish.merge_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_meta</span></code></a>(meta[, target, commit, local_repo])</p></td>
+<td><p>Merge one EMPD meta data into another</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.finish.merge_postgres" title="empd_admin.finish.merge_postgres"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_postgres</span></code></a>(meta[, commit])</p></td>
+<td><p>Merge the new metadata into the EMPD2 postgres database</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.finish.rebase_master" title="empd_admin.finish.rebase_master"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rebase_master</span></code></a>(meta)</p></td>
+<td><p>Merge the master branch of EMPD2/EMPD-data into the local fork</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="empd_admin.finish.finish_pr">
 <code class="descclassname">empd_admin.finish.</code><code class="descname">finish_pr</code><span class="sig-paren">(</span><em>meta</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.finish_pr" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finish a data contribution to the EMPD</p>
+<p>This functions is supposed to be called at the end of a new data
+contribution in a github pull request</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the meta file</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes to the git repository of <cite>meta</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.finish.fix_sample_formats">
 <code class="descclassname">empd_admin.finish.</code><code class="descname">fix_sample_formats</code><span class="sig-paren">(</span><em>meta</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.fix_sample_formats" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fix the sample formats changing the order, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the meta file of the data contribution</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes to the git repository</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.finish.look_for_changed_fixed_tables">
 <code class="descclassname">empd_admin.finish.</code><code class="descname">look_for_changed_fixed_tables</code><span class="sig-paren">(</span><em>meta</em>, <em>pr_owner</em>, <em>pr_repo</em>, <em>pr_branch</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.look_for_changed_fixed_tables" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Check whether any of the fixed tables has been changed</p>
+<p>The import of the data contribution into the postgres database might add
+new entries into the postgres/scripts/tables files. This function checks
+for this and reports back to the PR</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the meta file of the data contribution</p></li>
+<li><p><strong>pr_owner</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The owner (github username) of the data contribution</p></li>
+<li><p><strong>pr_repo</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the repository</p></li>
+<li><p><strong>pr_branch</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The branch of the data contribution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The status message to report what happened with the fixed tables</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.finish.merge_meta">
 <code class="descclassname">empd_admin.finish.</code><code class="descname">merge_meta</code><span class="sig-paren">(</span><em>meta</em>, <em>target=None</em>, <em>commit=True</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.merge_meta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Merge one EMPD meta data into another</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The file to merge.</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The file to merge <cite>meta</cite> into. If None, the meta file of the
+<cite>local_repo</cite> is used, and, if this is <cite>meta</cite> we use <cite>meta.tsv</cite>.</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes to the git repository</p></li>
+<li><p><strong>local_repo</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the EMPD-data local repository. If None, the directory of
+<cite>meta</cite> is used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The <cite>target</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.finish.merge_postgres">
 <code class="descclassname">empd_admin.finish.</code><code class="descname">merge_postgres</code><span class="sig-paren">(</span><em>meta</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.merge_postgres" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Merge the new metadata into the EMPD2 postgres database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the meta file of the data contribution</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes to the git repository</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.finish.rebase_master">
 <code class="descclassname">empd_admin.finish.</code><code class="descname">rebase_master</code><span class="sig-paren">(</span><em>meta</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.rebase_master" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Merge the master branch of EMPD2/EMPD-data into the local fork</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the meta file of the data contribution</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 

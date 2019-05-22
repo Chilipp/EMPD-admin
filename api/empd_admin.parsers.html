@@ -124,11 +124,113 @@
       
   <div class="section" id="module-empd_admin.parsers">
 <span id="empd-admin-parsers-module"></span><h1>empd_admin.parsers module<a class="headerlink" href="#module-empd_admin.parsers" title="Permalink to this headline">¶</a></h1>
+<p><strong>Classes</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.WebParser" title="empd_admin.parsers.WebParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WebParser</span></code></a>([prog, usage, description, …])</p></td>
+<td><p>An ArgumentParser that does not sys.exit</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.get_parser" title="empd_admin.parsers.get_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_parser</span></code></a>()</p></td>
+<td><p>Create a command-line parser</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.process_comment" title="empd_admin.parsers.process_comment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_comment</span></code></a>(comment, pr_owner, pr_repo, …)</p></td>
+<td><p>Process a comment in a pull request and handle it’s empd-admin commands</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.process_comment_line" title="empd_admin.parsers.process_comment_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_comment_line</span></code></a>(line, pr_owner, …)</p></td>
+<td><p>Process a line of a github comment</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.setup_pytest_args" title="empd_admin.parsers.setup_pytest_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_pytest_args</span></code></a>(namespace)</p></td>
+<td><p>Setup the arguments for a EMPD-data test run based on command line args</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.setup_subparsers" title="empd_admin.parsers.setup_subparsers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_subparsers</span></code></a>(parser[, pr_owner, …])</p></td>
+<td><p>Setup the EMPD-admin subparsers</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_accept" title="empd_admin.parsers.test_accept"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_accept</span></code></a>()</p></td>
+<td><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.accept" title="empd_admin.accept.accept"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_accept_query" title="empd_admin.parsers.test_accept_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_accept_query</span></code></a>()</p></td>
+<td><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.accept_query" title="empd_admin.accept.accept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept_query()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_createdb" title="empd_admin.parsers.test_createdb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_createdb</span></code></a>()</p></td>
+<td><p>Test function for <code class="xref py py-func docutils literal notranslate"><span class="pre">import_database()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_finish" title="empd_admin.parsers.test_finish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_finish</span></code></a>()</p></td>
+<td><p>Test function for <a class="reference internal" href="empd_admin.finish.html#empd_admin.finish.finish_pr" title="empd_admin.finish.finish_pr"><code class="xref py py-func docutils literal notranslate"><span class="pre">finish_pr()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_fix" title="empd_admin.parsers.test_fix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_fix</span></code></a>()</p></td>
+<td><p>Test function for running EMPD fixes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_help" title="empd_admin.parsers.test_help"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_help</span></code></a>()</p></td>
+<td><p>Test function for printing help on the EMPD-admin</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_help_merge_meta" title="empd_admin.parsers.test_help_merge_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_help_merge_meta</span></code></a>()</p></td>
+<td><p>Test function for printing help on a command</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_merge_meta" title="empd_admin.parsers.test_merge_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_merge_meta</span></code></a>()</p></td>
+<td><p>Test function for <a class="reference internal" href="empd_admin.finish.html#empd_admin.finish.merge_meta" title="empd_admin.finish.merge_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge_meta()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_no_command" title="empd_admin.parsers.test_no_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_no_command</span></code></a>()</p></td>
+<td><p>Test function &#64;EMPD-admin without arguments</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_query" title="empd_admin.parsers.test_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_query</span></code></a>()</p></td>
+<td><p>Test function for <code class="xref py py-func docutils literal notranslate"><span class="pre">query()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_rebase" title="empd_admin.parsers.test_rebase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_rebase</span></code></a>()</p></td>
+<td><p>Test function for <a class="reference internal" href="empd_admin.finish.html#empd_admin.finish.rebase_master" title="empd_admin.finish.rebase_master"><code class="xref py py-func docutils literal notranslate"><span class="pre">rebase_master()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_rebuild" title="empd_admin.parsers.test_rebuild"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_rebuild</span></code></a>()</p></td>
+<td><p>Test function for rebuilding fixed postgres tables</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_test" title="empd_admin.parsers.test_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_test</span></code></a>()</p></td>
+<td><p>Test function for running the EMPD tests</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_test_collect" title="empd_admin.parsers.test_test_collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_test_collect</span></code></a>()</p></td>
+<td><p>Test function for collecting EMPD tests</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_unaccept" title="empd_admin.parsers.test_unaccept"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_unaccept</span></code></a>()</p></td>
+<td><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.unaccept" title="empd_admin.accept.unaccept"><code class="xref py py-func docutils literal notranslate"><span class="pre">unaccept()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_unaccept_query" title="empd_admin.parsers.test_unaccept_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_unaccept_query</span></code></a>()</p></td>
+<td><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.unaccept_query" title="empd_admin.accept.unaccept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">unaccept_query()</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
 <dl class="class">
 <dt id="empd_admin.parsers.WebParser">
 <em class="property">class </em><code class="descclassname">empd_admin.parsers.</code><code class="descname">WebParser</code><span class="sig-paren">(</span><em>prog=None</em>, <em>usage=None</em>, <em>description=None</em>, <em>epilog=None</em>, <em>parents=[]</em>, <em>formatter_class=&lt;class 'argparse.HelpFormatter'&gt;</em>, <em>prefix_chars='-'</em>, <em>fromfile_prefix_chars=None</em>, <em>argument_default=None</em>, <em>conflict_handler='error'</em>, <em>add_help=True</em>, <em>allow_abbrev=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.WebParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/argparse.html#argparse.ArgumentParser" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code></a></p>
 <p>An ArgumentParser that does not sys.exit</p>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.WebParser.error" title="empd_admin.parsers.WebParser.error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></a>(message)</p></td>
+<td><p>Prints a usage message incorporating the message to stderr and exits.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.WebParser.exit" title="empd_admin.parsers.WebParser.exit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exit</span></code></a>([status, message])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.WebParser.parse_known_args" title="empd_admin.parsers.WebParser.parse_known_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_known_args</span></code></a>(*args, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="empd_admin.parsers.WebParser.error">
 <code class="descname">error</code><span class="sig-paren">(</span><em>message: string</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.WebParser.error" title="Permalink to this definition">¶</a></dt>
@@ -153,107 +255,148 @@ should either exit or raise an exception.</p>
 <dl class="function">
 <dt id="empd_admin.parsers.get_parser">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.get_parser" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a command-line parser</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.process_comment">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">process_comment</code><span class="sig-paren">(</span><em>comment</em>, <em>pr_owner</em>, <em>pr_repo</em>, <em>pr_branch</em>, <em>pr_num</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.process_comment" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Process a comment in a pull request and handle it’s empd-admin commands</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The message that shall be posted on Github</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.process_comment_line">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">process_comment_line</code><span class="sig-paren">(</span><em>line</em>, <em>pr_owner</em>, <em>pr_repo</em>, <em>pr_branch</em>, <em>pr_num</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.process_comment_line" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Process a line of a github comment</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.setup_pytest_args">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">setup_pytest_args</code><span class="sig-paren">(</span><em>namespace</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.setup_pytest_args" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Setup the arguments for a EMPD-data test run based on command line args</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>argparse.Namespace</strong> – The namespace of the parsed command line arguments</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>list of str</em> – The arguments to the call of pytest</p></li>
+<li><p><em>list of str</em> – Specific files that should be run</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.setup_subparsers">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">setup_subparsers</code><span class="sig-paren">(</span><em>parser</em>, <em>pr_owner=None</em>, <em>pr_repo=None</em>, <em>pr_branch=None</em>, <em>add_help=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.setup_subparsers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Setup the EMPD-admin subparsers</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_accept">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_accept</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_accept" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.accept" title="empd_admin.accept.accept"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept()</span></code></a></p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_accept_query">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_accept_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_accept_query" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.accept_query" title="empd_admin.accept.accept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept_query()</span></code></a></p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_createdb">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_createdb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_createdb" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <code class="xref py py-func docutils literal notranslate"><span class="pre">import_database()</span></code></p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_finish">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_finish</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_finish" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <a class="reference internal" href="empd_admin.finish.html#empd_admin.finish.finish_pr" title="empd_admin.finish.finish_pr"><code class="xref py py-func docutils literal notranslate"><span class="pre">finish_pr()</span></code></a></p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_fix">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_fix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_fix" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for running EMPD fixes</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_help">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_help</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for printing help on the EMPD-admin</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_help_merge_meta">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_help_merge_meta</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_help_merge_meta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for printing help on a command</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_merge_meta">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_merge_meta</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_merge_meta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <a class="reference internal" href="empd_admin.finish.html#empd_admin.finish.merge_meta" title="empd_admin.finish.merge_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge_meta()</span></code></a></p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_no_command">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_no_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_no_command" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function &#64;EMPD-admin without arguments</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_query">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_query" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <code class="xref py py-func docutils literal notranslate"><span class="pre">query()</span></code></p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_rebase">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_rebase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_rebase" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <a class="reference internal" href="empd_admin.finish.html#empd_admin.finish.rebase_master" title="empd_admin.finish.rebase_master"><code class="xref py py-func docutils literal notranslate"><span class="pre">rebase_master()</span></code></a></p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_rebuild">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_rebuild</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_rebuild" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for rebuilding fixed postgres tables</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_test">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_test" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for running the EMPD tests</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_test_collect">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_test_collect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_test_collect" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for collecting EMPD tests</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_unaccept">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_unaccept</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_unaccept" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.unaccept" title="empd_admin.accept.unaccept"><code class="xref py py-func docutils literal notranslate"><span class="pre">unaccept()</span></code></a></p>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.parsers.test_unaccept_query">
 <code class="descclassname">empd_admin.parsers.</code><code class="descname">test_unaccept_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_unaccept_query" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.unaccept_query" title="empd_admin.accept.unaccept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">unaccept_query()</span></code></a></p>
+</dd></dl>
 
 </div>
 

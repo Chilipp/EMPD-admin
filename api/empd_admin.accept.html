@@ -125,26 +125,213 @@
   <div class="section" id="module-empd_admin.accept">
 <span id="empd-admin-accept-module"></span><h1>empd_admin.accept module<a class="headerlink" href="#module-empd_admin.accept" title="Permalink to this headline">¶</a></h1>
 <p>Module for accepting erroneous meta data</p>
+<p>Errornous fields, i.e. meta data cells that do not pass the EMPD-data, tests,
+can be accepted by modifying the <cite>okexcept</cite> column in the meta data sheet.</p>
+<p>The functions here are also available as <a class="reference internal" href="../cli.html#unaccept"><span class="std std-ref">unaccept</span></a> and <a class="reference internal" href="../cli.html#accept"><span class="std std-ref">accept</span></a>
+commnds of the <span class="xref std std-ref">empd-admin</span> shell command.</p>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.accept.accept" title="empd_admin.accept.accept"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accept</span></code></a>(meta, what[, commit, skip_ci, …])</p></td>
+<td><p>Accept failed metadata</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.accept.accept_query" title="empd_admin.accept.accept_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accept_query</span></code></a>(meta, query, columns[, commit, …])</p></td>
+<td><p>Accept failed metadata based on a query for the pandas.DataFrame.query</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.accept.unaccept" title="empd_admin.accept.unaccept"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unaccept</span></code></a>(meta, what[, commit, skip_ci, …])</p></td>
+<td><p>Reverse acceptance for failed meta data</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.accept.unaccept_query" title="empd_admin.accept.unaccept_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unaccept_query</span></code></a>(meta, query, columns[, …])</p></td>
+<td><p>Reverse acceptance for failed meta data based on a SQL query</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="empd_admin.accept.accept">
 <code class="descclassname">empd_admin.accept.</code><code class="descname">accept</code><span class="sig-paren">(</span><em>meta</em>, <em>what</em>, <em>commit=True</em>, <em>skip_ci=False</em>, <em>raise_error=False</em>, <em>exact=False</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.accept" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accept failed metadata</p>
+<p>This function marks columns for specific cells as <cite>okexcept</cite>, such that it
+passes the EMPD-data tests</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the metadata</p></li>
+<li><p><strong>what</strong> (<em>list of str</em>) – A list of strings like <cite>sample:column</cite> where <cite>sample</cite> is a regular
+expression (or the name of the sample if <cite>exact</cite>) and the <cite>column</cite> is
+the column for the corresponding sample that shall be accepted. The
+<cite>sample</cite> can also be <code class="docutils literal notranslate"><span class="pre">'all'</span></code> to match all samples in the metadata</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes in the repository of <cite>meta</cite></p></li>
+<li><p><strong>skip_ci</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True and <cite>commit</cite>, then <code class="docutils literal notranslate"><span class="pre">[skip</span> <span class="pre">ci]</span></code> will be added to the commit
+message</p></li>
+<li><p><strong>raise_error</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, raise an error on Failure, otherwise return the error msg</p></li>
+<li><p><strong>except</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, samples must be euqal to the <cite>sample</cite> part in <cite>what</cite>.
+Otherwise we use regular expressions</p></li>
+<li><p><strong>local_repo</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path of the local EMPD-data repository. If None, it will be assumed
+to be the directory of the given <cite>meta</cite>.</p></li>
+<li><p><strong>Returs</strong> – </p></li>
+<li><p><strong>------</strong> – </p></li>
+<li><p><strong>str</strong> – The status message. None if everything is allright.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Accept wrong countries for all samples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">accept</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;all:Country&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Accept wrong latitudes and longitudes for all samples that start with
+<code class="docutils literal notranslate"><span class="pre">'Barboni'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">accept</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Barboni:Latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;Barboni:Longitude&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Accept wrong Temperature for the sample <code class="docutils literal notranslate"><span class="pre">'Beaudouin_a1'</span></code> and nothing
+else:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">accept</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Beaudouin_a1:Temperature&#39;</span><span class="p">],</span> <span class="n">exact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you skip the <cite>exact</cite> parameter above, wrong temperatures would
+also be accepted for the sample <code class="docutils literal notranslate"><span class="pre">Beaudouin_a10</span></code>!</p>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.accept.accept_query">
 <code class="descclassname">empd_admin.accept.</code><code class="descname">accept_query</code><span class="sig-paren">(</span><em>meta</em>, <em>query</em>, <em>columns</em>, <em>commit=True</em>, <em>skip_ci=False</em>, <em>raise_error=False</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.accept_query" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accept the columns based on a query for the pandas.DataFrame.query</p>
+<dd><p>Accept failed metadata based on a query for the pandas.DataFrame.query</p>
+<p>This function can accept failed <cite>columns</cite> for samples based on a <cite>query</cite>.</p>
+<p>The sql expression would be something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">UPDATE</span> <span class="n">meta</span> <span class="n">SET</span> <span class="n">okexcept</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="n">WHERE</span> <span class="n">query</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the metadata that shall be queried</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> part of the query (see
+<a class="reference internal" href="empd_admin.query.html#empd_admin.query.query_samples" title="empd_admin.query.query_samples"><code class="xref py py-func docutils literal notranslate"><span class="pre">empd_admin.query.query_samples()</span></code></a>).</p></li>
+<li><p><strong>columns</strong> (<em>list of str</em>) – The columns that shall be marked as accepted (they will be appended to
+the existing columns)</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes in the repository <cite>local_repo</cite></p></li>
+<li><p><strong>skip_ci</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True and <cite>commit</cite>, then <code class="docutils literal notranslate"><span class="pre">[skip</span> <span class="pre">ci]</span></code> will be added to the commit
+message</p></li>
+<li><p><strong>raise_error</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, raise an error on Failure, otherwise return the error msg</p></li>
+<li><p><strong>local_repo</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path of the local EMPD-data repository. If None, it will be assumed
+to be the directory of the given <cite>meta</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The status message. None if everything is allright.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#empd_admin.accept.accept" title="empd_admin.accept.accept"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept()</span></code></a></p>
+</div>
+<p class="rubric">Examples</p>
+<p>Accept missing Latitudes and Longitudes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">accept_query</span><span class="p">(</span>
+    <span class="n">meta</span><span class="p">,</span> <span class="s2">&quot;Latitude is NULL or Longitude is NULL&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.accept.unaccept">
 <code class="descclassname">empd_admin.accept.</code><code class="descname">unaccept</code><span class="sig-paren">(</span><em>meta</em>, <em>what</em>, <em>commit=True</em>, <em>skip_ci=False</em>, <em>raise_error=False</em>, <em>exact=False</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.unaccept" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Reverse acceptance for failed meta data</p>
+<p>This function reverses the acceptance made by the <a class="reference internal" href="#empd_admin.accept.accept" title="empd_admin.accept.accept"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept()</span></code></a> or
+<a class="reference internal" href="#empd_admin.accept.accept_query" title="empd_admin.accept.accept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept_query()</span></code></a> function. Arguments are the same as for the
+<a class="reference internal" href="../cli.html#accept"><span class="std std-ref">accept</span></a> function, despite the fact that the <cite>column</cite> part in <cite>what</cite>
+can also be <cite>all</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the metadata</p></li>
+<li><p><strong>what</strong> (<em>list of str</em>) – A list of strings like <cite>sample:column</cite> where <cite>sample</cite> is a regular
+expression (or the name of the sample if <cite>exact</cite>) and the <cite>column</cite> is
+the column for the corresponding sample that shall be accepted</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes in the repository of <cite>meta</cite></p></li>
+<li><p><strong>skip_ci</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True and <cite>commit</cite>, then <code class="docutils literal notranslate"><span class="pre">[skip</span> <span class="pre">ci]</span></code> will be added to the commit
+message</p></li>
+<li><p><strong>raise_error</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, raise an error on Failure, otherwise return the error msg</p></li>
+<li><p><strong>except</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, samples must be euqal to the <cite>sample</cite> part in <cite>what</cite>.
+Otherwise we use regular expressions</p></li>
+<li><p><strong>local_repo</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path of the local EMPD-data repository. If None, it will be assumed
+to be the directory of the given <cite>meta</cite>.</p></li>
+<li><p><strong>Returs</strong> – </p></li>
+<li><p><strong>------</strong> – </p></li>
+<li><p><strong>str</strong> – The status message. None if everything is allright.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Do not accept any failure for any column:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unaccept</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;all:all&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Do not accept any failure for latitudes or longitudes with samples that
+start with <code class="docutils literal notranslate"><span class="pre">'Barboni'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unaccept</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Barboni:Latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;Barboni:Longitude&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Do not accept wrong Temperature for the sample <code class="docutils literal notranslate"><span class="pre">'Beaudouin_a1'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unaccept</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Beaudouin_a1:Temperature&#39;</span><span class="p">],</span> <span class="n">exact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you skip the <cite>exact</cite> parameter above, wrong temperatures would
+also be not accepted anymore for the sample <code class="docutils literal notranslate"><span class="pre">Beaudouin_a10</span></code>!</p>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.accept.unaccept_query">
 <code class="descclassname">empd_admin.accept.</code><code class="descname">unaccept_query</code><span class="sig-paren">(</span><em>meta</em>, <em>query</em>, <em>columns</em>, <em>commit=True</em>, <em>skip_ci=False</em>, <em>raise_error=False</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.unaccept_query" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accept the columns based on a query for the pandas.DataFrame.query</p>
+<dd><p>Reverse acceptance for failed meta data based on a SQL query</p>
+<p>This function reverses the acceptance made by the <a class="reference internal" href="#empd_admin.accept.accept" title="empd_admin.accept.accept"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept()</span></code></a> or
+<a class="reference internal" href="#empd_admin.accept.accept_query" title="empd_admin.accept.accept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept_query()</span></code></a> function, based on a SQL query. The arguments are
+the same as for the <a class="reference internal" href="#empd_admin.accept.accept_query" title="empd_admin.accept.accept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept_query()</span></code></a> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the metadata that shall be queried</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> part of the query (see
+<a class="reference internal" href="empd_admin.query.html#empd_admin.query.query_samples" title="empd_admin.query.query_samples"><code class="xref py py-func docutils literal notranslate"><span class="pre">empd_admin.query.query_samples()</span></code></a>).</p></li>
+<li><p><strong>columns</strong> (<em>list of str</em>) – The columns that shall not be accepted any more</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the changes in the repository of <cite>meta</cite></p></li>
+<li><p><strong>skip_ci</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True and <cite>commit</cite>, then <code class="docutils literal notranslate"><span class="pre">[skip</span> <span class="pre">ci]</span></code> will be added to the commit
+message</p></li>
+<li><p><strong>raise_error</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, raise an error on Failure, otherwise return the error msg</p></li>
+<li><p><strong>local_repo</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path of the local EMPD-data repository. If None, it will be assumed
+to be the directory of the given <cite>meta</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The status message. None if everything is allright.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#empd_admin.accept.unaccept" title="empd_admin.accept.unaccept"><code class="xref py py-func docutils literal notranslate"><span class="pre">unaccept()</span></code></a></p>
+</div>
+<p class="rubric">Examples</p>
+<p>Do not accept any failure for samples where the Country equals “Germany”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unaccept_query</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="s2">&quot;Country = &#39;Germany&#39;&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
