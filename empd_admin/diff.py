@@ -23,6 +23,66 @@ url_regex = regex = re.compile(
 
 def diff(meta, left=None, right=None, output=None, commit=False, *args,
          **kwargs):
+    """Compute the diff between two EMPD metadata files
+
+    This function computes the difference between two EMPD-data files using the
+    :func:`compute_diff` function. It takes the meta data of an EMPD-data
+    repository and compares it to another
+
+    Parameters
+    ----------
+    meta: str
+        The path to the tab-delimited meta data of a cloned EMPD-data
+        repository
+    left: str
+        The path to the first meta data file, relative to the directory of
+        `meta`. Alternatively it can also be a url. If `left` is None, the
+        `meta` will be used
+    right: str
+        The path to the second meta data file, relative to the directory of
+        `meta`. Alternatively it can also be a url. If `right` is None, the
+        `meta` will be used, or (if `left` is the same as `meta` or None),
+        the meta data of the EMPD2/EMPD-data repository at
+        https://raw.githubusercontent.com/EMPD2/EMPD-data/master/meta.tsv
+        is used.
+    output: str
+        The filename to use for saving the diff. If set, it will be saved in
+        the ``'queries'`` directory, relative to `meta`. If not set but
+        `commit` is True, it will be saved to ``'queries/diff.tsv'``.
+    commit: bool
+        If True, commit the added `output` to the git repository of `meta`
+    ``*args,**kwargs``
+        Any other parameter for the :func:`compute_diff` function
+
+    Returns
+    -------
+    str
+        The path where the data has been saved (if `output` is set or `commit`
+        is True)
+    str
+        The computed difference as markdown table
+
+    Examples
+    --------
+    For a data contribution, e.g. the test-data branch, you can compute the
+    difference to the EMPD meta.tsv via::
+
+        import git
+        git.Repo.clone_from('https://github.com/EMPD2/EMPD-data',
+                            branch='test-data')
+        diff('EMPD-data/test.tsv')
+
+    which is essentially the same as::
+
+        diff('EMPD-data/test.tsv', 'test.tsv', 'meta.tsv')
+
+    You will reveive nothing, however, because `how` is set to ``'inner'`` and
+    ``'test.tsv'`` contains new samples. Instead, you can set `how` to
+    ``'left'`` to include the samples of ``'test.tsv'`` that are not in
+    ``'meta.tsv'``::
+
+        diff('EMPD-data/test.tsv', how='left')
+    """
     local_repo = osp.dirname(meta)
     meta = osp.basename(meta)
     repo = Repo(local_repo)
@@ -87,6 +147,70 @@ def diff(meta, left=None, right=None, output=None, commit=False, *args,
 
 def compute_diff(left, right, how='inner', on=None, exclude=[],
                  columns='leftdiff', atol=1e-3):
+    """Compute the difference between two EMPD meta dataframes
+
+    Parameters
+    ----------
+    left: pandas.DataFrame
+        The first EMPD-data metadata (see
+        :func:`~empd_admin.common.read_empd_meta`)
+    right: pandas.DataFrame
+        The second EMPD-data metadata(see
+        :func:`~empd_admin.common.read_empd_meta`).
+    how: str
+        How to merge `right` into `left`. Possiblities are
+
+        inner (default)
+            use intersection of samples from both frames, similar to a SQL
+            inner join; preserve the order of the left keys.
+        outer
+            use union of samples from both frames, similar to a SQL full outer
+            join; sort keys lexicographically.
+        left
+            use only samples from left frame, similar to a SQL left outer join;
+            preserve key order.
+        right
+            use only samples from right frame, similar to a SQL right outer
+            join; preserve key order.
+    on: list of str
+        The names of the columns to compute the diff on. If None, we use the
+        intersection of columns between `left` and `right.`
+    exclude: list of str
+        Columns names that should be excluded in the diff.
+    columns: str or list of str
+        The columns of the returned dataframe. It can either be a list of
+        column names to use or one of
+
+        leftdiff (default)
+            To use the columns from `left` that differ from `right`
+        left
+            To use all columns from `left`
+        rightdiff
+            To use the columns from `right` that differ from `left`
+        right
+            To use all columns from `right`
+        inner
+            To use the intersection of `left` and `right`
+        bothdiff
+            To use the differing columns from `right` and `left` (columns from
+            `right` are suffixed with an ``'_r'``)
+        both
+            To use all columns from `left` and `right` (columns from `right`
+            are suffixed with an ``'_r'``)
+
+        In any of these cases (except if you specify the column names
+        explicitly), the columns the data frame will include a ``diff`` column
+        that contains for each sample the columns names of the differing cells.
+    atol: float
+        Absolute tolerance to use for numeric columns (see the
+        :attr:`empd_admin.common.NUMERIC_COLS`).
+
+    Returns
+    -------
+    pandas.DataFrame
+        The dataframe highlighting the difference between `left` and `right`.
+        The index is the sample name, the colums are determined by the
+        `columns` parameter"""
     left = left.copy()
     right = right.copy()
 
@@ -162,6 +286,7 @@ def compute_diff(left, right, how='inner', on=None, exclude=[],
 
 
 def test_diff():
+    """Test function for :func:`compute_diff`"""
     from pandas.testing import assert_frame_equal
     left = pd.DataFrame([[1, 2, 3], [3, 4, 5]], index=[1, 2],
                         columns=list('abc'))

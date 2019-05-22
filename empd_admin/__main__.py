@@ -5,9 +5,25 @@ import re
 from empd_admin.parsers import setup_pytest_args, get_parser
 
 
-def main():
+def main(args=None, namespace=None):
+    """Process command line args
+
+    This function calls the :func:`empd_admin.parsers.get_parser` method and
+    processes the given `args` or, if they are ``None``, :attr:`sys.argv`
+
+    Parameters
+    ----------
+    args: list
+        The command line arguments that are passed to the
+        :meth:`argparse.ArgumentParser.parse_args` function
+    namespace: argparse.Namespace
+        The namespace that should be extended.
+
+    .. note::
+
+        This function is called when running `empd-admin` in the shell"""
     parser = get_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(args)
     if args.parser == 'help':
         args.print_help(args.command)
         parser.exit()

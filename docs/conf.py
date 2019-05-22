@@ -39,12 +39,18 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosectionlabel',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.intersphinx',
     'autodocsumm',
     'sphinxarg.ext',
     'IPython.sphinxext.ipython_console_highlighting',
     'IPython.sphinxext.ipython_directive',
     'sphinxcontrib.programoutput'
 ]
+
+autodoc_default_options = {
+    'autosummary': True,
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -80,3 +86,11 @@ html_static_path = ['_static']
 html_sidebars = {
     '**': []  # disable sidebar
     }
+
+intersphinx_mapping = {
+    'pandas': ('http://pandas.pydata.org/pandas-docs/stable/', None),
+    'numpy': ('https://docs.scipy.org/doc/numpy/', None),
+    'python': ('https://docs.python.org/3.7/', None),
+    'git': ('https://gitpython.readthedocs.io/en/stable/', None),
+    'github': ('https://pygithub.readthedocs.io/en/latest/', None),
+}

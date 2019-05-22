@@ -13,6 +13,18 @@ from empd_admin.common import read_empd_meta, get_psql_scripts, dump_empd_meta
 
 
 def finish_pr(meta, commit=True):
+    """Finish a data contribution to the EMPD
+
+    This functions is supposed to be called at the end of a new data
+    contribution in a github pull request
+
+    Parameters
+    ----------
+    meta: str
+        The path to the meta file
+    commit: bool
+        If True, commit the changes to the git repository of `meta`
+    """
     rebase_master(meta)
     fix_sample_formats(meta, commit)
     merge_postgres(meta, commit=commit)
@@ -38,6 +50,25 @@ def finish_pr(meta, commit=True):
 
 
 def merge_meta(meta, target=None, commit=True, local_repo=None):
+    """Merge one EMPD meta data into another
+
+    Parameters
+    ----------
+    meta: str
+        The file to merge.
+    target: str
+        The file to merge `meta` into. If None, the meta file of the
+        `local_repo` is used, and, if this is `meta` we use `meta.tsv`.
+    commit: bool
+        If True, commit the changes to the git repository
+    local_repo: str
+        The path to the EMPD-data local repository. If None, the directory of
+        `meta` is used
+
+    Returns
+    -------
+    str
+        The `target`"""
     if local_repo is None:
         local_repo = osp.dirname(meta)
 
@@ -68,6 +99,12 @@ def merge_meta(meta, target=None, commit=True, local_repo=None):
 
 
 def rebase_master(meta):
+    """Merge the master branch of EMPD2/EMPD-data into the local fork
+
+    Parameters
+    ----------
+    meta: str
+        The path to the meta file of the data contribution"""
     # Merge the master branch into the feature branch using rebase
     repo = Repo(osp.dirname(meta))
     fetch_upstream(repo)
@@ -75,6 +112,14 @@ def rebase_master(meta):
 
 
 def fix_sample_formats(meta, commit=True):
+    """Fix the sample formats changing the order, etc.
+
+    Parameters
+    ----------
+    meta: str
+        The path to the meta file of the data contribution
+    commit: bool
+        If True, commit the changes to the git repository"""
     pytest_args = ['--fix-db', '-v', '-k', 'fix_sample_data_formatting']
     if commit:
         pytest_args.append('--commit')
@@ -84,6 +129,14 @@ def fix_sample_formats(meta, commit=True):
 
 
 def merge_postgres(meta, commit=True):
+    """Merge the new metadata into the EMPD2 postgres database
+
+    Parameters
+    ----------
+    meta: str
+        The path to the meta file of the data contribution
+    commit: bool
+        If True, commit the changes to the git repository"""
     # import the data into the EMPD2 database
     if commit:
         with remember_cwd():
@@ -132,6 +185,27 @@ def merge_postgres(meta, commit=True):
 
 
 def look_for_changed_fixed_tables(meta, pr_owner, pr_repo, pr_branch):
+    """Check whether any of the fixed tables has been changed
+
+    The import of the data contribution into the postgres database might add
+    new entries into the postgres/scripts/tables files. This function checks
+    for this and reports back to the PR
+
+    Parameters
+    ----------
+    meta: str
+        The path to the meta file of the data contribution
+    pr_owner: str
+        The owner (github username) of the data contribution
+    pr_repo: str
+        The name of the repository
+    pr_branch: str
+        The branch of the data contribution
+
+    Returns
+    -------
+    str
+        The status message to report what happened with the fixed tables"""
     fixed = ['Country', 'GroupID', 'SampleContext', 'SampleMethod',
              'SampleType']
     msg = ''

@@ -21,7 +21,14 @@ ONHEROKU = os.getenv('HEROKU', 'false').lower()[0] in 'ty'
 
 @contextlib.contextmanager
 def remember_cwd():
-    """Context manager to switch back to the current working directory"""
+    """Context manager to switch back to the current working directory
+
+    Usage::
+
+        with remember_cwd():
+            os.chdir('test')
+            print(os.getcwd())  # test
+        print(os.getcwd())      # test/.."""
     curdir = os.getcwd()
     try:
         yield
@@ -31,6 +38,15 @@ def remember_cwd():
 
 @contextlib.contextmanager
 def remember_env(key):
+    """Context manager to remember an environment variable
+
+    Usage::
+
+        print(os.getenv('TEST'))       # old value
+        with remember_env('TEST'):
+            os.environ['TEST'] = 'new value'
+            print(os.getenv('TEST'))   # new value
+        print(os.getenv('TEST'))       # old value"""
     val = os.getenv(key)
     try:
         yield
@@ -42,6 +58,11 @@ def remember_env(key):
 
 
 def wait_for_pg_server(timeout=120):
+    """Wait for the postgres server to be started
+
+    This utility function is used for the webapp to make sure that the
+    postgres server, that starts in a separate process, is running. This is
+    based on the lockfile at ``$HOME/starting_pg_server.lock``"""
     for i in range(timeout):
         if not osp.exists(osp.expanduser(osp.join(
                 '~', 'starting_pg_server.lock'))):
@@ -53,6 +74,38 @@ def wait_for_pg_server(timeout=120):
 
 @contextlib.contextmanager
 def temporary_database(dbname=None):
+    """Create a temporary database that shall be removed afterwards
+
+    Use this as a context manager::
+
+        import psycopg2 as psql
+        with temporary_database() as db_url:
+            conn = psql.connect(db_url)
+            ...
+            conn.close()
+
+    Parameters
+    ----------
+    dbname: str
+        The name of the database to use. If None, a new temporary database will
+        be created and dropped afterwards. Otherwise, we assume that it
+        exists already and it will not be dropped afterwards.
+
+    Returns
+    -------
+    str
+        The url to connect to the database::
+
+            'postgres://postgres@localhost/' + dbname
+
+        where ``dbname`` is the given name or the temporary database. The first
+        part of the query can also be set through the ``DATABASE_URL``
+        environment variable. I.e.::
+
+            os.environ['DATABASE_URL'] = 'postgres:///'
+
+        will result in::
+            'postgres:///' + dbname"""
     import psycopg2 as psql
     from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
     base_url = os.getenv('DATABASE_URL', 'postgres://postgres@localhost/')
@@ -77,6 +130,15 @@ def temporary_database(dbname=None):
 
 
 def fetch_upstream(repo):
+    """Fetch the remote upstream from the EMPD2/EMPD-data github repository
+
+    This function adds a new upstream to the given git `repo` (if not already
+    existent) based on https://github.com/EMPD2/EMPD-data.git
+
+    Parameters
+    ----------
+    repo: git.Repo
+        The local repository"""
     try:
         remote = repo.remotes['upstream']
     except IndexError:
@@ -89,6 +151,43 @@ def fetch_upstream(repo):
 
 
 def get_meta_file(dirname='.'):
+    """Get the meta file of an EMPD-data repository
+
+    This function either returns the path to the meta data of a new
+    contribution or the ``meta.tsv`` file in the given `dirname`.
+
+    Parameters
+    ----------
+    dirname: str
+        The path to a local clone of the (forked) EMPD2/EMPD-data repository.
+        If this directory contains a new file, that is not in the master
+        branch of EMPD2/EMPD-data, we assume that this is a new contribution
+        and return this file. Otherwise, we return the ``meta.tsv``
+
+    Returns
+    -------
+    str
+        The path to the meta file (not relative to `dirname`)
+
+    Examples
+    --------
+    Let's clone the master branch of EMPD2/EMPD-data::
+
+        import git
+        repo = git.Repo.clone_from('https://github.com/EMPD2/EMPD-data.git')
+
+    Now, ``get_meta_file`` returns the ``meta.tsv`` of this local clone::
+
+        get_meta_file('EMPD-data')
+        'meta.tsv'
+
+    If we create a new file in the root of this repository, we get this one::
+
+        with open('EMPD-data/new.tsv', 'w') as f:
+            pass
+
+        get_meta_file('EMPD-data')
+        'new.tsv'"""
     if not osp.exists(osp.join(dirname, 'meta.tsv')):
         raise ValueError(
             dirname + " does not seem to look like an EMPD-data repo!")
@@ -109,7 +208,63 @@ def get_meta_file(dirname='.'):
 
 def import_database(meta, dbname=None, commit=False, populate=None,
                     rebuild_fixed=[], sql_dump=None, dump_tables=True):
+    """Import the EMPD meta data into a postgres database
 
+    This function import the given EMPD `meta` data into a relational postgres
+    database and, optionally, dumps the database to the disk. The database can
+    either be already existing or a new one will be created using the
+    :func:`temporary_database` function.
+
+    Parameters
+    ----------
+    meta: str
+        The path to a tab-delimited EMPD meta data file
+    dbname: str
+        The name of a database suitable for the :func:`temporary_database`
+        function. If None, a temporary database will be created and dropped
+        at the end
+    commit: bool
+        If True, commit the changes to the repository of `meta`
+    populate: bool or str
+        If True, populate the database with the fixed tables (groupid, etc.) of
+        the EMPD. This parameter is ignored if `dbname` is None. If `populate`
+        is a string, it must represent the path to a sql file that is used to
+        fill data into the database
+    rebuild_fixed: list of str
+        If this list is not empty, the `meta` is ignored and the fixed tables
+        of the given database are filled instead.
+    sql_dump: str
+        The name of the file where to dump the postgres database (using
+        ``pg_dump``). If None and `commit` is True, it will be saved with the
+        name of `meta` in the ``postgres`` directory relative to `meta`.
+        Otherwise this parameter gives the name of the sql dump in the
+        ``postgres`` directory (see also examples below)
+    dump_tables: bool
+        If True, update the fixed tables when calling the import script
+
+    Returns
+    -------
+    bool
+        Whether the import was successful or not
+    str
+        The report of the import
+    str
+        The path to the dumped postgres file (see the `sql_dump` and `commit`
+        parameters)
+
+    Examples
+    --------
+    Transform the meta data of the EMPD2/EMPD-data master into a database into
+    a temporary postgres database::
+
+        from git import Repo
+        repo = Repo.clone_from('https://github.com/EMPD2/EMPD-data.git')
+        import_database('EMPD-data/meta.tsv')
+
+    Dump the database into ``postgres/dump.sql``::
+
+        import_database('EMPD-data/meta.tsv', sql_dump='dump.sql')
+    """
     SQLSCRIPTS = get_psql_scripts()
 
     with temporary_database(dbname) as db_url:
@@ -175,8 +330,8 @@ def import_database(meta, dbname=None, commit=False, populate=None,
             else:
                 meta_base = osp.splitext(osp.basename(meta))[0]
 
-            sql_dump = sql_dump or osp.join(osp.dirname(meta), 'postgres',
-                                            meta_base + '.sql')
+            sql_dump = osp.join(osp.dirname(meta), 'postgres',
+                                osp.basename(sql_dump or meta_base + '.sql'))
 
             with open(sql_dump, 'w') as f:
                 proc = spr.Popen(['pg_dump', db_url], stdout=f)
@@ -190,14 +345,22 @@ def import_database(meta, dbname=None, commit=False, populate=None,
     return success, stdout.decode('utf-8'), sql_dump
 
 
-def replace_dots(s):
-    """Replaced '.' and 's' in the pytest report"""
-    s = re.sub(r'\[\s*\d+%\]', '', re.sub(r'(?m)^[\.s]{2,1000}', '', s))
-    return '\n'.join(filter(None, map(str.strip, s.splitlines())))
-
-
 def run_test(meta, pytest_args=[], tests=['']):
+    """Run the EMPD-data repository tests for the given meta data
 
+    This function runs the EMPD tests for the given `meta` data from a local
+    EMPD-data repository. Tests are ran in a separate process.
+
+    Parameters
+    ----------
+    meta: str
+        The path to the tab-delimited EMPD meta data in a local clone of the
+        EMPD2/EMPD-data repository.
+    pytest_args: list of str
+        Any additional arguments passed to the execution of the ``pytest``
+        command
+    tests: list of str
+        Test files to use for pytest"""
     TESTDIR = get_test_dir()
 
     def replace_testdir(s):
@@ -228,12 +391,42 @@ def run_test(meta, pytest_args=[], tests=['']):
                     md_report = f.read()
             success = proc.returncode == 0
 
-    return (success, replace_dots(replace_testdir(stdout.decode('utf-8'))),
+    return (success, replace_testdir(stdout.decode('utf-8')),
             replace_testdir(md_report))
 
 
 def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None,
             pr_id=None):
+    """Provide information on a pull request and the intro message
+
+    This function is used by the webapp to welcome new contributions
+
+    Parameters
+    ----------
+    local_repo: str
+        The path to the local clone of the forked repository
+    pr_owner: str
+        The github user name of the PR creator
+    pr_repo: str
+        The name of the repo (something like EMPD2/EMPD-data)
+    pr_branch: str
+        The branch of the repository (e.g. master)
+    pr_id: int
+        The number of the pull request
+
+    Returns
+    -------
+    dict
+        A mapping with the following keys:
+
+        message
+            The message to print on the PR (might be forwarded to
+            :func:`comment_on_pr`
+        sha
+            The hexsha of the PR
+        status
+            ``'failure'`` or ``'pending'``, the status that is used by the
+            :func:`set_pr_status` function"""
     repo = Repo(local_repo)
     ref_head = repo.refs[f'pull/{pr_id}/head']
     sha = ref_head.commit.hexsha
@@ -296,6 +489,39 @@ def pr_info(local_repo, pr_owner=None, pr_repo=None, pr_branch=None,
 
 
 def download_pr(repo_owner, repo_name, pr_id, target_dir, force=False):
+    """Clone the repository associated with a certain pull request
+
+    Parameters
+    ----------
+    repo_owner: str
+        The owner of the upstream repository (EMPD2)
+    repo_name: str
+        The name of the upstream repository (EMPD-data)
+    pr_id: int
+        The number of the pull request
+    target_dir: str
+        Path to a local directory where to clone the repository into
+    force: bool
+        The PR can be skipped when the latest commit includes one of
+        ``[ci skip], [skip ci], [admin skip], [skip admin]``. If force is True,
+        these messages are ignored
+
+    Returns
+    -------
+    dict
+        An empty dict if everything went well, and the repo was cloned,
+        otherwise a mapping with the following keys:
+
+        message
+            A detailed explanation of the action (e.g. why it failed or has
+            been skippd) that can be posted on github (see
+            :func:`comment_on_pr`)
+        sha
+            The hexsha of the PR
+        status
+            ``'skipped'`` or ``'merge_conflict'``, if the tests are skipped or
+            have the PR has a merge conflict with the upstream repository
+    """
     gh = github.Github(os.environ['GH_TOKEN'])
 
     owner = gh.get_user(repo_owner)
@@ -366,6 +592,31 @@ def download_pr(repo_owner, repo_name, pr_id, target_dir, force=False):
 
 
 def full_repo_test(local_repo, pr_id):
+    """Run all tests and test the postgres import of a pull request
+
+    This function is called by the webapp for new pull requests or after a
+    PR has been edited.
+
+    Parameters
+    ----------
+    local_repo: str
+        The path to the local directory where the repository has been cloned
+        into
+    pr_id: int
+        The number of the pull request
+
+    Returns
+    -------
+    dict
+        A mapping with status information of the PR. The keys are:
+
+        message
+            A markdown formatted message that can be posted on github
+        status
+            'failure', 'mixed' or 'good': Whether the tests passed or not
+        sha
+            The hexsha of the PR"""
+
     local_repo = osp.join(local_repo, '')
     repo = Repo(local_repo)
     sha = repo.refs['pull/{pr}/head'.format(pr=pr_id)].commit.hexsha
@@ -455,6 +706,30 @@ def full_repo_test(local_repo, pr_id):
 
 def comment_on_pr(owner, repo_name, pr_id, message, force=False,
                   onlyif='last'):
+    """Comment on a pull request on Github
+
+    Parameters
+    ----------
+    owner: str
+        The name of the upstream repository owner (EMPD2)
+    repo_name: str
+        The name of the upstream repository (EMPD-data)
+    pr_id: int
+        The number of the pull request
+    message: str
+        The markdown formatted message to post
+    force: bool
+        If True, ignore `onlyif` and always comment with the given `message`
+    onlyif: str
+        Can be either ``'last'`` to only comment if `message` differs from the
+        last comment or ``'any'`` to only comment if `message` has never been
+        posted in this PR
+
+    Returns
+    -------
+    github.PullRequestComment
+        The comment that has been posted (or is already existing)
+    """
     gh = github.Github(os.environ['GH_TOKEN'])
 
     user = gh.get_user(owner)
@@ -490,13 +765,38 @@ def comment_on_pr(owner, repo_name, pr_id, message, force=False,
 
 
 def set_pr_status(owner, repo_name, test_info, target_url=None):
+    """Set the status of a pull request
+
+    Parameters
+    ----------
+    owner: str
+        The owner of the upstream repository (EMPD2)
+    repo_name: str
+        The name of the upstream repository (EMPD-data)
+    test_info: dict
+        A dictionary with the the following keys:
+
+        status
+            One out of
+
+            ``'good', 'success', 'mixed'``
+                The commit will be marked as successful
+            ``'pending'``
+                The commit will be marked as pending
+            anything else
+                The commit will be marked as failed
+
+        sha
+            The hexsha of the commit whose status shall be modified
+    target_url: str
+        The url where the status message on Github should link to"""
     gh = github.Github(os.environ['GH_TOKEN'])
 
     user = gh.get_user(owner)
     repo = user.get_repo(repo_name)
     if test_info:
         commit = repo.get_commit(test_info['sha'])
-        if test_info['status'] == 'good':
+        if test_info['status'] in ['good', 'success']:
             commit.create_status(
                 "success", description="All data is excellent.",
                 context="empd-admin-check", target_url=target_url)
@@ -515,11 +815,13 @@ def set_pr_status(owner, repo_name, test_info, target_url=None):
 
 
 def test_get_meta_file(local_repo):
+    """Test function for :func:`get_meta_file`"""
     repo_dir = local_repo.working_dir
     assert get_meta_file(repo_dir) == osp.join(repo_dir, 'test.tsv')
 
 
 def test_repo_test(pr_id, tmpdir):
+    """Test function for :func:`full_repo_test`"""
     test_info = download_pr('EMPD2', 'EMPD-data', pr_id, tmpdir)
 
     assert not test_info
@@ -533,6 +835,7 @@ def test_repo_test(pr_id, tmpdir):
 
 
 def test_pr_info(pr_id, tmpdir):
+    """Test function for the :func:`pr_info`"""
     test_info = download_pr('EMPD2', 'EMPD-data', pr_id, tmpdir)
 
     assert not test_info
@@ -544,6 +847,7 @@ def test_pr_info(pr_id, tmpdir):
 
 
 def test_import_database(local_repo):
+    """Test function for the :func:`import_database`"""
     repo_dir = local_repo.working_dir
     success, log, sql_dump = import_database(osp.join(repo_dir, 'test.tsv'))
     assert success, log

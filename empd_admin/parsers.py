@@ -42,6 +42,7 @@ class WebParser(argparse.ArgumentParser):
 
 
 def get_parser():
+    """Create a command-line parser"""
     parser = argparse.ArgumentParser('empd-admin', add_help=True)
 
     parser.add_argument(
@@ -55,7 +56,7 @@ def get_parser():
 
 def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
                      add_help=True):
-
+    """Setup the EMPD-admin subparsers"""
     subparsers = parser.add_subparsers(title='Commands', dest='parser')
 
     test_parser = subparsers.add_parser(
@@ -196,15 +197,25 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
         Examples
         --------
 
-        - Accept wrong countries for samples starting with "sample_a"::
+        - Accept wrong countries for all samples::
 
-              {parser.prog} accept sample_a:Country
+              {parser.prog} accept all:Country
 
-        - Accept a wrong Country for the sample "sample_a1"::
+        - Accept wrong latitudes and longitudes for all samples that start with
+          ``'Barboni'``::
 
-              {parser.prog} accept -e sample_a1:Country
+              {parser.prog} accept Barboni:Latitude Barboni:Longitude
 
-        - To accept missing Latitudes and Longitudes, use::
+        - Accept wrong Temperature for the sample ``'Beaudouin_a1'``::
+
+              {parser.prog} accept -e Beaudouin_a1:Temperature
+
+          .. note::
+
+              If you skip the ``-e`` option above, wrong temperatures would
+              also be accepted for the sample ``Beaudouin_a10``
+
+        - Accept missing Latitudes and Longitudes::
 
               {parser.prog} accept Country -q "Latitude is NULL or Longitude is NULL"
         """)
@@ -230,16 +241,24 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
 
         Examples
         --------
+        - Do not accept any failure for any column::
 
-        - Do not accept any failure for the Country column for samples
-          starting with "sample_a"::
+              {parser.prog} unaccept all:all
 
-              {parser.prog} unaccept sample_a:Country
+        - Do not accept any failure for latitudes or longitudes with samples
+          that start with ``'Barboni'``::
 
-        - Do not accept any failure for the Country column and one single
-          sample "sample_a1"::
+              {parser.prog} unaccept Barboni:Latitude Barboni:Longitude
 
-              {parser.prog} unaccept -e sample_a1:Country
+        - Do not accept wrong Temperature for the sample ``'Beaudouin_a1'``::
+
+              {parser.prog} unaccept -e Beaudouin_a1:Temperature
+
+          .. note::
+
+              If you skip the `exact` parameter above, wrong temperatures would
+              also be not accepted anymore for the sample ``Beaudouin_a10``!
+
 
         - Do not accept any failure for samples where the Country equals
           "Germany"::
@@ -345,6 +364,10 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
         Display the samples with a 'forest' SampleContext::
 
             {parser.prog} query "SampleContext LIKE '%forest%'"
+
+        Display the distinct countries of a certain data contribution::
+
+            {parser.prog} query -d "SampleName LIKE '%Barboni_%'"
         """)
 
     diff_parser = subparsers.add_parser(
@@ -403,7 +426,7 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
 
     diff_parser.add_argument(
         '-o', '--output', default=None,
-        help=("Save the query in the `queries` directory. If not set but "
+        help=("Save the difference in the `queries` directory. If not set but "
               "`--commit` is set, then it will be saved as "
               "`queries/diff.tsv`."))
 
@@ -450,6 +473,19 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
 
 
 def setup_pytest_args(namespace):
+    """Setup the arguments for a EMPD-data test run based on command line args
+
+    Parameters
+    ----------
+    argparse.Namespace
+        The namespace of the parsed command line arguments
+
+    Returns
+    -------
+    list of str
+        The arguments to the call of pytest
+    list of str
+        Specific files that should be run"""
     pytest_args = []
     if namespace.m:
         pytest_args.extend(['-m', namespace.m])
@@ -484,6 +520,12 @@ def setup_pytest_args(namespace):
 
 
 def process_comment(comment, pr_owner, pr_repo, pr_branch, pr_num):
+    """Process a comment in a pull request and handle it's empd-admin commands
+
+    Returns
+    -------
+    str
+        The message that shall be posted on Github"""
     reports = []
     for line in comment.splitlines():
         report = process_comment_line(line, pr_owner, pr_repo, pr_branch,
@@ -500,6 +542,7 @@ def process_comment(comment, pr_owner, pr_repo, pr_branch, pr_num):
 
 
 def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
+    """Process a line of a github comment"""
     if not line or not line.startswith('@EMPD-admin'):
         return
 
@@ -768,12 +811,14 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
 
 # --- tests
 def test_no_command():
+    """Test function @EMPD-admin without arguments"""
     msg = process_comment_line('should not trigger anything',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     assert msg is None
 
 
 def test_help():
+    """Test function for printing help on the EMPD-admin"""
     msg = process_comment_line('@EMPD-admin help',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     parser = argparse.ArgumentParser('@EMPD-admin', add_help=False)
@@ -783,6 +828,7 @@ def test_help():
 
 
 def test_help_merge_meta():
+    """Test function for printing help on a command"""
     msg = process_comment_line('@EMPD-admin help merge-meta',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     parser = argparse.ArgumentParser('@EMPD-admin', add_help=False)
@@ -793,6 +839,7 @@ def test_help_merge_meta():
 
 
 def test_test_collect():
+    """Test function for collecting EMPD tests"""
     msg = process_comment_line('@EMPD-admin test -v precip --collect-only',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'test_precip' in msg, msg
@@ -800,6 +847,7 @@ def test_test_collect():
 
 
 def test_test():
+    """Test function for running the EMPD tests"""
     msg = process_comment_line(
         '@EMPD-admin test precip -v -f --extract-failed --no-commit',
         'EMPD2', 'EMPD-data', 'test-data', 2)
@@ -809,6 +857,7 @@ def test_test():
 
 
 def test_fix():
+    """Test function for running EMPD fixes"""
     msg = process_comment_line('@EMPD-admin fix -v country --no-commit',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
 
@@ -817,6 +866,7 @@ def test_fix():
 
 
 def test_finish():
+    """Test function for :func:`~empd_admin.finish.finish_pr`"""
     msg = process_comment_line('@EMPD-admin finish --no-tests',
                                'EMPD2', 'EMPD-data', 'test-data', 2)
 
@@ -824,6 +874,7 @@ def test_finish():
 
 
 def test_accept():
+    """Test function for :func:`~empd_admin.accept.accept`"""
     msg = process_comment_line(
         '@EMPD-admin accept test_a1:Country --no-commit',
         'EMPD2', 'EMPD-data', 'test-data', 2)
@@ -832,6 +883,7 @@ def test_accept():
 
 
 def test_accept_query():
+    """Test function for :func:`~empd_admin.accept.accept_query`"""
     msg = process_comment_line(
         ('@EMPD-admin accept -q "SampleName = \'test_a1\'" Country'
          ' --no-commit'),
@@ -841,6 +893,7 @@ def test_accept_query():
 
 
 def test_unaccept():
+    """Test function for :func:`~empd_admin.accept.unaccept`"""
     msg = process_comment_line(
         '@EMPD-admin unaccept test_a2:Country --no-commit',
         'EMPD2', 'EMPD-data', 'test-data', 2)
@@ -849,6 +902,7 @@ def test_unaccept():
 
 
 def test_unaccept_query():
+    """Test function for :func:`~empd_admin.accept.unaccept_query`"""
     msg = process_comment_line(
         ('@EMPD-admin unaccept -q "SampleName = \'test_a1\'" Country '
          '--no-commit'),
@@ -858,6 +912,7 @@ def test_unaccept_query():
 
 
 def test_query():
+    """Test function for :func:`~empd_admin.query.query`"""
     msg = process_comment_line(
         "@EMPD-admin query `okexcept LIKE '%Country%'` SampleName",
         'EMPD2', 'EMPD-data', 'test-data', 2)
@@ -866,6 +921,7 @@ def test_query():
 
 
 def test_createdb():
+    """Test function for :func:`import_database`"""
     msg = process_comment_line(
         '@EMPD-admin createdb', 'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'Postgres import succeded' in msg, "Wrong message:\n" + msg
@@ -873,6 +929,7 @@ def test_createdb():
 
 
 def test_rebuild():
+    """Test function for rebuilding fixed postgres tables"""
     msg = process_comment_line(
         '@EMPD-admin rebuild all', 'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'Postgres import succeded' in msg, "Wrong message:\n" + msg
@@ -880,6 +937,7 @@ def test_rebuild():
 
 
 def test_rebase():
+    """Test function for :func:`~empd_admin.finish.rebase_master`"""
     msg = process_comment_line(
         '@EMPD-admin rebase --no-commit', 'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'successfully rebased' in msg, "Wrong message:\n" + msg
@@ -887,6 +945,7 @@ def test_rebase():
 
 
 def test_merge_meta():
+    """Test function for :func:`~empd_admin.finish.merge_meta`"""
     msg = process_comment_line(
         '@EMPD-admin merge-meta failures/failed.tsv --no-commit',
         'EMPD2', 'EMPD-data', 'test-data', 2)

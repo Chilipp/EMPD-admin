@@ -14,6 +14,15 @@ from empd_admin.common import read_empd_meta, dump_empd_meta
 
 
 def transform_list(items):
+    """Transform a list of temperature or precipitation into a string
+
+    The EMPD-data meta data holds the temperature and precipitation as
+    comma-delimited string of the numbers
+
+    Parameters
+    ----------
+    items: list of floats or str
+        floats will be combined using ``','.join``, a string is returned"""
     if isinstance(items, str):
         return items.replace('[', '').replace(']', '')
     items = [item if item is not None else np.nan
@@ -24,6 +33,32 @@ def transform_list(items):
 def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
                           branch='master', meta='meta.tsv', submitter_gh=None,
                           commit_msg=''):
+    """Handle data contribution through the viewer
+
+    Parameters
+    ----------
+    metadata: dict
+        The meta data as JSON from the viewer
+    submitter: str
+        The name of the submitter
+    repo: str
+        The name of the repository ('EMPD2/EMPD-data')
+    branch: str
+        The branch of the repo
+    meta: str
+        The name of the meta file for the contribution
+    submitter_gh: str
+        The github username of the `submitter`
+    commit_msg: str
+        The message that shall be used for the commit
+
+    Returns
+    -------
+    bool
+        True, if everything went fine
+    str
+        a html-formatted report whether everything worked as expected
+    """
     # read the meta data json
     metadata = pd.DataFrame.from_dict(
         {d.pop('SampleName'): d for d in metadata}, 'index')
@@ -57,13 +92,32 @@ def handle_viewer_request(metadata, submitter, repo='EMPD2/EMPD-data',
 
 def create_new_pull_request(metadata, submitter, submitter_gh=None,
                             commit_msg=''):
-    """Create a new branch and pull request with the given metadata"""
+    """Create a new branch and pull request with the given metadata
+
+    Not yet implemented..."""
     return False, "Edits from EMPD2/EMPD-data:master are not yet supported"
 
 
 def edit_pull_request(pull, meta, metadata, submitter, submitter_gh=None,
                       commit_msg='', commit=True):
-    """Edit the meta data of an existing pull request"""
+    """Edit the meta data of an existing pull request
+
+    Parameters
+    ----------
+    pull: github.PullRequest
+        The pull request on github
+    meta: str
+        The name of the meta file for the contribution
+    metadata: dict
+        The meta data as JSON from the viewer
+    submitter: str
+        The name of the submitter
+    submitter_gh: str
+        The github username of the `submitter`
+    commit_msg: str
+        The message that shall be used for the commit
+    commit: bool
+        If True, commit the changes"""
     full_repo = pull.head.repo.full_name
     remote_url = f'https://github.com/{full_repo}.git'
     branch = pull.head.label.split(':')[1]
@@ -121,6 +175,24 @@ def edit_pull_request(pull, meta, metadata, submitter, submitter_gh=None,
 
 
 def handle_issue_submission(body):
+    """Handle the submission of issues to the EMPD
+
+    This will create a token for the submitted body and saves it to the private
+    EMPD-issues repository at
+
+    https://github.com/Chilipp/EMPD-issues.git
+
+    This token will then be handled by the :func:`handle_verified_issue`
+
+    Parameters
+    ----------
+    body: str
+        The body of the issue
+
+    Returns
+    -------
+    str
+        The sha1 token for the issue that can be send in a verifcation mail"""
     import datetime as dt
     remote_url = ('https://EMPD-admin:%s@github.com/'
                   'Chilipp/EMPD-issues.git')
@@ -143,6 +215,23 @@ def handle_issue_submission(body):
 
 
 def handle_verified_issue(token):
+    """Handle a token and submit an issue
+
+    This function continues what has been began with the
+    :func:`handle_issue_submission` and creates the issue.
+
+    Parameters
+    ----------
+    token: str
+        The sha1 token as it has been created with the
+        :func:`handle_issue_submission` function
+
+    Returns
+    -------
+    bool
+        True if it was successful
+    str
+        An html-formatted message of the status"""
 
     def commit_info(msg):
         with open(osp.join(tmpdir, 'info.yml'), 'w') as f:
@@ -213,6 +302,19 @@ def handle_verified_issue(token):
 
 
 def submit_issue(title, msg):
+    """Submit an issue to the EMPD2/EMPD-data repository
+
+    Parameters
+    ----------
+    title: str
+        The title for the issue
+    msg: str
+        The comment for the issue
+
+    Returns
+    -------
+    github.Issue
+        The newly created issue"""
     gh = github.Github(os.environ['GH_TOKEN'])
 
     repo = gh.get_repo('EMPD2/EMPD-data')
