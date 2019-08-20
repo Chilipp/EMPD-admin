@@ -2,6 +2,6 @@ empd\_admin.accept module
 =========================
 
 .. automodule:: empd_admin.accept
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

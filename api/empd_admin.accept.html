@@ -130,7 +130,7 @@ can be accepted by modifying the <cite>okexcept</cite> column in the meta data s
 <p>The functions here are also available as <a class="reference internal" href="../cli.html#unaccept"><span class="std std-ref">unaccept</span></a> and <a class="reference internal" href="../cli.html#accept"><span class="std std-ref">accept</span></a>
 commnds of the <span class="xref std std-ref">empd-admin</span> shell command.</p>
 <p><strong>Functions</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -152,7 +152,7 @@ commnds of the <span class="xref std std-ref">empd-admin</span> shell command.</
 </table>
 <dl class="function">
 <dt id="empd_admin.accept.accept">
-<code class="descclassname">empd_admin.accept.</code><code class="descname">accept</code><span class="sig-paren">(</span><em>meta</em>, <em>what</em>, <em>commit=True</em>, <em>skip_ci=False</em>, <em>raise_error=False</em>, <em>exact=False</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.accept" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.accept.</code><code class="sig-name descname">accept</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">what</em>, <em class="sig-param">commit=True</em>, <em class="sig-param">skip_ci=False</em>, <em class="sig-param">raise_error=False</em>, <em class="sig-param">exact=False</em>, <em class="sig-param">local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.accept" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accept failed metadata</p>
 <p>This function marks columns for specific cells as <cite>okexcept</cite>, such that it
 passes the EMPD-data tests</p>
@@ -202,7 +202,7 @@ also be accepted for the sample <code class="docutils literal notranslate"><span
 
 <dl class="function">
 <dt id="empd_admin.accept.accept_query">
-<code class="descclassname">empd_admin.accept.</code><code class="descname">accept_query</code><span class="sig-paren">(</span><em>meta</em>, <em>query</em>, <em>columns</em>, <em>commit=True</em>, <em>skip_ci=False</em>, <em>raise_error=False</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.accept_query" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.accept.</code><code class="sig-name descname">accept_query</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">query</em>, <em class="sig-param">columns</em>, <em class="sig-param">commit=True</em>, <em class="sig-param">skip_ci=False</em>, <em class="sig-param">raise_error=False</em>, <em class="sig-param">local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.accept_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accept failed metadata based on a query for the pandas.DataFrame.query</p>
 <p>This function can accept failed <cite>columns</cite> for samples based on a <cite>query</cite>.</p>
 <p>The sql expression would be something like:</p>
@@ -246,7 +246,7 @@ to be the directory of the given <cite>meta</cite>.</p></li>
 
 <dl class="function">
 <dt id="empd_admin.accept.unaccept">
-<code class="descclassname">empd_admin.accept.</code><code class="descname">unaccept</code><span class="sig-paren">(</span><em>meta</em>, <em>what</em>, <em>commit=True</em>, <em>skip_ci=False</em>, <em>raise_error=False</em>, <em>exact=False</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.unaccept" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.accept.</code><code class="sig-name descname">unaccept</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">what</em>, <em class="sig-param">commit=True</em>, <em class="sig-param">skip_ci=False</em>, <em class="sig-param">raise_error=False</em>, <em class="sig-param">exact=False</em>, <em class="sig-param">local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.unaccept" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reverse acceptance for failed meta data</p>
 <p>This function reverses the acceptance made by the <a class="reference internal" href="#empd_admin.accept.accept" title="empd_admin.accept.accept"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept()</span></code></a> or
 <a class="reference internal" href="#empd_admin.accept.accept_query" title="empd_admin.accept.accept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept_query()</span></code></a> function. Arguments are the same as for the
@@ -296,7 +296,7 @@ also be not accepted anymore for the sample <code class="docutils literal notran
 
 <dl class="function">
 <dt id="empd_admin.accept.unaccept_query">
-<code class="descclassname">empd_admin.accept.</code><code class="descname">unaccept_query</code><span class="sig-paren">(</span><em>meta</em>, <em>query</em>, <em>columns</em>, <em>commit=True</em>, <em>skip_ci=False</em>, <em>raise_error=False</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.unaccept_query" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.accept.</code><code class="sig-name descname">unaccept_query</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">query</em>, <em class="sig-param">columns</em>, <em class="sig-param">commit=True</em>, <em class="sig-param">skip_ci=False</em>, <em class="sig-param">raise_error=False</em>, <em class="sig-param">local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.accept.unaccept_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reverse acceptance for failed meta data based on a SQL query</p>
 <p>This function reverses the acceptance made by the <a class="reference internal" href="#empd_admin.accept.accept" title="empd_admin.accept.accept"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept()</span></code></a> or
 <a class="reference internal" href="#empd_admin.accept.accept_query" title="empd_admin.accept.accept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">accept_query()</span></code></a> function, based on a SQL query. The arguments are
@@ -349,7 +349,7 @@ to be the directory of the given <cite>meta</cite>.</p></li>
     </p>
     <p>
         &copy; Copyright 2019, Philipp S. Sommer.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
 </footer>

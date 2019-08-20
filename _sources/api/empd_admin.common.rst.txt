@@ -2,6 +2,6 @@ empd\_admin.common module
 =========================
 
 .. automodule:: empd_admin.common
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

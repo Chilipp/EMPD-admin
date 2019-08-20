@@ -126,7 +126,7 @@
 <span id="empd-admin-finish-module"></span><h1>empd_admin.finish module<a class="headerlink" href="#module-empd_admin.finish" title="Permalink to this headline">¶</a></h1>
 <p>Command to finish the merging of a PR</p>
 <p><strong>Functions</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -154,7 +154,7 @@
 </table>
 <dl class="function">
 <dt id="empd_admin.finish.finish_pr">
-<code class="descclassname">empd_admin.finish.</code><code class="descname">finish_pr</code><span class="sig-paren">(</span><em>meta</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.finish_pr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.finish.</code><code class="sig-name descname">finish_pr</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.finish_pr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finish a data contribution to the EMPD</p>
 <p>This functions is supposed to be called at the end of a new data
 contribution in a github pull request</p>
@@ -170,7 +170,7 @@ contribution in a github pull request</p>
 
 <dl class="function">
 <dt id="empd_admin.finish.fix_sample_formats">
-<code class="descclassname">empd_admin.finish.</code><code class="descname">fix_sample_formats</code><span class="sig-paren">(</span><em>meta</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.fix_sample_formats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.finish.</code><code class="sig-name descname">fix_sample_formats</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.fix_sample_formats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix the sample formats changing the order, etc.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -184,7 +184,7 @@ contribution in a github pull request</p>
 
 <dl class="function">
 <dt id="empd_admin.finish.look_for_changed_fixed_tables">
-<code class="descclassname">empd_admin.finish.</code><code class="descname">look_for_changed_fixed_tables</code><span class="sig-paren">(</span><em>meta</em>, <em>pr_owner</em>, <em>pr_repo</em>, <em>pr_branch</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.look_for_changed_fixed_tables" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.finish.</code><code class="sig-name descname">look_for_changed_fixed_tables</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">pr_owner</em>, <em class="sig-param">pr_repo</em>, <em class="sig-param">pr_branch</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.look_for_changed_fixed_tables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether any of the fixed tables has been changed</p>
 <p>The import of the data contribution into the postgres database might add
 new entries into the postgres/scripts/tables files. This function checks
@@ -209,7 +209,7 @@ for this and reports back to the PR</p>
 
 <dl class="function">
 <dt id="empd_admin.finish.merge_meta">
-<code class="descclassname">empd_admin.finish.</code><code class="descname">merge_meta</code><span class="sig-paren">(</span><em>meta</em>, <em>target=None</em>, <em>commit=True</em>, <em>local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.merge_meta" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.finish.</code><code class="sig-name descname">merge_meta</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">target=None</em>, <em class="sig-param">commit=True</em>, <em class="sig-param">local_repo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.merge_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge one EMPD meta data into another</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -233,7 +233,7 @@ for this and reports back to the PR</p>
 
 <dl class="function">
 <dt id="empd_admin.finish.merge_postgres">
-<code class="descclassname">empd_admin.finish.</code><code class="descname">merge_postgres</code><span class="sig-paren">(</span><em>meta</em>, <em>commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.merge_postgres" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.finish.</code><code class="sig-name descname">merge_postgres</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">commit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.merge_postgres" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge the new metadata into the EMPD2 postgres database</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -247,7 +247,7 @@ for this and reports back to the PR</p>
 
 <dl class="function">
 <dt id="empd_admin.finish.rebase_master">
-<code class="descclassname">empd_admin.finish.</code><code class="descname">rebase_master</code><span class="sig-paren">(</span><em>meta</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.rebase_master" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.finish.</code><code class="sig-name descname">rebase_master</code><span class="sig-paren">(</span><em class="sig-param">meta</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.finish.rebase_master" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge the master branch of EMPD2/EMPD-data into the local fork</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -271,7 +271,7 @@ for this and reports back to the PR</p>
     </p>
     <p>
         &copy; Copyright 2019, Philipp S. Sommer.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
 </footer>

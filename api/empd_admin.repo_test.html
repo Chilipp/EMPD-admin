@@ -125,7 +125,7 @@
   <div class="section" id="module-empd_admin.repo_test">
 <span id="empd-admin-repo-test-module"></span><h1>empd_admin.repo_test module<a class="headerlink" href="#module-empd_admin.repo_test" title="Permalink to this headline">¶</a></h1>
 <p><strong>Functions</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -186,7 +186,7 @@
 </table>
 <dl class="function">
 <dt id="empd_admin.repo_test.comment_on_pr">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">comment_on_pr</code><span class="sig-paren">(</span><em>owner</em>, <em>repo_name</em>, <em>pr_id</em>, <em>message</em>, <em>force=False</em>, <em>onlyif='last'</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.comment_on_pr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">comment_on_pr</code><span class="sig-paren">(</span><em class="sig-param">owner</em>, <em class="sig-param">repo_name</em>, <em class="sig-param">pr_id</em>, <em class="sig-param">message</em>, <em class="sig-param">force=False</em>, <em class="sig-param">onlyif='last'</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.comment_on_pr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Comment on a pull request on Github</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -212,7 +212,7 @@ posted in this PR</p></li>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.download_pr">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">download_pr</code><span class="sig-paren">(</span><em>repo_owner</em>, <em>repo_name</em>, <em>pr_id</em>, <em>target_dir</em>, <em>force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.download_pr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">download_pr</code><span class="sig-paren">(</span><em class="sig-param">repo_owner</em>, <em class="sig-param">repo_name</em>, <em class="sig-param">pr_id</em>, <em class="sig-param">target_dir</em>, <em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.download_pr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clone the repository associated with a certain pull request</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,7 +250,7 @@ have the PR has a merge conflict with the upstream repository</p>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.fetch_upstream">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">fetch_upstream</code><span class="sig-paren">(</span><em>repo</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.fetch_upstream" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">fetch_upstream</code><span class="sig-paren">(</span><em class="sig-param">repo</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.fetch_upstream" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch the remote upstream from the EMPD2/EMPD-data github repository</p>
 <p>This function adds a new upstream to the given git <cite>repo</cite> (if not already
 existent) based on <a class="reference external" href="https://github.com/EMPD2/EMPD-data.git">https://github.com/EMPD2/EMPD-data.git</a></p>
@@ -263,7 +263,7 @@ existent) based on <a class="reference external" href="https://github.com/EMPD2/
 
 <dl class="function">
 <dt id="empd_admin.repo_test.full_repo_test">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">full_repo_test</code><span class="sig-paren">(</span><em>local_repo</em>, <em>pr_id</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.full_repo_test" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">full_repo_test</code><span class="sig-paren">(</span><em class="sig-param">local_repo</em>, <em class="sig-param">pr_id</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.full_repo_test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run all tests and test the postgres import of a pull request</p>
 <p>This function is called by the webapp for new pull requests or after a
 PR has been edited.</p>
@@ -295,7 +295,7 @@ into</p></li>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.get_meta_file">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">get_meta_file</code><span class="sig-paren">(</span><em>dirname='.'</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.get_meta_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">get_meta_file</code><span class="sig-paren">(</span><em class="sig-param">dirname='.'</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.get_meta_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the meta file of an EMPD-data repository</p>
 <p>This function either returns the path to the meta data of a new
 contribution or the <code class="docutils literal notranslate"><span class="pre">meta.tsv</span></code> file in the given <cite>dirname</cite>.</p>
@@ -336,7 +336,7 @@ and return this file. Otherwise, we return the <code class="docutils literal not
 
 <dl class="function">
 <dt id="empd_admin.repo_test.import_database">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">import_database</code><span class="sig-paren">(</span><em>meta</em>, <em>dbname=None</em>, <em>commit=False</em>, <em>populate=None</em>, <em>rebuild_fixed=[]</em>, <em>sql_dump=None</em>, <em>dump_tables=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.import_database" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">import_database</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">dbname=None</em>, <em class="sig-param">commit=False</em>, <em class="sig-param">populate=None</em>, <em class="sig-param">rebuild_fixed=[]</em>, <em class="sig-param">sql_dump=None</em>, <em class="sig-param">dump_tables=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.import_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import the EMPD meta data into a postgres database</p>
 <p>This function import the given EMPD <cite>meta</cite> data into a relational postgres
 database and, optionally, dumps the database to the disk. The database can
@@ -390,7 +390,7 @@ a temporary postgres database:</p>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.pr_info">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">pr_info</code><span class="sig-paren">(</span><em>local_repo</em>, <em>pr_owner=None</em>, <em>pr_repo=None</em>, <em>pr_branch=None</em>, <em>pr_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.pr_info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">pr_info</code><span class="sig-paren">(</span><em class="sig-param">local_repo</em>, <em class="sig-param">pr_owner=None</em>, <em class="sig-param">pr_repo=None</em>, <em class="sig-param">pr_branch=None</em>, <em class="sig-param">pr_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.pr_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide information on a pull request and the intro message</p>
 <p>This function is used by the webapp to welcome new contributions</p>
 <dl class="field-list simple">
@@ -425,7 +425,7 @@ a temporary postgres database:</p>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.remember_cwd">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">remember_cwd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.remember_cwd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">remember_cwd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.remember_cwd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Context manager to switch back to the current working directory</p>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">remember_cwd</span><span class="p">():</span>
@@ -438,7 +438,7 @@ a temporary postgres database:</p>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.remember_env">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">remember_env</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.remember_env" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">remember_env</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.remember_env" title="Permalink to this definition">¶</a></dt>
 <dd><p>Context manager to remember an environment variable</p>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;TEST&#39;</span><span class="p">))</span>       <span class="c1"># old value</span>
@@ -452,7 +452,7 @@ a temporary postgres database:</p>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.run_test">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">run_test</code><span class="sig-paren">(</span><em>meta, pytest_args=[], tests=['']</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.run_test" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">run_test</code><span class="sig-paren">(</span><em class="sig-param">meta, pytest_args=[], tests=['']</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.run_test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the EMPD-data repository tests for the given meta data</p>
 <p>This function runs the EMPD tests for the given <cite>meta</cite> data from a local
 EMPD-data repository. Tests are ran in a separate process.</p>
@@ -471,7 +471,7 @@ command</p></li>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.set_pr_status">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">set_pr_status</code><span class="sig-paren">(</span><em>owner</em>, <em>repo_name</em>, <em>test_info</em>, <em>target_url=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.set_pr_status" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">set_pr_status</code><span class="sig-paren">(</span><em class="sig-param">owner</em>, <em class="sig-param">repo_name</em>, <em class="sig-param">test_info</em>, <em class="sig-param">target_url=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.set_pr_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the status of a pull request</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -502,7 +502,7 @@ command</p></li>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.temporary_database">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">temporary_database</code><span class="sig-paren">(</span><em>dbname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.temporary_database" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">temporary_database</code><span class="sig-paren">(</span><em class="sig-param">dbname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.temporary_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a temporary database that shall be removed afterwards</p>
 <p>Use this as a context manager:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span> <span class="k">as</span> <span class="nn">psql</span>
@@ -543,31 +543,31 @@ environment variable. I.e.:</p>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.test_get_meta_file">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">test_get_meta_file</code><span class="sig-paren">(</span><em>local_repo</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.test_get_meta_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">test_get_meta_file</code><span class="sig-paren">(</span><em class="sig-param">local_repo</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.test_get_meta_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test function for <a class="reference internal" href="#empd_admin.repo_test.get_meta_file" title="empd_admin.repo_test.get_meta_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_meta_file()</span></code></a></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.test_import_database">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">test_import_database</code><span class="sig-paren">(</span><em>local_repo</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.test_import_database" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">test_import_database</code><span class="sig-paren">(</span><em class="sig-param">local_repo</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.test_import_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test function for the <a class="reference internal" href="#empd_admin.repo_test.import_database" title="empd_admin.repo_test.import_database"><code class="xref py py-func docutils literal notranslate"><span class="pre">import_database()</span></code></a></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.test_pr_info">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">test_pr_info</code><span class="sig-paren">(</span><em>pr_id</em>, <em>tmpdir</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.test_pr_info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">test_pr_info</code><span class="sig-paren">(</span><em class="sig-param">pr_id</em>, <em class="sig-param">tmpdir</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.test_pr_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test function for the <a class="reference internal" href="#empd_admin.repo_test.pr_info" title="empd_admin.repo_test.pr_info"><code class="xref py py-func docutils literal notranslate"><span class="pre">pr_info()</span></code></a></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.test_repo_test">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">test_repo_test</code><span class="sig-paren">(</span><em>pr_id</em>, <em>tmpdir</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.test_repo_test" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">test_repo_test</code><span class="sig-paren">(</span><em class="sig-param">pr_id</em>, <em class="sig-param">tmpdir</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.test_repo_test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test function for <a class="reference internal" href="#empd_admin.repo_test.full_repo_test" title="empd_admin.repo_test.full_repo_test"><code class="xref py py-func docutils literal notranslate"><span class="pre">full_repo_test()</span></code></a></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.repo_test.wait_for_pg_server">
-<code class="descclassname">empd_admin.repo_test.</code><code class="descname">wait_for_pg_server</code><span class="sig-paren">(</span><em>timeout=120</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.wait_for_pg_server" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.repo_test.</code><code class="sig-name descname">wait_for_pg_server</code><span class="sig-paren">(</span><em class="sig-param">timeout=120</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.repo_test.wait_for_pg_server" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for the postgres server to be started</p>
 <p>This utility function is used for the webapp to make sure that the
 postgres server, that starts in a separate process, is running. This is
@@ -589,7 +589,7 @@ based on the lockfile at <code class="docutils literal notranslate"><span class=
     </p>
     <p>
         &copy; Copyright 2019, Philipp S. Sommer.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
 </footer>

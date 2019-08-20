@@ -2,6 +2,6 @@ empd\_admin.diff module
 =======================
 
 .. automodule:: empd_admin.diff
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

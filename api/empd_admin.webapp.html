@@ -120,7 +120,7 @@
   <div class="section" id="module-empd_admin.webapp">
 <span id="empd-admin-webapp-module"></span><h1>empd_admin.webapp module<a class="headerlink" href="#module-empd_admin.webapp" title="Permalink to this headline">¶</a></h1>
 <p><strong>Classes</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -150,7 +150,7 @@
 </tbody>
 </table>
 <p><strong>Functions</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -175,10 +175,10 @@
 </table>
 <dl class="class">
 <dt id="empd_admin.webapp.CommandHookHandler">
-<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">CommandHookHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.CommandHookHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">CommandHookHandler</code><span class="sig-paren">(</span><em class="sig-param">application: tornado.web.Application</em>, <em class="sig-param">request: tornado.httputil.HTTPServerRequest</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.CommandHookHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
 <p><strong>Methods</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -191,17 +191,17 @@
 </table>
 <dl class="method">
 <dt id="empd_admin.webapp.CommandHookHandler.post">
-<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.CommandHookHandler.post" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.CommandHookHandler.post" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="empd_admin.webapp.MainHandler">
-<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">MainHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.MainHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">MainHandler</code><span class="sig-paren">(</span><em class="sig-param">application: tornado.web.Application</em>, <em class="sig-param">request: tornado.httputil.HTTPServerRequest</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.MainHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
 <p><strong>Methods</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -217,12 +217,12 @@
 </table>
 <dl class="method">
 <dt id="empd_admin.webapp.MainHandler.get">
-<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.MainHandler.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.MainHandler.get" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="empd_admin.webapp.MainHandler.set_default_headers">
-<code class="descname">set_default_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.MainHandler.set_default_headers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_default_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.MainHandler.set_default_headers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override this to set HTTP headers at the beginning of the request.</p>
 <p>For example, this is the place to set a custom <code class="docutils literal notranslate"><span class="pre">Server</span></code> header.
 Note that setting such headers in the normal flow of request
@@ -234,10 +234,10 @@ during error handling.</p>
 
 <dl class="class">
 <dt id="empd_admin.webapp.PushedMasterHookHandler">
-<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">PushedMasterHookHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.PushedMasterHookHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">PushedMasterHookHandler</code><span class="sig-paren">(</span><em class="sig-param">application: tornado.web.Application</em>, <em class="sig-param">request: tornado.httputil.HTTPServerRequest</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.PushedMasterHookHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
 <p><strong>Methods</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -250,17 +250,17 @@ during error handling.</p>
 </table>
 <dl class="method">
 <dt id="empd_admin.webapp.PushedMasterHookHandler.post">
-<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.PushedMasterHookHandler.post" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.PushedMasterHookHandler.post" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="empd_admin.webapp.TestHookHandler">
-<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">TestHookHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.TestHookHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">TestHookHandler</code><span class="sig-paren">(</span><em class="sig-param">application: tornado.web.Application</em>, <em class="sig-param">request: tornado.httputil.HTTPServerRequest</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.TestHookHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
 <p><strong>Methods</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -273,18 +273,18 @@ during error handling.</p>
 </table>
 <dl class="method">
 <dt id="empd_admin.webapp.TestHookHandler.post">
-<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.TestHookHandler.post" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.TestHookHandler.post" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="empd_admin.webapp.VerificationHandler">
-<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">VerificationHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.VerificationHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">VerificationHandler</code><span class="sig-paren">(</span><em class="sig-param">application: tornado.web.Application</em>, <em class="sig-param">request: tornado.httputil.HTTPServerRequest</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.VerificationHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
 <p>Handler to verify requests through tokens</p>
 <p><strong>Methods</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -297,17 +297,17 @@ during error handling.</p>
 </table>
 <dl class="method">
 <dt id="empd_admin.webapp.VerificationHandler.get">
-<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.VerificationHandler.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.VerificationHandler.get" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="empd_admin.webapp.ViewerHookHandler">
-<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">ViewerHookHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerHookHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">ViewerHookHandler</code><span class="sig-paren">(</span><em class="sig-param">application: tornado.web.Application</em>, <em class="sig-param">request: tornado.httputil.HTTPServerRequest</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerHookHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
 <p><strong>Methods</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -323,12 +323,12 @@ during error handling.</p>
 </table>
 <dl class="method">
 <dt id="empd_admin.webapp.ViewerHookHandler.post">
-<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerHookHandler.post" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerHookHandler.post" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="empd_admin.webapp.ViewerHookHandler.set_default_headers">
-<code class="descname">set_default_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerHookHandler.set_default_headers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_default_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerHookHandler.set_default_headers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override this to set HTTP headers at the beginning of the request.</p>
 <p>For example, this is the place to set a custom <code class="docutils literal notranslate"><span class="pre">Server</span></code> header.
 Note that setting such headers in the normal flow of request
@@ -340,11 +340,11 @@ during error handling.</p>
 
 <dl class="class">
 <dt id="empd_admin.webapp.ViewerIssuesHandler">
-<em class="property">class </em><code class="descclassname">empd_admin.webapp.</code><code class="descname">ViewerIssuesHandler</code><span class="sig-paren">(</span><em>application: tornado.web.Application</em>, <em>request: tornado.httputil.HTTPServerRequest</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerIssuesHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">ViewerIssuesHandler</code><span class="sig-paren">(</span><em class="sig-param">application: tornado.web.Application</em>, <em class="sig-param">request: tornado.httputil.HTTPServerRequest</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerIssuesHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tornado.web.RequestHandler</span></code></p>
 <p>A handler for issues submitted through the EMPD viewer</p>
 <p><strong>Methods</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -360,12 +360,12 @@ during error handling.</p>
 </table>
 <dl class="method">
 <dt id="empd_admin.webapp.ViewerIssuesHandler.post">
-<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerIssuesHandler.post" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerIssuesHandler.post" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="empd_admin.webapp.ViewerIssuesHandler.set_default_headers">
-<code class="descname">set_default_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerIssuesHandler.set_default_headers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_default_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.ViewerIssuesHandler.set_default_headers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override this to set HTTP headers at the beginning of the request.</p>
 <p>For example, this is the place to set a custom <code class="docutils literal notranslate"><span class="pre">Server</span></code> header.
 Note that setting such headers in the normal flow of request
@@ -377,27 +377,27 @@ during error handling.</p>
 
 <dl class="function">
 <dt id="empd_admin.webapp.create_webapp">
-<code class="descclassname">empd_admin.webapp.</code><code class="descname">create_webapp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.create_webapp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">create_webapp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.create_webapp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.webapp.main">
-<code class="descclassname">empd_admin.webapp.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.webapp.send_verfication_mail">
-<code class="descclassname">empd_admin.webapp.</code><code class="descname">send_verfication_mail</code><span class="sig-paren">(</span><em>token</em>, <em>what</em>, <em>subject</em>, <em>msg</em>, <em>recipient</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.send_verfication_mail" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">send_verfication_mail</code><span class="sig-paren">(</span><em class="sig-param">token</em>, <em class="sig-param">what</em>, <em class="sig-param">subject</em>, <em class="sig-param">msg</em>, <em class="sig-param">recipient</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.send_verfication_mail" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.webapp.verify_recaptcha">
-<code class="descclassname">empd_admin.webapp.</code><code class="descname">verify_recaptcha</code><span class="sig-paren">(</span><em>recaptcha_token</em>, <em>action</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.verify_recaptcha" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">verify_recaptcha</code><span class="sig-paren">(</span><em class="sig-param">recaptcha_token</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.verify_recaptcha" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.webapp.verify_request">
-<code class="descclassname">empd_admin.webapp.</code><code class="descname">verify_request</code><span class="sig-paren">(</span><em>signature</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.verify_request" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.webapp.</code><code class="sig-name descname">verify_request</code><span class="sig-paren">(</span><em class="sig-param">signature</em>, <em class="sig-param">body</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.webapp.verify_request" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -415,7 +415,7 @@ during error handling.</p>
     </p>
     <p>
         &copy; Copyright 2019, Philipp S. Sommer.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
 </footer>

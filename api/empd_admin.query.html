@@ -125,7 +125,7 @@
   <div class="section" id="module-empd_admin.query">
 <span id="empd-admin-query-module"></span><h1>empd_admin.query module<a class="headerlink" href="#module-empd_admin.query" title="Permalink to this headline">¶</a></h1>
 <p><strong>Functions</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -141,7 +141,7 @@
 </table>
 <dl class="function">
 <dt id="empd_admin.query.query_meta">
-<code class="descclassname">empd_admin.query.</code><code class="descname">query_meta</code><span class="sig-paren">(</span><em>meta</em>, <em>query</em>, <em>columns='notnull'</em>, <em>count=False</em>, <em>output=None</em>, <em>commit=False</em>, <em>local_repo=None</em>, <em>distinct=False</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.query.query_meta" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.query.</code><code class="sig-name descname">query_meta</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">query</em>, <em class="sig-param">columns='notnull'</em>, <em class="sig-param">count=False</em>, <em class="sig-param">output=None</em>, <em class="sig-param">commit=False</em>, <em class="sig-param">local_repo=None</em>, <em class="sig-param">distinct=False</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.query.query_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the meta data of a data contribution</p>
 <p>This function uses the <a class="reference internal" href="#empd_admin.query.query_samples" title="empd_admin.query.query_samples"><code class="xref py py-func docutils literal notranslate"><span class="pre">query_samples()</span></code></a> function to return a subset
 of the EMPD metadata. The performed query is such as:</p>
@@ -183,7 +183,7 @@ None</p></li>
 
 <dl class="function">
 <dt id="empd_admin.query.query_samples">
-<code class="descclassname">empd_admin.query.</code><code class="descname">query_samples</code><span class="sig-paren">(</span><em>meta_df</em>, <em>query</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.query.query_samples" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.query.</code><code class="sig-name descname">query_samples</code><span class="sig-paren">(</span><em class="sig-param">meta_df</em>, <em class="sig-param">query</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.query.query_samples" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the samples based on their metadata</p>
 <p>This function saves the given <cite>meta_df</cite> to a sqlite database and queries
 it based on the given filter. The performed query is such as:</p>
@@ -193,7 +193,7 @@ it based on the given filter. The performed query is such as:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>meta_df</strong> (<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.2)"><em>pandas.DataFrame</em></a>) – The EMPD meta data (see <a class="reference internal" href="empd_admin.common.html#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">empd_admin.common.read_empd_meta()</span></code></a>)</p></li>
+<li><p><strong>meta_df</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.0)"><em>pandas.DataFrame</em></a>) – The EMPD meta data (see <a class="reference internal" href="empd_admin.common.html#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">empd_admin.common.read_empd_meta()</span></code></a>)</p></li>
 <li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The WHERE clause of the SQL query</p></li>
 </ul>
 </dd>
@@ -221,7 +221,7 @@ it based on the given filter. The performed query is such as:</p>
     </p>
     <p>
         &copy; Copyright 2019, Philipp S. Sommer.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
 </footer>

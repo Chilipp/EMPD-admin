@@ -2,9 +2,9 @@ Python API Reference
 ====================
 
 .. automodule:: empd_admin
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Submodules
 ----------
@@ -20,4 +20,3 @@ Submodules
    empd_admin.repo_test
    empd_admin.viewer_responses
    empd_admin.webapp
-
