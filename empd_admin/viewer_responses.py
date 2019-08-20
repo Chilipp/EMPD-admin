@@ -279,6 +279,9 @@ def handle_verified_issue(token):
             body = json.loads(f.read(), strict=False)
         title = body['issue_title']
         msg = body['issue_msg']
+        repo = 'EMPD-data' if body.get('error-source', 'data') == 'data' else \
+            'EMPD-viewer'
+        repo = 'EMPD2/' + repo
         submitter = (body['submitter_firstname'] + ' ' +
                      body['submitter_lastname'])
 
@@ -288,7 +291,7 @@ def handle_verified_issue(token):
         msg += ("\n\n"
                 "<sub>This issue has been submitted via EMPD2.github.io by "
                 f"{submitter}</sub>")
-        issue = submit_issue(title, msg)
+        issue = submit_issue(title, msg, repo)
         info['url'] = issue.html_url
         info['num'] = issue.number
 
@@ -301,7 +304,7 @@ def handle_verified_issue(token):
             f"<a href={issue.html_url}>#{issue.number}</a>.")
 
 
-def submit_issue(title, msg):
+def submit_issue(title, msg, repo='EMPD2/EMPD-data'):
     """Submit an issue to the EMPD2/EMPD-data repository
 
     Parameters
@@ -317,6 +320,6 @@ def submit_issue(title, msg):
         The newly created issue"""
     gh = github.Github(os.environ['GH_TOKEN'])
 
-    repo = gh.get_repo('EMPD2/EMPD-data')
+    repo = gh.get_repo(repo)
     issue = repo.create_issue(title, msg)
     return issue
