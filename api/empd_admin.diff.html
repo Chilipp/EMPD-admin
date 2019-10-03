@@ -134,7 +134,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.diff.compute_diff" title="empd_admin.diff.compute_diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_diff</span></code></a>(left, right[, how, on, …])</p></td>
 <td><p>Compute the difference between two EMPD meta dataframes</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.diff.diff" title="empd_admin.diff.diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diff</span></code></a>(meta[, left, right, output, commit])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.diff.diff" title="empd_admin.diff.diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diff</span></code></a>(meta[, left, right, output, commit, …])</p></td>
 <td><p>Compute the diff between two EMPD metadata files</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.diff.test_diff" title="empd_admin.diff.test_diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_diff</span></code></a>()</p></td>
@@ -149,9 +149,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>left</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.0)"><em>pandas.DataFrame</em></a>) – The first EMPD-data metadata (see
+<li><p><strong>left</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.1)"><em>pandas.DataFrame</em></a>) – The first EMPD-data metadata (see
 <a class="reference internal" href="empd_admin.common.html#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_empd_meta()</span></code></a>)</p></li>
-<li><p><strong>right</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.0)"><em>pandas.DataFrame</em></a>) – The second EMPD-data metadata(see
+<li><p><strong>right</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.1)"><em>pandas.DataFrame</em></a>) – The second EMPD-data metadata(see
 <a class="reference internal" href="empd_admin.common.html#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_empd_meta()</span></code></a>).</p></li>
 <li><p><strong>how</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – <p>How to merge <cite>right</cite> into <cite>left</cite>. Possiblities are</p>
 <dl class="simple">
@@ -206,14 +206,14 @@ The index is the sample name, the colums are determined by the
 <cite>columns</cite> parameter</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.0)">pandas.DataFrame</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.1)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="empd_admin.diff.diff">
-<code class="sig-prename descclassname">empd_admin.diff.</code><code class="sig-name descname">diff</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">left=None</em>, <em class="sig-param">right=None</em>, <em class="sig-param">output=None</em>, <em class="sig-param">commit=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.diff.diff" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.diff.</code><code class="sig-name descname">diff</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">left=None</em>, <em class="sig-param">right=None</em>, <em class="sig-param">output=None</em>, <em class="sig-param">commit=False</em>, <em class="sig-param">maxdiff=200</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.diff.diff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the diff between two EMPD metadata files</p>
 <p>This function computes the difference between two EMPD-data files using the
 <a class="reference internal" href="#empd_admin.diff.compute_diff" title="empd_admin.diff.compute_diff"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_diff()</span></code></a> function. It takes the meta data of an EMPD-data
@@ -236,6 +236,7 @@ is used.</p></li>
 the <code class="docutils literal notranslate"><span class="pre">'queries'</span></code> directory, relative to <cite>meta</cite>. If not set but
 <cite>commit</cite> is True, it will be saved to <code class="docutils literal notranslate"><span class="pre">'queries/diff.tsv'</span></code>.</p></li>
 <li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the added <cite>output</cite> to the git repository of <cite>meta</cite></p></li>
+<li><p><strong>maxdiff</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The maximum number of lines for the diff</p></li>
 <li><p><strong>*args</strong><strong>,</strong><strong>**kwargs</strong> – Any other parameter for the <a class="reference internal" href="#empd_admin.diff.compute_diff" title="empd_admin.diff.compute_diff"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_diff()</span></code></a> function</p></li>
 </ul>
 </dd>

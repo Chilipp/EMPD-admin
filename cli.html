@@ -648,7 +648,7 @@ also be not accepted anymore for the sample <code class="docutils literal notran
 <p>Compare two EMPD meta files</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">empd</span><span class="o">-</span><span class="n">admin</span> <span class="n">diff</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">how</span> <span class="p">{</span><span class="n">inner</span><span class="p">,</span><span class="n">outer</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">right</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">on</span> <span class="n">ON</span> <span class="p">[</span><span class="n">ON</span> <span class="o">...</span><span class="p">]]</span>
                 <span class="p">[</span><span class="o">-</span><span class="n">atol</span> <span class="n">ATOL</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">e</span> <span class="n">EXCLUDE</span> <span class="p">[</span><span class="n">EXCLUDE</span> <span class="o">...</span><span class="p">]]</span>
-                <span class="p">[</span><span class="o">-</span><span class="n">col</span> <span class="p">[</span><span class="n">COLUMN</span> <span class="p">[</span><span class="n">COLUMN</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span>
+                <span class="p">[</span><span class="o">-</span><span class="n">col</span> <span class="p">[</span><span class="n">COLUMN</span> <span class="p">[</span><span class="n">COLUMN</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="nb">max</span> <span class="n">MAXDIFF</span><span class="p">]</span>
                 <span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="p">[</span><span class="n">right</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -692,6 +692,10 @@ also be not accepted anymore for the sample <code class="docutils literal notran
 </dd>
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Save the difference in the <cite>queries</cite> directory. If not set but <cite>–commit</cite> is set, then it will be saved as <cite>queries/diff.tsv</cite>.</p>
+</dd>
+<dt><kbd>-max, --maxdiff</kbd></dt>
+<dd><p>The maximum number of lines to print to stdout. Default: 200</p>
+<p>Default: 200</p>
 </dd>
 </dl>
 </div>
