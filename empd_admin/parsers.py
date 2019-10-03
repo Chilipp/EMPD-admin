@@ -430,6 +430,12 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
               "`--commit` is set, then it will be saved as "
               "`queries/diff.tsv`."))
 
+    if not pr_owner:
+        diff_parser.add_argument(
+            '-max', '--maxdiff', default=200, type=int,
+            help=("The maximum number of lines to print to stdout. "
+                  "Default: %(default)s"))
+
     merge_meta_parser = subparsers.add_parser(
         'merge-meta', help="Merge two metafiles", add_help=add_help)
 

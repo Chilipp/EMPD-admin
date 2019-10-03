@@ -21,8 +21,8 @@ url_regex = regex = re.compile(
     r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 
-def diff(meta, left=None, right=None, output=None, commit=False, *args,
-         **kwargs):
+def diff(meta, left=None, right=None, output=None, commit=False,
+         maxdiff=200, *args, **kwargs):
     """Compute the diff between two EMPD metadata files
 
     This function computes the difference between two EMPD-data files using the
@@ -51,6 +51,8 @@ def diff(meta, left=None, right=None, output=None, commit=False, *args,
         `commit` is True, it will be saved to ``'queries/diff.tsv'``.
     commit: bool
         If True, commit the added `output` to the git repository of `meta`
+    maxdiff: int
+        The maximum number of lines for the diff
     ``*args,**kwargs``
         Any other parameter for the :func:`compute_diff` function
 
@@ -137,9 +139,9 @@ def diff(meta, left=None, right=None, output=None, commit=False, *args,
         diff], ignore_index=True)
 
     ret = f'<details><summary>{left}..{right}</summary>\n\n' + textwrap.indent(
-        dump_empd_meta(diff.head(200), sep='|'),
+        dump_empd_meta(diff.head(maxdiff), sep='|'),
         '| ')
-    ret += '\n\nDisplaying %i of %i rows' % (min(len(diff) - 1, 200),
+    ret += '\n\nDisplaying %i of %i rows' % (min(len(diff) - 1, maxdiff),
                                              len(diff) - 1)
 
     return output, ret
@@ -211,6 +213,14 @@ def compute_diff(left, right, how='inner', on=None, exclude=[],
         The dataframe highlighting the difference between `left` and `right`.
         The index is the sample name, the colums are determined by the
         `columns` parameter"""
+
+    def is_iterable(l):
+        try:
+            iter(l)
+        except (TypeError, ValueError):
+            return False
+        return True
+
     left = left.copy()
     right = right.copy()
 
@@ -222,6 +232,7 @@ def compute_diff(left, right, how='inner', on=None, exclude=[],
         on = [col for col in left.columns if col in right.columns]
     on = [col for col in on if col not in exclude]
     changed = []
+
     merged['diff'] = ''
     valid_left = merged.left.notnull()
     valid_right = merged.right.notnull()
@@ -233,10 +244,14 @@ def compute_diff(left, right, how='inner', on=None, exclude=[],
             diff = (merged[col].notnull() & merged[col + '_r'].notnull() &
                     (~np.isclose(merged[col], merged[col + '_r'], atol=atol)))
         elif col in ['Temperature', 'Precipitation']:
-            s1 = np.array(merged[col].str.split(',').apply(np.array).tolist(),
+            s1 = np.array(merged[col].str.split(',').apply(np.array).apply(
+                    lambda l: ([np.nan] * 17 if not is_iterable(l)
+                               else l)).tolist(),
                           dtype=float)
             s2 = np.array(
-                merged[col + '_r'].str.split(',').apply(np.array).tolist(),
+                merged[col + '_r'].str.split(',').apply(np.array).apply(
+                    lambda l: ([np.nan] * 17 if not is_iterable(l)
+                               else l)).tolist(),
                 dtype=float)
             diff = ((~np.isnan(s1)) & (~np.isnan(s1)) &
                     (~np.isclose(s1, s2, atol=atol))).any(axis=1)
