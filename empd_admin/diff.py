@@ -236,30 +236,36 @@ def compute_diff(left, right, how='inner', on=None, exclude=[],
     merged['diff'] = ''
     valid_left = merged.left.notnull()
     valid_right = merged.right.notnull()
-    merged.loc[~valid_left, 'diff'] += 'missing in right,'
-    merged.loc[~valid_right, 'diff'] += 'missing in left,'
+    merged.loc[~valid_left, 'diff'] += 'missing in left,'
+    merged.loc[~valid_right, 'diff'] += 'missing in right,'
 
     for col in on:
+        lcol = merged[col]
+        rcol = merged[col + '_r']
         if col in NUMERIC_COLS:
-            diff = (merged[col].notnull() & merged[col + '_r'].notnull() &
-                    (~np.isclose(merged[col], merged[col + '_r'], atol=atol)))
+            lcol = lcol.replace('', 'nan').astype(float)
+            rcol = rcol.replace('', 'nan').astype(float)
+            diff = (lcol.notnull() & rcol.notnull() &
+                    (~np.isclose(lcol, rcol, atol=atol)))
         elif col in ['Temperature', 'Precipitation']:
-            s1 = np.array(merged[col].str.split(',').apply(np.array).apply(
+            s1 = np.array(lcol.str.split(',').apply(np.array).apply(
                     lambda l: ([np.nan] * 17 if not is_iterable(l)
                                else l)).tolist(),
                           dtype=float)
             s2 = np.array(
-                merged[col + '_r'].str.split(',').apply(np.array).apply(
+                rcol.str.split(',').apply(np.array).apply(
                     lambda l: ([np.nan] * 17 if not is_iterable(l)
                                else l)).tolist(),
                 dtype=float)
             diff = ((~np.isnan(s1)) & (~np.isnan(s1)) &
                     (~np.isclose(s1, s2, atol=atol))).any(axis=1)
         else:
-            diff = (merged[col].notnull() & merged[col + '_r'].notnull() &
-                    (merged[col] != merged[col + '_r']))
-        diff |= merged[col].isnull() & merged[col + '_r'].notnull()
-        diff |= merged[col].notnull() & merged[col + '_r'].isnull()
+            if hasattr(merged[col], 'str'):
+                lcol = lcol.str.strip().str.replace('\n', ' ')
+                rcol = rcol.str.strip().str.replace('\n', ' ')
+            diff = (lcol.notnull() & rcol.notnull() & (lcol != rcol))
+        diff |= lcol.isnull() & rcol.notnull()
+        diff |= lcol.notnull() & rcol.isnull()
         diff &= valid_left & valid_right
         if diff.any():
             changed.append(col)
@@ -297,6 +303,7 @@ def compute_diff(left, right, how='inner', on=None, exclude=[],
     if 'right' in columns or 'rightdiff' in columns:
         ret = ret.rename(columns={
             col: col[:-2] for col in columns if col.endswith('_r')})
+
     return ret
 
 
