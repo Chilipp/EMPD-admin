@@ -112,7 +112,8 @@ def main(args=None, namespace=None):
     elif args.parser == 'rebuild':
         success, report, sql_dump = import_database(
             meta, dbname=args.database, commit=args.commit,
-            rebuild_fixed=args.tables)
+            rebuild_fixed=args.tables,
+            populate=osp.join(osp.dirname(meta), 'postgres', 'EMPD2.sql'))
         print(report)
         if not success:
             sys.exit(1)

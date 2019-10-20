@@ -774,7 +774,9 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                         elif ns.parser == 'rebuild':
                             success, msg, sql_dump = test.import_database(
                                 meta, commit=ns.commit,
-                                populate='postgres/EMPD2.sql',
+                                populate=osp.join(
+                                    osp.dirname(meta), 'postgres',
+                                    'EMPD2.sql'),
                                 rebuild_fixed=ns.tables)
                             if success:
                                 ret += "Postgres import succeded "
