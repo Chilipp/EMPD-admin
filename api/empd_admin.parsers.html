@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="empd_admin.query module" href="empd_admin.query.html" />
-    <link rel="prev" title="empd_admin.finish module" href="empd_admin.finish.html" />
+    <link rel="prev" title="empd_admin.generate_repo module" href="empd_admin.generate_repo.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -84,7 +84,7 @@
               
                 
   <li>
-    <a href="empd_admin.finish.html" title="Previous Chapter: empd_admin.finish module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; empd_admin.fi...</span>
+    <a href="empd_admin.generate_repo.html" title="Previous Chapter: empd_admin.generate_repo module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; empd_admin.ge...</span>
     </a>
   </li>
   <li>
@@ -173,37 +173,40 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_fix" title="empd_admin.parsers.test_fix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_fix</span></code></a>()</p></td>
 <td><p>Test function for running EMPD fixes</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_help" title="empd_admin.parsers.test_help"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_help</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_generate" title="empd_admin.parsers.test_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_generate</span></code></a>()</p></td>
+<td><p>Test function for <a class="reference internal" href="empd_admin.generate_repo.html#empd_admin.generate_repo.db2repo" title="empd_admin.generate_repo.db2repo"><code class="xref py py-func docutils literal notranslate"><span class="pre">empd_admin.generate_repo.db2repo()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_help" title="empd_admin.parsers.test_help"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_help</span></code></a>()</p></td>
 <td><p>Test function for printing help on the EMPD-admin</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_help_merge_meta" title="empd_admin.parsers.test_help_merge_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_help_merge_meta</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_help_merge_meta" title="empd_admin.parsers.test_help_merge_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_help_merge_meta</span></code></a>()</p></td>
 <td><p>Test function for printing help on a command</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_merge_meta" title="empd_admin.parsers.test_merge_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_merge_meta</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_merge_meta" title="empd_admin.parsers.test_merge_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_merge_meta</span></code></a>()</p></td>
 <td><p>Test function for <a class="reference internal" href="empd_admin.finish.html#empd_admin.finish.merge_meta" title="empd_admin.finish.merge_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge_meta()</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_no_command" title="empd_admin.parsers.test_no_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_no_command</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_no_command" title="empd_admin.parsers.test_no_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_no_command</span></code></a>()</p></td>
 <td><p>Test function &#64;EMPD-admin without arguments</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_query" title="empd_admin.parsers.test_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_query</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_query" title="empd_admin.parsers.test_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_query</span></code></a>()</p></td>
 <td><p>Test function for <code class="xref py py-func docutils literal notranslate"><span class="pre">query()</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_rebase" title="empd_admin.parsers.test_rebase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_rebase</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_rebase" title="empd_admin.parsers.test_rebase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_rebase</span></code></a>()</p></td>
 <td><p>Test function for <a class="reference internal" href="empd_admin.finish.html#empd_admin.finish.rebase_master" title="empd_admin.finish.rebase_master"><code class="xref py py-func docutils literal notranslate"><span class="pre">rebase_master()</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_rebuild" title="empd_admin.parsers.test_rebuild"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_rebuild</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_rebuild" title="empd_admin.parsers.test_rebuild"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_rebuild</span></code></a>()</p></td>
 <td><p>Test function for rebuilding fixed postgres tables</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_test" title="empd_admin.parsers.test_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_test</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_test" title="empd_admin.parsers.test_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_test</span></code></a>()</p></td>
 <td><p>Test function for running the EMPD tests</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_test_collect" title="empd_admin.parsers.test_test_collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_test_collect</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_test_collect" title="empd_admin.parsers.test_test_collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_test_collect</span></code></a>()</p></td>
 <td><p>Test function for collecting EMPD tests</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_unaccept" title="empd_admin.parsers.test_unaccept"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_unaccept</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_unaccept" title="empd_admin.parsers.test_unaccept"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_unaccept</span></code></a>()</p></td>
 <td><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.unaccept" title="empd_admin.accept.unaccept"><code class="xref py py-func docutils literal notranslate"><span class="pre">unaccept()</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.parsers.test_unaccept_query" title="empd_admin.parsers.test_unaccept_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_unaccept_query</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.parsers.test_unaccept_query" title="empd_admin.parsers.test_unaccept_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_unaccept_query</span></code></a>()</p></td>
 <td><p>Test function for <a class="reference internal" href="empd_admin.accept.html#empd_admin.accept.unaccept_query" title="empd_admin.accept.unaccept_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">unaccept_query()</span></code></a></p></td>
 </tr>
 </tbody>
@@ -330,6 +333,12 @@ should either exit or raise an exception.</p>
 <dt id="empd_admin.parsers.test_fix">
 <code class="sig-prename descclassname">empd_admin.parsers.</code><code class="sig-name descname">test_fix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_fix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test function for running EMPD fixes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.parsers.test_generate">
+<code class="sig-prename descclassname">empd_admin.parsers.</code><code class="sig-name descname">test_generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.parsers.test_generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test function for <a class="reference internal" href="empd_admin.generate_repo.html#empd_admin.generate_repo.db2repo" title="empd_admin.generate_repo.db2repo"><code class="xref py py-func docutils literal notranslate"><span class="pre">empd_admin.generate_repo.db2repo()</span></code></a></p>
 </dd></dl>
 
 <dl class="function">

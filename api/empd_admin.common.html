@@ -164,7 +164,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.common.lock_empd_master" title="empd_admin.common.lock_empd_master"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lock_empd_master</span></code></a>()</p></td>
 <td><p>Lock the data repository</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_empd_meta</span></code></a>([fname])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_empd_meta</span></code></a>([fname, addokexcept])</p></td>
 <td><p>Read an EMPD-data metadata file into a pandas DataFrame</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.common.wait_for_empd_master" title="empd_admin.common.wait_for_empd_master"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_for_empd_master</span></code></a>([timeout])</p></td>
@@ -190,7 +190,7 @@ and <a class="reference internal" href="#empd_admin.common.wait_for_empd_master"
 
 <dl class="data">
 <dt id="empd_admin.common.NUMERIC_COLS">
-<code class="sig-prename descclassname">empd_admin.common.</code><code class="sig-name descname">NUMERIC_COLS</code><em class="property"> = ['Latitude', 'Longitude', 'Elevation', 'AreaOfSite', 'AgeBP']</em><a class="headerlink" href="#empd_admin.common.NUMERIC_COLS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.common.</code><code class="sig-name descname">NUMERIC_COLS</code><em class="property"> = ['Latitude', 'Longitude', 'Elevation', 'AreaOfSite', 'AgeBP', 'count', 'percentage']</em><a class="headerlink" href="#empd_admin.common.NUMERIC_COLS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Columns in the EMPD-data metadata sheet that hold numeric values</p>
 </dd></dl>
 
@@ -203,7 +203,7 @@ formatting</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>meta</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.1)"><em>pandas.DataFrame</em></a>) – The dataframe holding the meta data (see <a class="reference internal" href="#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_empd_meta()</span></code></a>)</p></li>
+<li><p><strong>meta</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.2)"><em>pandas.DataFrame</em></a>) – The dataframe holding the meta data (see <a class="reference internal" href="#empd_admin.common.read_empd_meta" title="empd_admin.common.read_empd_meta"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_empd_meta()</span></code></a>)</p></li>
 <li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The filename where to save it (see <code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.DataFrame.to_csv()</span></code>)</p></li>
 <li><p><strong>**kwargs</strong> – Any other argument that is parsed to the
 <code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.DataFrame.to_csv()</span></code> function</p></li>
@@ -295,9 +295,9 @@ see the <a class="reference internal" href="#empd_admin.common.DATA_LOCKFILE" ti
 
 <dl class="function">
 <dt id="empd_admin.common.read_empd_meta">
-<code class="sig-prename descclassname">empd_admin.common.</code><code class="sig-name descname">read_empd_meta</code><span class="sig-paren">(</span><em class="sig-param">fname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.read_empd_meta" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">empd_admin.common.</code><code class="sig-name descname">read_empd_meta</code><span class="sig-paren">(</span><em class="sig-param">fname=None</em>, <em class="sig-param">addokexcept=True</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.common.read_empd_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read an EMPD-data metadata file into a pandas DataFrame</p>
-<p>This function is the same as <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html#pandas.read_csv" title="(in pandas v0.25.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.read_csv()</span></code></a> but it also ensures
+<p>This function is the same as <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html#pandas.read_csv" title="(in pandas v0.25.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.read_csv()</span></code></a> but it also ensures
 the correct dtype for the various columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -310,7 +310,7 @@ default to the meta data in the <a class="reference internal" href="#empd_admin.
 <cite>SampleName</cite> column in <cite>fname</cite>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.1)">pandas.DataFrame</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.2)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>

@@ -1,0 +1,7 @@
+empd\_admin.generate\_repo module
+=================================
+
+.. automodule:: empd_admin.generate_repo
+   :members:
+   :undoc-members:
+   :show-inheritance:

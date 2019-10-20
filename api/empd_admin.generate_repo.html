@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>empd_admin.generate_repo module &#8212; EMPD-admin 0.0.1.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="empd_admin.parsers module" href="empd_admin.parsers.html" />
+    <link rel="prev" title="empd_admin.finish module" href="empd_admin.finish.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          EMPD-admin</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://EMPD2.github.io">EMPD2.github.io</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pulls.html">EMPD-data pull requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">empd-admin Command Line Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="empd_admin.html">Python API Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">empd_admin.generate_repo module</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="empd_admin.finish.html" title="Previous Chapter: empd_admin.finish module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; empd_admin.fi...</span>
+    </a>
+  </li>
+  <li>
+    <a href="empd_admin.parsers.html" title="Next Chapter: empd_admin.parsers module"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">empd_admin.pa... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/api/empd_admin.generate_repo.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="module-empd_admin.generate_repo">
+<span id="empd-admin-generate-repo-module"></span><h1>empd_admin.generate_repo module<a class="headerlink" href="#module-empd_admin.generate_repo" title="Permalink to this headline">¶</a></h1>
+<p>Module to generate the EMPD-data repository from the postgres database</p>
+<p>This module defines the db2folder function that generates the EMPD-data
+repository out of the postgres database</p>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#empd_admin.generate_repo.db2repo" title="empd_admin.generate_repo.db2repo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">db2repo</span></code></a>(meta, postgres_dump[, commit, …])</p></td>
+<td><p>Generate the EMPD-data repository out of a <cite>postgres_dump</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#empd_admin.generate_repo.fill_repo" title="empd_admin.generate_repo.fill_repo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_repo</span></code></a>(meta, db_url[, root_db, dry_run, …])</p></td>
+<td><p>Fill the EMPD-data repo with the database in the given URL</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="empd_admin.generate_repo.db2repo">
+<code class="sig-prename descclassname">empd_admin.generate_repo.</code><code class="sig-name descname">db2repo</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">postgres_dump</em>, <em class="sig-param">commit=False</em>, <em class="sig-param">output=None</em>, <em class="sig-param">dry_run=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.generate_repo.db2repo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the EMPD-data repository out of a <cite>postgres_dump</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the local EMPD2 meta data file</p></li>
+<li><p><strong>postgres_dump</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path to the postgres file (relative to <cite>meta</cite>). This dump must
+define a <cite>metaViewer</cite> table that contains the new meta data</p></li>
+<li><p><strong>commit</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, commit the added files</p></li>
+<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – <p>The path where to save the new meta data. If this is None, the
+following cases are considered:</p>
+<ol class="arabic simple">
+<li><p><cite>meta</cite> is <code class="docutils literal notranslate"><span class="pre">'meta.tsv'</span></code>: <cite>output</cite> will be set to <code class="docutils literal notranslate"><span class="pre">'update.tsv'</span></code></p></li>
+<li><p><cite>meta</cite> is anything else: <cite>output</cite> will be set to <cite>meta</cite></p></li>
+</ol>
+</p></li>
+<li><p><strong>dry_run</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, do not create any file but only report what would have been
+saved</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The markdown formatted report</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="empd_admin.generate_repo.fill_repo">
+<code class="sig-prename descclassname">empd_admin.generate_repo.</code><code class="sig-name descname">fill_repo</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">db_url</em>, <em class="sig-param">root_db=None</em>, <em class="sig-param">dry_run=False</em>, <em class="sig-param">meta_data=True</em>, <em class="sig-param">count_data=True</em>, <em class="sig-param">keep=None</em>, <em class="sig-param">how='left'</em>, <em class="sig-param">on=None</em>, <em class="sig-param">exclude=[]</em>, <em class="sig-param">columns='left'</em>, <em class="sig-param">atol=0.001</em><span class="sig-paren">)</span><a class="headerlink" href="#empd_admin.generate_repo.fill_repo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill the EMPD-data repo with the database in the given URL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The path where to save the data</p></li>
+<li><p><strong>db_url</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The url where the postgres database can be accessed. Note that we
+expect this database to have a <code class="docutils literal notranslate"><span class="pre">'metaViewer'</span></code> table</p></li>
+<li><p><strong>root_db</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The url where the EMPD2 postgres database can be accessed. This
+parameter is only necessary where <code class="docutils literal notranslate"><span class="pre">how</span> <span class="pre">!=</span> <span class="pre">'left-only'</span></code></p></li>
+<li><p><strong>dry_run</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, do not create any file but only report what would have been
+saved</p></li>
+<li><p><strong>meta_data</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True (default), dump the meta data into <cite>meta</cite></p></li>
+<li><p><strong>count_data</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True (default), dump the pollen counts in the corresponding file
+of the sample</p></li>
+<li><p><strong>keep</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – Columns to keep from the <cite>root_df</cite></p></li>
+<li><p><strong>how</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – <p>How to merge the <cite>root</cite> meta data into the new one. Possiblities are</p>
+<dl class="simple">
+<dt>inner</dt><dd><p>use intersection of samples from both frames, similar to a SQL
+inner join; preserve the order of the left keys.</p>
+</dd>
+<dt>outer</dt><dd><p>use union of samples from both frames, similar to a SQL full outer
+join; sort keys lexicographically.</p>
+</dd>
+<dt>left (default)</dt><dd><p>use only samples from the new frame, similar to a SQL left outer
+join; preserve key order.</p>
+</dd>
+<dt>right</dt><dd><p>use only samples from right frame, similar to a SQL right outer
+join; preserve key order.</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>on</strong> (<em>list of str</em>) – The names of the columns to compute the diff on. If None, we use the
+intersection of columns between <cite>left</cite> and <cite>right.</cite></p></li>
+<li><p><strong>exclude</strong> (<em>list of str</em>) – Columns names that should be excluded in the diff.</p></li>
+<li><p><strong>columns</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>list of str</em>) – <p>The columns of the returned dataframe. It can either be a list of
+column names to use or one of</p>
+<dl class="simple">
+<dt>leftdiff (default)</dt><dd><p>To use the columns from <cite>left</cite> that differ from <cite>right</cite></p>
+</dd>
+<dt>left</dt><dd><p>To use all columns from <cite>left</cite></p>
+</dd>
+<dt>rightdiff</dt><dd><p>To use the columns from <cite>right</cite> that differ from <cite>left</cite></p>
+</dd>
+<dt>right</dt><dd><p>To use all columns from <cite>right</cite></p>
+</dd>
+<dt>inner</dt><dd><p>To use the intersection of <cite>left</cite> and <cite>right</cite></p>
+</dd>
+<dt>bothdiff</dt><dd><p>To use the differing columns from <cite>right</cite> and <cite>left</cite> (columns from
+<cite>right</cite> are suffixed with an <code class="docutils literal notranslate"><span class="pre">'_r'</span></code>)</p>
+</dd>
+<dt>both</dt><dd><p>To use all columns from <cite>left</cite> and <cite>right</cite> (columns from <cite>right</cite>
+are suffixed with an <code class="docutils literal notranslate"><span class="pre">'_r'</span></code>)</p>
+</dd>
+</dl>
+<p>In any of these cases (except if you specify the column names
+explicitly), the columns the data frame will include a <code class="docutils literal notranslate"><span class="pre">diff</span></code> column
+that contains for each sample the columns names of the differing cells.</p>
+</p></li>
+<li><p><strong>atol</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Absolute tolerance to use for numeric columns (see the
+<a class="reference internal" href="empd_admin.common.html#empd_admin.common.NUMERIC_COLS" title="empd_admin.common.NUMERIC_COLS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">empd_admin.common.NUMERIC_COLS</span></code></a>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – The markdown formatted report</p></li>
+<li><p><em>list</em> – The filenames that have changed (or would have been changed, if
+<cite>dry_run</cite> is True)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Philipp S. Sommer.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

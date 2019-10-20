@@ -15,6 +15,7 @@ Submodules
    empd_admin.common
    empd_admin.diff
    empd_admin.finish
+   empd_admin.generate_repo
    empd_admin.parsers
    empd_admin.query
    empd_admin.repo_test
