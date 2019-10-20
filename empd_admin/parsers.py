@@ -15,6 +15,7 @@ from empd_admin.finish import (
 import empd_admin.accept as accept
 from empd_admin.query import query_meta
 from empd_admin.diff import diff
+from empd_admin.generate_repo import db2repo
 
 
 parser_info = dict(exited=False, errored=False, exit_message='',
@@ -386,43 +387,80 @@ def setup_subparsers(parser, pr_owner=None, pr_repo=None, pr_branch=None,
               "repository will be used. If that is the same as `left`, we use "
               "the meta.tsv of the repository or " + empd_url))
 
-    diff_parser.add_argument(
-        '-how', choices=['inner', 'outer', 'left', 'right'], default='inner',
-        help=("Specify which samples to test. `inner` means the intersection "
-              "of `left` and `right`, `outer` is the outer product of `left` "
-              "and `right`, and so on. Default: %(default)s."))
+    gen_repo_parser = subparsers.add_parser(
+        'generate', help="Generate the EMPD data out of a postgres dump",
+        add_help=add_help)
 
-    diff_parser.add_argument(
-        '-on', nargs='+',
-        help=("The columns to use for computing the change. They have to be "
-              "in `left` and `right`. If `None`, all columns will be used."))
+    gen_repo_parser.add_argument(
+        'postgres_dump',
+        help="The name of the postgres dump, relative to the `postgres` folder"
+        )
 
-    diff_parser.add_argument(
-        '-atol', type=float, default=1e-3,
-        help=("Absolute tolerance to use for numeric columns. "
-              "Default: %(default)s"))
+    gen_repo_parser.add_argument(
+        '-o', '--output', default=None,
+        help=("Save the metadata to the given file. If not set, the meta data "
+              "file of the repository will be used."))
 
-    diff_parser.add_argument(
-        '-e', '--exclude', nargs='+', default=[],
-        help=("The columns to exclude for computing the change. They will be "
-              "removed from the columns set by the `on` parameter."))
+    gen_repo_parser.add_argument(
+        '-d', '--dry-run', action='store_true',
+        help="Perform a dry run and do not save anything to disk")
 
-    diff_parser.add_argument(
-        '-col', '--columns', nargs='*', default=['leftdiff'], metavar='COLUMN',
-        help=("The columns for the output. Can be `leftdiff`, to use the "
-              "differing columns from `left`, `left` to use all columns from "
-              "`left`, `rightdiff` to use differing columns from `right, "
-              "`right` to use all columns from `right`, `inner` to use the "
-              "intersection of `left` and `right`, nothing to not display any "
-              "columns, or a list of columns to display. Alternatively it cah "
-              "be `both` to use the columns from `left` and `right`, or "
-              "`bothdiff`, to use the changed columns from `left` and `right`."
-              " The columns from `right` will then be suffixed with an `_r`. "
-              "Default: %(default)s."
-              ))
+    gen_repo_parser.add_argument(
+        '--no-meta', action='store_false', dest='meta_data',
+        help="If set, do not modify the meta data")
 
-    diff_parser.add_argument(
-        '-c', '--commit', help=commit_help, action='store_true')
+    gen_repo_parser.add_argument(
+        '--no-counts', action='store_false', dest='count_data',
+        help="If set, do not modify the pollen data files")
+
+    gen_repo_parser.add_argument(
+        '-k', '--keep', nargs='+', metavar='COLUMN',
+        help="Keep the specified columns from meta.tsv")
+
+    for subparser in [diff_parser, gen_repo_parser]:
+
+        subparser.add_argument(
+            '-how', choices=['inner', 'outer', 'left', 'right'],
+            default='inner' if subparser is diff_parser else 'left',
+            help=("Specify which samples to test. `inner` means the "
+                  "intersection of `left` and `right`, `outer` is the outer "
+                  "product of `left` and `right`, and so on. "
+                  "Default: %(default)s."))
+
+        subparser.add_argument(
+            '-on', nargs='+',
+            help=("The columns to use for computing the change. They have to "
+                  "be in `left` and `right`. If `None`, all columns will be "
+                  "used."))
+
+        subparser.add_argument(
+            '-atol', type=float, default=1e-3,
+            help=("Absolute tolerance to use for numeric columns. "
+                  "Default: %(default)s"))
+
+        subparser.add_argument(
+            '-e', '--exclude', nargs='+', default=[],
+            help=("The columns to exclude for computing the change. They will "
+                  "be removed from the columns set by the `on` parameter."))
+
+        subparser.add_argument(
+            '-col', '--columns', nargs='*',
+            default=['leftdiff'] if subparser is diff_parser else ['left'],
+            metavar='COLUMN',
+            help=("The columns for the output. Can be `leftdiff`, to use the "
+                  "differing columns from `left`, `left` to use all columns "
+                  "from `left`, `rightdiff` to use differing columns from "
+                  "`right`, `right` to use all columns from `right`, `inner` "
+                  "to use the intersection of `left` and `right`, nothing to "
+                  "not display any columns, or a list of columns to display. "
+                  "Alternatively it can be `both` to use the columns from "
+                  "`left` and `right`, or `bothdiff`, to use the changed "
+                  "columns from `left` and `right`.  The columns from `right` "
+                  "will then be suffixed with an `_r`. Default: %(default)s."
+                  ))
+
+        subparser.add_argument(
+            '-c', '--commit', help=commit_help, action='store_true')
 
     diff_parser.add_argument(
         '-o', '--output', default=None,
@@ -654,6 +692,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                                            ns.commit, how=ns.how, on=ns.on,
                                            columns=ns.columns, atol=ns.atol,
                                            exclude=ns.exclude)
+                                output = ns.output
                             except Exception:
                                 s = io.StringIO()
                                 traceback.print_exc(file=s)
@@ -663,6 +702,33 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                             ret += msg
                             if output:
                                 ret += f"\n\nYou can look at the diff data in the viewer at https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta=queries/{output}\n"
+                        elif ns.parser == 'generate':
+                            try:
+                                msg = db2repo(
+                                    meta, ns.postgres_dump, ns.commit,
+                                    output=ns.output, dry_run=ns.dry_run,
+                                    keep=ns.keep,
+                                    meta_data=ns.meta_data,
+                                    count_data=ns.count_data,
+                                    how=ns.how, on=ns.on,
+                                    columns=ns.columns,
+                                    exclude=ns.exclude, atol=ns.atol)
+                                if ns.commit:
+                                    output = ns.output or 'update.tsv'
+                                else:
+                                    output = None
+                            except Exception:
+                                s = io.StringIO()
+                                traceback.print_exc(file=s)
+                                output = None
+                                msg = ("Sorry buy I failed to do generate the data:\n"
+                                       "\n```{}```").format(s.getvalue())
+                            ret += msg
+                            if output:
+                                ret += ("\n\n"
+                                        f"Successfully saved {ns.postgres_dump} as {output}.\n"
+                                        "You can look at the diff data in the viewer at "
+                                        "https://EMPD2.github.io/?repo={pr_owner}/{pr_repo}&branch={pr_branch}&meta={output}\n")
                         elif ns.parser == 'accept':
                             ns.meta_file = ns.meta_file or osp.basename(meta)
                             if ns.query:
@@ -693,7 +759,7 @@ def process_comment_line(line, pr_owner, pr_repo, pr_branch, pr_num):
                             ret = ret + msg if msg else ''
                         elif ns.parser == 'createdb':
                             success, msg, sql_dump = test.import_database(
-                                meta, commit=ns.commit, dump_tables=ns.commit)
+                                meta, commit=ns.commit, dump_tables=False)
                             if success:
                                 ret += "Postgres import succeded "
                                 if sql_dump:
@@ -932,6 +998,16 @@ def test_createdb():
         '@EMPD-admin createdb', 'EMPD2', 'EMPD-data', 'test-data', 2)
     assert 'Postgres import succeded' in msg, "Wrong message:\n" + msg
     assert 'not been committed' in msg, "Wrong message:\n" + msg
+
+
+def test_generate():
+    """Test function for :func:`empd_admin.generate_repo.db2repo`"""
+    msg = process_comment_line(
+        '@EMPD-admin generate postgres/test.sql --dry-run', 'EMPD2',
+        'EMPD-data', 'test-data', 2)
+    assert 'Dumped 3 lines to test.tsv' in msg, "Wrong message:\n" + msg
+    assert 'Changed 3 count files.' in msg, "Wrong message:\n" + msg
+    assert 'No action has been performed because it was a dry run' in msg
 
 
 def test_rebuild():

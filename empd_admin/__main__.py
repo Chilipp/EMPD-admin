@@ -99,6 +99,16 @@ def main(args=None, namespace=None):
                    how=args.how, on=args.on, columns=args.columns,
                    exclude=args.exclude, atol=args.atol,
                    maxdiff=args.maxdiff)[1])
+
+    elif args.parser == 'generate':
+        from empd_admin.generate_repo import db2repo
+        print(db2repo(
+            meta, args.postgres_dump, args.commit,
+            output=args.output, dry_run=args.dry_run,
+            keep=args.keep,
+            meta_data=args.meta_data, count_data=args.count_data,
+            how=args.how, on=args.on, columns=args.columns,
+            exclude=args.exclude, atol=args.atol))
     elif args.parser == 'rebuild':
         success, report, sql_dump = import_database(
             meta, dbname=args.database, commit=args.commit,

@@ -15,7 +15,8 @@ DATADIR = os.getenv(
 
 
 #: Columns in the EMPD-data metadata sheet that hold numeric values
-NUMERIC_COLS = ['Latitude', 'Longitude', 'Elevation', 'AreaOfSite', 'AgeBP']
+NUMERIC_COLS = ['Latitude', 'Longitude', 'Elevation', 'AreaOfSite', 'AgeBP',
+                'count', 'percentage']
 
 
 #: Lock file to lock the repository :attr:`DATADIR`. By default, this is at
@@ -24,7 +25,7 @@ NUMERIC_COLS = ['Latitude', 'Longitude', 'Elevation', 'AreaOfSite', 'AgeBP']
 DATA_LOCKFILE = osp.join(osp.expanduser('~'), 'cloning_master.lock')
 
 
-def read_empd_meta(fname=None):
+def read_empd_meta(fname=None, addokexcept=True):
     """Read an EMPD-data metadata file into a pandas DataFrame
 
     This function is the same as :func:`pandas.read_csv` but it also ensures
@@ -59,8 +60,11 @@ def read_empd_meta(fname=None):
         repo = get_empd_master_repo()
         fname = osp.join(repo.working_dir, 'meta.tsv')
 
-    ret = pd.read_csv(str(fname), sep='\t', index_col='SampleName',
-                      dtype=str)
+    ret = pd.read_csv(str(fname), sep='\t', dtype=str)
+    if 'SampleName' in ret.columns:
+        ret.set_index('SampleName', inplace=True)
+    elif 'samplename' in ret.columns:
+        ret.set_index('samplename', inplace=True)
 
     for col in NUMERIC_COLS:
         if col in ret.columns:
@@ -68,7 +72,7 @@ def read_empd_meta(fname=None):
     if 'ispercent' in ret.columns:
         ret['ispercent'] = ret['ispercent'].replace('', False).astype(bool)
 
-    if 'okexcept' not in ret.columns:
+    if addokexcept and 'okexcept' not in ret.columns:
         ret['okexcept'] = ''
 
     return ret
@@ -97,7 +101,7 @@ def dump_empd_meta(meta, fname=None, **kwargs):
         from empd_admin.common import read_empd_meta, dump_empd_meta
         meta = read_empd_meta('EMPD-data/meta.tsv')
         dump_empd_meta(meta, 'EMPD-data/meta.tsv')"""
-    if meta.index.name == 'SampleName':
+    if 'SampleName' in meta.index.names or 'samplename' in meta.index.names:
         kwargs.setdefault('index', True)
     else:
         kwargs.setdefault('index', False)
