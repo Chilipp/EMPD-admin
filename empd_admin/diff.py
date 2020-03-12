@@ -260,7 +260,8 @@ def compute_diff(left, right, how='inner', on=None, exclude=[],
             diff = ((~np.isnan(s1)) & (~np.isnan(s1)) &
                     (~np.isclose(s1, s2, atol=atol))).any(axis=1)
         else:
-            if hasattr(merged[col], 'str'):
+            if (hasattr(merged[col], 'str') and hasattr(left[col], 'str') and
+                    hasattr(right[col], 'str')):
                 lcol = lcol.str.strip().str.replace('\n', ' ')
                 rcol = rcol.str.strip().str.replace('\n', ' ')
             diff = (lcol.notnull() & rcol.notnull() & (lcol != rcol))
