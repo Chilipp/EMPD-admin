@@ -70,7 +70,11 @@ def read_empd_meta(fname=None, addokexcept=True):
         if col in ret.columns:
             ret[col] = ret[col].replace('', np.nan).astype(float)
     if 'ispercent' in ret.columns:
-        ret['ispercent'] = ret['ispercent'].replace('', False).astype(bool)
+        ret.rename(columns={'ispercent': 'ispercent_str'}, inplace=True)
+        ret['ispercent'] = False
+        ret.loc[ret.ispercent_str.str.startswith('t', na=False) |
+                ret.ispercent_str.str.startswith('T', na=False), 'ispercent'] = True
+        del ret['ispercent_str']
 
     if addokexcept and 'okexcept' not in ret.columns:
         ret['okexcept'] = ''
@@ -195,3 +199,15 @@ def get_psql_scripts():
     get_empd_master_repo: To get the data repository"""
     repo = get_empd_master_repo()
     return osp.join(repo.working_dir, 'postgres', 'scripts')
+
+
+# ----------------------- Tests ----------------------------
+def test_ispercent_read_empd_data():
+    import tempfile
+    df = pd.DataFrame(index=pd.Index(['a1', 'a2', 'a3'], name='SampleName'))
+    df['ispercent'] = ['False', '', 'True']
+    with tempfile.NamedTemporaryFile(prefix="empd_", suffix=".tsv") as f:
+        df.to_csv(f.name, '\t')
+        test = read_empd_meta(f.name)
+    assert test.ispercent.values.tolist() == [False, False, True]
+
