@@ -184,15 +184,15 @@ the working directory to the downloaded directory.</p>
 the <a class="reference internal" href="cli.html#test"><span class="std std-ref">empd-admin test</span></a> command. For the test-data
 branch this will fail due to an invalid country in the <em>test_a1</em> sample.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="o">!</span>empd-admin test
-<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmp9vh4iqer_test/report.md --commit --maxfail=20 --sample=.* /tmp/tmp9vh4iqer_test/tests/</span>
+<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmp6j6swcio_test/report.md --commit --maxfail=20 --sample=.* /tmp/tmp6j6swcio_test/tests/</span>
 <span class="go">============================= test session starts ==============================</span>
 <span class="go">platform linux -- Python 3.7.3, pytest-4.4.1, py-1.8.0, pluggy-0.9.0</span>
-<span class="go">rootdir: /tmp/tmp0tzagvu0/tests, inifile: pytest.ini</span>
+<span class="go">rootdir: /tmp/tmpuxxpdo6m/tests, inifile: pytest.ini</span>
 <span class="go">collected 38 items / 7 deselected / 31 selected</span>
 
-<span class="go">../tmp9vh4iqer_test/tests/test_critical.py ...                           [  9%]</span>
-<span class="go">../tmp9vh4iqer_test/tests/test_formatting.py ..sssss                     [ 32%]</span>
-<span class="go">../tmp9vh4iqer_test/tests/test_meta.py ..F..................             [100%]</span>
+<span class="go">../tmp6j6swcio_test/tests/test_critical.py ...                           [  9%]</span>
+<span class="go">../tmp6j6swcio_test/tests/test_formatting.py ..sssss                     [ 32%]</span>
+<span class="go">../tmp6j6swcio_test/tests/test_meta.py ..F..................             [100%]</span>
 
 <span class="go">=================================== FAILURES ===================================</span>
 <span class="go">_________________________________ test_country _________________________________</span>
@@ -212,8 +212,8 @@ branch this will fail due to an invalid country in the <em>test_a1</em> sample.<
 <span class="go">test_a2    Germany</span>
 <span class="go">test_a3    Germany</span>
 <span class="go">dtype: object</span>
-<span class="go">okexcept = &lt;function okexcept.&lt;locals&gt;.okexcept at 0x7f7e8cd35400&gt;</span>
-<span class="go">record_property = &lt;function record_property.&lt;locals&gt;.append_property at 0x7f7e868568c8&gt;</span>
+<span class="go">okexcept = &lt;function okexcept.&lt;locals&gt;.okexcept at 0x7ff7e9438400&gt;</span>
+<span class="go">record_property = &lt;function record_property.&lt;locals&gt;.append_property at 0x7ff7e2ea3840&gt;</span>
 
 <span class="go">    def test_country(meta, countries, nat_earth_countries, okexcept,</span>
 <span class="go">                     record_property):</span>
@@ -245,7 +245,7 @@ branch this will fail due to an invalid country in the <em>test_a1</em> sample.<
 <span class="go">E       assert not 1</span>
 <span class="go">E        +  where 1 = len(           OriginalSampleName   SiteName  ... empd_countries  Country_ok\nSampleName                                ......                       \ntest_a1          orig_test_a1  somewhere  ...        Germany       False\n\n[1 rows x 76 columns])</span>
 
-<span class="go">../tmp9vh4iqer_test/tests/test_meta.py:80: AssertionError</span>
+<span class="go">../tmp6j6swcio_test/tests/test_meta.py:80: AssertionError</span>
 <span class="go">=============================== warnings summary ===============================</span>
 <span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/socks.py:58</span>
 <span class="go">  /opt/conda/envs/empd-admin/lib/python3.7/site-packages/socks.py:58: DeprecationWarning: Using or importing the ABCs from &#39;collections&#39; instead of from &#39;collections.abc&#39; is deprecated, and in 3.8 it will stop working</span>
@@ -272,7 +272,7 @@ branch this will fail due to an invalid country in the <em>test_a1</em> sample.<
 <span class="go">    &quot;&quot;&quot;</span>
 
 <span class="go">-- Docs: https://docs.pytest.org/en/latest/warnings.html</span>
-<span class="go">=== 1 failed, 25 passed, 5 skipped, 7 deselected, 6 warnings in 5.36 seconds ===</span>
+<span class="go">=== 1 failed, 25 passed, 5 skipped, 7 deselected, 6 warnings in 5.24 seconds ===</span>
 </pre></div>
 </div>
 <p>The failed sample can be extracted using the <cite>-e</cite> option:</p>
@@ -287,13 +287,13 @@ branch this will fail due to an invalid country in the <em>test_a1</em> sample.<
 <p>and allows you to analyse it further. In our case, we can fix the failed sample
 with the <a class="reference internal" href="cli.html#fix"><span class="std std-ref">fix</span></a> command:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="o">!</span>empd-admin fix country -s test_a1
-<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmp566xewx6_test/report.md -m dbfix --fix-db --commit -k country --sample=test_a1 /tmp/tmp566xewx6_test/tests/fixes.py</span>
+<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmphq5ntihr_test/report.md -m dbfix --fix-db --commit -k country --sample=test_a1 /tmp/tmphq5ntihr_test/tests/fixes.py</span>
 <span class="go">============================= test session starts ==============================</span>
 <span class="go">platform linux -- Python 3.7.3, pytest-4.4.1, py-1.8.0, pluggy-0.9.0</span>
-<span class="go">rootdir: /tmp/tmp0tzagvu0/tests, inifile: pytest.ini</span>
+<span class="go">rootdir: /tmp/tmpuxxpdo6m/tests, inifile: pytest.ini</span>
 <span class="go">collected 7 items / 6 deselected / 1 selected</span>
 
-<span class="go">../tmp566xewx6_test/tests/fixes.py .                                     [100%]</span>
+<span class="go">../tmphq5ntihr_test/tests/fixes.py .                                     [100%]</span>
 
 <span class="go">=============================== warnings summary ===============================</span>
 <span class="go">/opt/conda/envs/empd-admin/lib/python3.7/site-packages/socks.py:58</span>
@@ -321,12 +321,12 @@ with the <a class="reference internal" href="cli.html#fix"><span class="std std-
 <span class="go">    &quot;&quot;&quot;</span>
 
 <span class="go">-- Docs: https://docs.pytest.org/en/latest/warnings.html</span>
-<span class="go">============== 1 passed, 6 deselected, 6 warnings in 5.05 seconds ==============</span>
+<span class="go">============== 1 passed, 6 deselected, 6 warnings in 4.97 seconds ==============</span>
 </pre></div>
 </div>
 <p>This now fixed the country for the <em>test_a1</em> sample and the tests will run through</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [8]: </span><span class="o">!</span>empd-admin test
-<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmp9914u_4o_test/report.md --commit --maxfail=20 --sample=.* /tmp/tmp9914u_4o_test/tests/</span>
+<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmp8e7pkit__test/report.md --commit --maxfail=20 --sample=.* /tmp/tmp8e7pkit__test/tests/</span>
 <span class="go">All tests passed</span>
 </pre></div>
 </div>
@@ -417,7 +417,7 @@ database server, you can transform the EMPD meta data in a relational database,
 </div>
 <p>and then incorporate your data as</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="o">!</span>empd-admin createdb -db MyEMPD
-<span class="go">Importing in postgresql://postgres@localhost/MyEMPD with /opt/conda/envs/empd-admin/bin/python /tmp/tmp0tzagvu0/postgres/scripts/import_into_empd2.py ./test.tsv --database-url postgresql://postgres@localhost/MyEMPD --no-dump</span>
+<span class="go">Importing in postgresql://postgres@localhost/MyEMPD with /opt/conda/envs/empd-admin/bin/python /tmp/tmpuxxpdo6m/postgres/scripts/import_into_empd2.py ./test.tsv --database-url postgresql://postgres@localhost/MyEMPD --no-dump</span>
 </pre></div>
 </div>
 <p>Then you can access it via</p>
@@ -433,57 +433,57 @@ contribution.</p>
 <code class="docutils literal notranslate"><span class="pre">test.tsv</span></code> or the failed samples <code class="docutils literal notranslate"><span class="pre">failures/failed.tsv</span></code>) and merge the new
 data into the base meta file <cite>meta.tsv</cite> of the EMPD.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="o">!</span>empd-admin finish --commit
-<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmpir8lpohl_test/report.md --fix-db -v -k fix_sample_data_formatting --commit /tmp/tmpir8lpohl_test/tests/fixes.py</span>
-<span class="go">Importing in postgresql://postgres@localhost/tmpg0cldh3u_empd with /opt/conda/envs/empd-admin/bin/python /tmp/tmp0tzagvu0/postgres/scripts/import_into_empd2.py ./test.tsv --database-url postgresql://postgres@localhost/tmpg0cldh3u_empd</span>
+<span class="go">Starting test run with /opt/conda/envs/empd-admin/bin/pytest --empd-meta=./test.tsv --markdown-report=/tmp/tmpxp7r9_lx_test/report.md --fix-db -v -k fix_sample_data_formatting --commit /tmp/tmpxp7r9_lx_test/tests/fixes.py</span>
+<span class="go">Importing in postgresql://postgres@localhost/tmpnusffwn5_empd with /opt/conda/envs/empd-admin/bin/python /tmp/tmpuxxpdo6m/postgres/scripts/import_into_empd2.py ./test.tsv --database-url postgresql://postgres@localhost/tmpnusffwn5_empd</span>
 
 <span class="gp">In [17]: </span><span class="n">log</span> <span class="o">=</span> <span class="o">!</span>git log -8
 <span class="gp">   ....: </span><span class="k">print</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
 <span class="gp">   ....: </span>
-<span class="go">commit 41a7c231847fe011be03372dae810e9de785b5f6</span>
-<span class="go">Author: EMPD-admin &lt;postgres@b7da7f78ba1e&gt;</span>
-<span class="go">Date:   Thu Mar 12 13:52:57 2020 +0000</span>
+<span class="go">commit b43dd9a501e1330b94e1f6bde8d000d0f2c9ca99</span>
+<span class="go">Author: EMPD-admin &lt;postgres@abad58bb0fa0&gt;</span>
+<span class="go">Date:   Thu Mar 12 15:00:42 2020 +0000</span>
 
 <span class="go">    Removed test.tsv to finish the PR</span>
 
-<span class="go">commit 2ee018a237820eb5854a5960504adaec2e88e2e9</span>
-<span class="go">Author: EMPD-admin &lt;postgres@b7da7f78ba1e&gt;</span>
-<span class="go">Date:   Thu Mar 12 13:52:57 2020 +0000</span>
+<span class="go">commit 69ae7a065fd7ede21ef6f89e654a6f897436ee00</span>
+<span class="go">Author: EMPD-admin &lt;postgres@abad58bb0fa0&gt;</span>
+<span class="go">Date:   Thu Mar 12 15:00:41 2020 +0000</span>
 
 <span class="go">    Removed extracted queries</span>
 
-<span class="go">commit 0ac6a167d70561207bc3a5b8acb46e6ac93894cb</span>
-<span class="go">Author: EMPD-admin &lt;postgres@b7da7f78ba1e&gt;</span>
-<span class="go">Date:   Thu Mar 12 13:52:57 2020 +0000</span>
+<span class="go">commit f3548d9a84695a9a5d4b2eb40d98dc66fa745332</span>
+<span class="go">Author: EMPD-admin &lt;postgres@abad58bb0fa0&gt;</span>
+<span class="go">Date:   Thu Mar 12 15:00:41 2020 +0000</span>
 
 <span class="go">    Removed extracted failures</span>
 
-<span class="go">commit a9a2e637b547fb9da105ea386147dbe3756e1b10</span>
-<span class="go">Author: EMPD-admin &lt;postgres@b7da7f78ba1e&gt;</span>
-<span class="go">Date:   Thu Mar 12 13:52:56 2020 +0000</span>
+<span class="go">commit b6898c7798a019aad7234b98752f8b66fef8ca32</span>
+<span class="go">Author: EMPD-admin &lt;postgres@abad58bb0fa0&gt;</span>
+<span class="go">Date:   Thu Mar 12 15:00:41 2020 +0000</span>
 
 <span class="go">    Merged test.tsv into meta.tsv [skip ci]</span>
 
-<span class="go">commit 52eb2999f7d4fc3c1ad83fe4995f3614cef68581</span>
-<span class="go">Author: EMPD-admin &lt;postgres@b7da7f78ba1e&gt;</span>
-<span class="go">Date:   Thu Mar 12 13:52:55 2020 +0000</span>
+<span class="go">commit 040fed738fe255a0da69065066e9afb91bdb75c3</span>
+<span class="go">Author: EMPD-admin &lt;postgres@abad58bb0fa0&gt;</span>
+<span class="go">Date:   Thu Mar 12 15:00:39 2020 +0000</span>
 
 <span class="go">    Updated tab-delimited files from EMPD2 postgres database</span>
 
-<span class="go">commit b643a580791a1ff425ef5bc8d7517b53e72b4581</span>
-<span class="go">Author: EMPD-admin &lt;postgres@b7da7f78ba1e&gt;</span>
-<span class="go">Date:   Thu Mar 12 13:52:52 2020 +0000</span>
+<span class="go">commit 7b5b3c0d6300dbd9913ce458bfdb2ee3152b7dc0</span>
+<span class="go">Author: EMPD-admin &lt;postgres@abad58bb0fa0&gt;</span>
+<span class="go">Date:   Thu Mar 12 15:00:37 2020 +0000</span>
 
 <span class="go">    Removed postgres dump of test.tsv</span>
 
-<span class="go">commit 4c72300f0d0b2ff8fe5bdb59aa9ad0c5d0ed5083</span>
-<span class="go">Author: EMPD-admin &lt;postgres@b7da7f78ba1e&gt;</span>
-<span class="go">Date:   Thu Mar 12 13:52:52 2020 +0000</span>
+<span class="go">commit 8c534529c7158ad68f7bf60752655c66433e322e</span>
+<span class="go">Author: EMPD-admin &lt;postgres@abad58bb0fa0&gt;</span>
+<span class="go">Date:   Thu Mar 12 15:00:37 2020 +0000</span>
 
 <span class="go">    Added postgres dump for test.tsv</span>
 
-<span class="go">commit 3a57ace27dade30e58d254469a1858d5576f3cec</span>
-<span class="go">Author: EMPD-admin &lt;postgres@b7da7f78ba1e&gt;</span>
-<span class="go">Date:   Thu Mar 12 13:52:51 2020 +0000</span>
+<span class="go">commit 963137056cb7eb0b41d0cd88ed1637d5ed34e0d6</span>
+<span class="go">Author: EMPD-admin &lt;postgres@abad58bb0fa0&gt;</span>
+<span class="go">Date:   Thu Mar 12 15:00:35 2020 +0000</span>
 
 <span class="go">    Updated fixed tables</span>
 </pre></div>
